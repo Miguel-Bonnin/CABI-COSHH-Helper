@@ -13,6 +13,19 @@ A web-based tool to streamline the creation of COSHH (Control of Substances Haza
 
 ## Quick Start
 
+### Try the Live Demo
+Visit the live application: **https://miguel-bonnin.github.io/CABI-COSHH-Helper/coshhgeneratorv5.html**
+
+### Try the Example
+Want to see how it works? Check out the example files in the `examples/` folder:
+- **HiDi Formamide.pdf** - Example MSDS sheet to upload and parse
+- **cabi_coshh_dynamic_2025-10-07.json** - Pre-filled assessment data to import
+- **coshhform-hidi.pdf** - Completed COSHH report output
+
+These example files are also linked directly in the application's MSDS tab.
+
+### Using the Tool
+
 1. **Open the Application**: Simply open `coshhgeneratorv5.html` in a modern web browser (Chrome, Firefox, Edge, Safari)
 2. **Upload MSDS**: Start by uploading a PDF MSDS or pasting text in the MSDS tab
 3. **Review Parsed Data**: Check and edit the automatically extracted hazard information
