@@ -1079,15 +1079,26 @@
             }
 
             let ppeText = guidance.ppeText;
-            const pPhrases = masterParsedMSDSData.pPhrases?.value?.toUpperCase().split(/[,;\s]+/).filter(Boolean) || [];
-            let pPhrasePPE = new Set();
-            pPhrases.forEach(p => {
-                if (p.includes("P280")) pPhrasePPE.add("MSDS P280: Wear protective gloves/clothing/eye/face protection.");
-                if (p.includes("P261") || p.includes("P271")) pPhrasePPE.add("MSDS P261/P271: Avoid breathing dust/fume/gas/mist/vapours/spray. Use only outdoors or in a well-ventilated area.");
-                if (p.includes("P284") || p.includes("P285")) pPhrasePPE.add("MSDS P284/P285: Wear respiratory protection.");
-            });
-            if (pPhrasePPE.size > 0) ppeText += "\n\nMSDS Specific P-phrases suggest:\n" + [...pPhrasePPE].join("\n");
-            const ppeSpecifyEl = document.getElementById('ppeSpecifyType'); if(ppeSpecifyEl) ppeSpecifyEl.value = ppeText;
+
+            // Check if ppeSpecifyType already has content (e.g., from imported JSON)
+            const ppeSpecifyEl = document.getElementById('ppeSpecifyType');
+            const existingPPEText = ppeSpecifyEl?.value || '';
+
+            // Only regenerate PPE text if it's empty or needs updating
+            if (!existingPPEText || existingPPEText === ppeText) {
+                const pPhrases = masterParsedMSDSData.pPhrases?.value?.toUpperCase().split(/[,;\s]+/).filter(Boolean) || [];
+                let pPhrasePPE = new Set();
+                pPhrases.forEach(p => {
+                    if (p.includes("P280")) pPhrasePPE.add("MSDS P280: Wear protective gloves/clothing/eye/face protection.");
+                    if (p.includes("P261") || p.includes("P271")) pPhrasePPE.add("MSDS P261/P271: Avoid breathing dust/fume/gas/mist/vapours/spray. Use only outdoors or in a well-ventilated area.");
+                    if (p.includes("P284") || p.includes("P285")) pPhrasePPE.add("MSDS P284/P285: Wear respiratory protection.");
+                });
+                if (pPhrasePPE.size > 0) ppeText += "\n\nMSDS Specific P-phrases suggest:\n" + [...pPhrasePPE].join("\n");
+                if (ppeSpecifyEl) ppeSpecifyEl.value = ppeText;
+            } else {
+                // Use existing PPE text that was imported
+                ppeText = existingPPEText;
+            }
             
             const ppeGloveCb = document.querySelector('input[name="ppeControl"][value="Gloves200_201"]');
             if (ppeGloveCb && ppeText.toLowerCase().includes("glove")) ppeGloveCb.checked = true;
