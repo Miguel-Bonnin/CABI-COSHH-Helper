@@ -114,7 +114,18 @@ Users are responsible for ensuring compliance with all relevant safety regulatio
 
 ## Development
 
-This application was prototyped with assistance from AI (Gemini model family, May 2024) to help automate and streamline parts of the COSHH assessment process.
+This application was prototyped with assistance from AI (Gemini and Claude) to help automate and streamline parts of the COSHH assessment process.
+
+### Developer Documentation
+
+For detailed technical documentation including:
+- **Risk Assessment Methodology** - How severity and likelihood are calculated
+- **Code Structure** - Line-by-line guide to the codebase
+- **Key Functions Reference** - All major functions explained
+- **Customization Guide** - How to modify risk thresholds, add procedures, etc.
+- **Future Modularization** - Roadmap for splitting the monolithic file
+
+See [TECHNICAL.md](TECHNICAL.md)
 
 ### Future Improvements
 - Separate HTML, CSS, and JavaScript files
