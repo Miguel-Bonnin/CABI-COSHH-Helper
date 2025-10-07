@@ -1,0 +1,38 @@
+/* Tab Navigation */
+
+.tab-header {
+    display: flex;
+    background-color: #333;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 0.85em;
+    outline: none;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.tab-button.active {
+    background-color: #00558c;
+}
+
+.tab-content {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-top: none;
+    min-height: 400px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}

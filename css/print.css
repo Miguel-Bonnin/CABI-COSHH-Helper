@@ -1,0 +1,61 @@
+/* Print Styles */
+
+@media print {
+    body,
+    .app-container {
+        background: #fff;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .app-header {
+        display: none;
+    }
+
+    .app-footer {
+        display: block;
+        text-align: center;
+        font-size: 0.7em;
+        margin-top: 10px;
+    }
+
+    .app-container {
+        width: 100%;
+    }
+
+    .tab-header,
+    form > *:not(#outputTab),
+    #outputTab button:not(.print-button),
+    #msdsInputTab,
+    #msdsPreviewPane {
+        display: none !important;
+    }
+
+    #outputTab,
+    #fullReportOutput,
+    #reportContent {
+        display: block !important;
+    }
+
+    #fullReportOutput {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .report-table {
+        font-size: 8pt;
+    }
+
+    .report-table th,
+    .report-table td {
+        padding: 3px;
+    }
+
+    .smart-summary {
+        font-size: 9pt;
+        background-color: #f0f0f0 !important;
+        border: 1px solid #ccc !important;
+    }
+}

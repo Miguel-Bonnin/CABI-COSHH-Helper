@@ -1629,7 +1629,7 @@ git push origin feature/add-new-procedure
 For questions, issues, or contributions:
 - **GitHub Issues**: [CABI-COSHH-Helper/issues](https://github.com/miguel-bonnin/CABI-COSHH-Helper/issues)
 - **Internal**: Contact CABI Health & Safety department
-- **Developer**: J. Miguel Bonnin (j.miguel.bonnin@cabi.org)
+- **Developer**: J. Miguel Bonnin (m.bonnin@cabi.org)
 
 ---
 
