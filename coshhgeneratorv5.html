@@ -631,12 +631,28 @@
 
         // Try specific keywords first, looking for content after a colon, possibly on next line.
         // Pattern: (Keyword Label) \s* : \s* (Captured Name up to newline or other known delimiters)
-        let nameMatch = text.match(/(?:Product name|Substance name|Trade name|Chemical Name|Product Identifier)\s*:\s*([^\n\r]+?)(?:\s*Product number|\s*Brand|\s*CAS No\.|\s*EC No\.|\s*Index No\.|$)/im);
-        
+        let nameMatch = text.match(/(?:Product name|Substance name|Trade name|Chemical Name|Product Identifier)\s*[:\s]+([^\n\r]+?)(?:\s*Product number|\s*Brand|\s*CAS No\.?|\s*EC No\.|\s*Index No\.|\s*Unique Formula|\s*REACH|\n\n|$)/im);
+
         if (nameMatch && nameMatch[1].trim()) {
             chemicalNameValue = nameMatch[1].trim();
-            chemicalNameConfidence = "high";
-        } else {
+            // Filter out obvious non-names (P-phrases, codes, etc.)
+            if (!chemicalNameValue.match(/^[PH]\d{3}/) && !chemicalNameValue.match(/^\d{4,}$/)) {
+                chemicalNameConfidence = "high";
+            } else {
+                chemicalNameValue = ""; // Reset if it's a P-phrase or code
+            }
+        }
+
+        // Try Section 3 table - look for "Chemical Name" column in composition table
+        if (!chemicalNameValue) {
+            const section3Match = text.match(/SECTION 3[^]*?Chemical Name[^]*?(\w[\w\s\-(),.']+?)(?:\s+\d{2,7}-\d{2}-\d|\s+\d{3}-\d{3}-\d|\s+CAS|\s+EC|98-100|$)/im);
+            if (section3Match && section3Match[1].trim()) {
+                chemicalNameValue = section3Match[1].trim();
+                chemicalNameConfidence = "high";
+            }
+        }
+
+        if (!chemicalNameValue) {
             // Fallback: Try to get capitalized line(s) often found at the very top or before CAS/EC numbers if more specific patterns fail.
             // This is more heuristic.
             nameMatch = text.match(/^\s*([A-Z][A-Za-z0-9\s\-(,).]+?)[\n\r]+\s*(?:1\.\d|SECTION 1|CAS|EC Number|Synonyms|Product number)/m);
@@ -645,7 +661,7 @@
                 chemicalNameConfidence = "medium";
             } else {
                 // Broader attempt if the above fail, looking for capitalized words often at the start.
-                nameMatch = text.match(/^\s*([A-Z][A-Z0-9\s\-(),]{5,})/m); // At least 5 chars, capitalized
+                nameMatch = text.match(/^\s*([A-Z][A-Za-z0-9\s\-(),]{5,})/m); // At least 5 chars, capitalized
                  if (nameMatch && nameMatch[1].trim()) {
                     chemicalNameValue = nameMatch[1].trim();
                     chemicalNameConfidence = "low";
@@ -654,6 +670,8 @@
         }
         // Clean up common prefixes if they were accidentally included due to broad matching
         chemicalNameValue = chemicalNameValue.replace(/^(?:Product name|Substance name|Trade name|Chemical Name|Product Identifier)\s*:\s*/i, '').trim();
+        // Remove trailing "Not Applicable" or similar noise
+        chemicalNameValue = chemicalNameValue.replace(/\s+(Not Applicable|N\/A)$/i, '').trim();
         data.chemicalName = { value: chemicalNameValue || "Not clearly found", confidence: chemicalNameValue ? chemicalNameConfidence : "low" };
 
 
@@ -661,24 +679,34 @@
 
         // ... (Chemical Name parsing remains the same as the last fix) ...
 
-        // 2. CAS Number (Further Enhanced for specific "CAS-No. : number" pattern)
+        // 2. CAS Number (Enhanced with Section 3 table parsing)
         let casValue = "";
         let casConfidence = "low";
 
-        // Pattern 1: Specifically look for "CAS-No." followed by optional whitespace, colon, optional whitespace, then the number.
-        // This is tailored to your example: "CAS-No.        : 60-24-2"
-        let casMatchSpecific = text.match(/CAS-No\.\s*:\s*(\d{2,7}-\d{2}-\d)/i);
-        
-        if (casMatchSpecific && casMatchSpecific[1]) {
-            casValue = casMatchSpecific[1].trim(); // Trim just in case, though the regex group should be tight
+        // Pattern 1: Look in Section 3 composition table (most reliable)
+        // Matches: "Chemical Name CAS No EC No. Weight-% ... Formamide 75-12-7 200-842-0 98-100"
+        const section3CasMatch = text.match(/SECTION 3[^]*?CAS No[^]*?(\d{2,7}-\d{2}-\d)/i);
+        if (section3CasMatch && section3CasMatch[1]) {
+            casValue = section3CasMatch[1].trim();
             casConfidence = "high";
-        } else {
-            // Pattern 2: More general pattern if the specific one fails
+        }
+
+        // Pattern 2: Specifically look for "CAS-No." or "CAS No." followed by optional whitespace, colon, optional whitespace, then the number.
+        if (!casValue) {
+            let casMatchSpecific = text.match(/CAS\s*-?\s*No\.?\s*:?\s*(\d{2,7}-\d{2}-\d)/i);
+            if (casMatchSpecific && casMatchSpecific[1]) {
+                casValue = casMatchSpecific[1].trim();
+                casConfidence = "high";
+            }
+        }
+
+        // Pattern 3: More general pattern if the specific one fails
+        if (!casValue) {
             // (CAS Label with variations) \s* :? \s* (Captured CAS Number allowing internal spaces/dashes)
             let casMatchGeneral = text.match(/(?:CAS\s*(?:–\s*No\.|Number|No\.?|-num|RN| Number:?)\s*:?\s*|Chemical Abstracts Service number\s*:\s*)\s*([\d\s–-]{4,12}\d)/i);
             if (casMatchGeneral && casMatchGeneral[1]) {
                 // Normalize: remove internal spaces and en-dashes, keep hyphens that are part of the number
-                casValue = casMatchGeneral[1].replace(/\s*–\s*/g, '-').replace(/\s+/g, ''); 
+                casValue = casMatchGeneral[1].replace(/\s*–\s*/g, '-').replace(/\s+/g, '');
                 // Further ensure it matches the X-XX-X or XXXX-XX-X format after cleaning
                 if (casValue.match(/^\d{2,7}-\d{2}-\d$/)) {
                     casConfidence = "medium";
@@ -686,16 +714,18 @@
                     casValue = ""; // Invalid format after cleaning
                     casConfidence = "low";
                 }
-            } else {
-                // Fallback 3: Simplest pattern just looking for the number format if others fail
-                // More prone to false positives, so used last and with lower confidence.
-                // Search in a limited portion of text to reduce false positives.
-                const earlyText = text.substring(0, 1500); // Increased search window slightly
-                let casMatchSimple = earlyText.match(/\b(\d{2,7}-\d{2}-\d)\b/);
-                if (casMatchSimple && casMatchSimple[1]) {
-                    casValue = casMatchSimple[1];
-                    casConfidence = "medium"; // Still medium as it's a format match
-                }
+            }
+        }
+
+        // Fallback 4: Simplest pattern just looking for the number format if others fail
+        if (!casValue) {
+            // More prone to false positives, so used last and with lower confidence.
+            // Search in a limited portion of text to reduce false positives.
+            const earlyText = text.substring(0, 1500); // Increased search window slightly
+            let casMatchSimple = earlyText.match(/\b(\d{2,7}-\d{2}-\d)\b/);
+            if (casMatchSimple && casMatchSimple[1]) {
+                casValue = casMatchSimple[1];
+                casConfidence = "medium"; // Still medium as it's a format match
             }
         }
         data.casNumber = { value: casValue, confidence: casValue ? casConfidence : "low" };
@@ -706,14 +736,80 @@
         let signalMatch = text.match(/Signal Word\s*[:\-]?\s*(Danger|Warning)/i);
         data.signalWord = { value: signalMatch ? signalMatch[1] : "None", confidence: signalMatch ? "high" : "medium" };
 
-        // 4. Pictograms (GHS Codes - Stricter: Only explicit GHSXX)
+        // 4. Pictograms (GHS Codes - From explicit codes OR inferred from H-phrases)
         let pictograms = new Set();
         const ghsCodeRegex = /\b(GHS\d{2})\b/gi;
         let pictogramMatch;
         while ((pictogramMatch = ghsCodeRegex.exec(text)) !== null) {
             pictograms.add(pictogramMatch[1].toUpperCase());
         }
-        data.parsedRawPictograms = { value: [...pictograms].join(', '), confidence: pictograms.size > 0 ? "high" : "low" };
+
+        // If no explicit GHS codes found, infer from H-phrases
+        let pictogramConfidence = pictograms.size > 0 ? "high" : "medium";
+        if (pictograms.size === 0) {
+            // Parse H-phrases early to infer pictograms
+            const hPhraseRegex = /\b(H\d{3}[A-Za-z+]*(?:\s*\+\s*H\d{3}[A-Za-z+]*)*)\b/gi;
+            let tempHPhrases = new Set();
+            let tempMatch;
+            while ((tempMatch = hPhraseRegex.exec(text)) !== null) {
+                tempHPhrases.add(tempMatch[1].replace(/\s/g, '').toUpperCase());
+            }
+
+            // Map H-phrases to GHS pictograms
+            const hPhraseToGHS = {
+                // GHS08 - Health Hazard
+                'H350': 'GHS08', 'H351': 'GHS08', 'H340': 'GHS08', 'H341': 'GHS08', // Carcinogen, Mutagen
+                'H360': 'GHS08', 'H361': 'GHS08', 'H362': 'GHS08', // Reproductive toxicity
+                'H370': 'GHS08', 'H371': 'GHS08', 'H372': 'GHS08', 'H373': 'GHS08', // Organ toxicity
+                'H334': 'GHS08', 'H317': 'GHS08', // Respiratory/skin sensitization
+
+                // GHS07 - Harmful/Irritant
+                'H302': 'GHS07', 'H312': 'GHS07', 'H332': 'GHS07', // Harmful
+                'H315': 'GHS07', 'H319': 'GHS07', 'H320': 'GHS07', // Irritant
+                'H335': 'GHS07', 'H336': 'GHS07',
+
+                // GHS06 - Toxic
+                'H300': 'GHS06', 'H301': 'GHS06', 'H310': 'GHS06', 'H311': 'GHS06',
+                'H330': 'GHS06', 'H331': 'GHS06',
+
+                // GHS05 - Corrosive
+                'H314': 'GHS05', 'H318': 'GHS05',
+
+                // GHS02 - Flammable
+                'H220': 'GHS02', 'H221': 'GHS02', 'H222': 'GHS02', 'H223': 'GHS02',
+                'H224': 'GHS02', 'H225': 'GHS02', 'H226': 'GHS02', 'H228': 'GHS02',
+
+                // GHS03 - Oxidizing
+                'H270': 'GHS03', 'H271': 'GHS03', 'H272': 'GHS03',
+
+                // GHS01 - Explosive
+                'H200': 'GHS01', 'H201': 'GHS01', 'H202': 'GHS01', 'H203': 'GHS01',
+                'H204': 'GHS01', 'H205': 'GHS01', 'H240': 'GHS01', 'H241': 'GHS01',
+
+                // GHS04 - Gas under pressure
+                'H280': 'GHS04', 'H281': 'GHS04', 'H282': 'GHS04', 'H283': 'GHS04',
+
+                // GHS09 - Environmental
+                'H400': 'GHS09', 'H410': 'GHS09', 'H411': 'GHS09', 'H412': 'GHS09', 'H413': 'GHS09',
+                'H420': 'GHS09', 'H429': 'GHS09'
+            };
+
+            tempHPhrases.forEach(hPhrase => {
+                // Match the first 4 characters (e.g., "H350", "H360F" -> "H360")
+                const basePhrase = hPhrase.substring(0, 4);
+                if (hPhraseToGHS[basePhrase]) {
+                    pictograms.add(hPhraseToGHS[basePhrase]);
+                }
+            });
+
+            if (pictograms.size > 0) {
+                pictogramConfidence = "medium"; // Inferred from H-phrases, not explicit
+            } else {
+                pictogramConfidence = "low";
+            }
+        }
+
+        data.parsedRawPictograms = { value: [...pictograms].join(', '), confidence: pictogramConfidence };
 
         // 5. Hazard Statements (H-phrases) - Keep as is
         const hPhraseRegex = /\b(H\d{3}[A-Za-z+]*(?:\s*\+\s*H\d{3}[A-Za-z+]*)*)\b/gi;
