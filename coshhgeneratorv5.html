@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CABI COSHH Helper - Enhanced MSDS Parsing</title>
+    <style>
+        /* ... (Same CSS as your previous "Full Form" version) ... */
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f0f0; display: flex; flex-direction: column; min-height: 100vh; }
+        .app-header { background-color: #ffffff; padding: 10px 20px; display: flex; align-items: center; border-bottom: 1px solid #ddd; }
+        .app-header img { max-height: 50px; margin-right: 20px; }
+        .app-header h1 { margin: 0; font-size: 1.8em; color: #00558c; }
+        .app-container { max-width: 1200px; margin: 20px auto; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); flex-grow: 1; }
+        .tab-header { display: flex; background-color: #333; flex-wrap: wrap; }
+        .tab-button { padding: 10px 15px; color: white; cursor: pointer; border: none; background: none; font-size: 0.85em; outline: none; flex-grow: 1; text-align: center; }
+        .tab-button.active { background-color: #00558c; }
+        .tab-content { padding: 20px; border: 1px solid #ddd; border-top: none; min-height: 400px; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        label, .label-header { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="number"], input[type="date"], input[type="file"], select, textarea {
+            width: calc(100% - 18px); padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
+        }
+        textarea { min-height: 70px; resize: vertical; }
+        button { padding: 10px 15px; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top:10px; }
+        .action-button { background-color: #00558c; } .action-button:hover { background-color: #003e6b; }
+        .secondary-button { background-color: #6c757d; } .secondary-button:hover { background-color: #5a6268; }
+        .form-section { margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #eee; border-radius: 4px;}
+        .form-section h3 { margin-top:0; padding-bottom:10px; border-bottom:1px solid #ddd;}
+        .inline-group label, .checkbox-inline label { display: inline-block; margin-right: 10px; font-weight: normal;}
+        .inline-group input[type="checkbox"], .checkbox-inline input[type="checkbox"] { width: auto; margin-right: 5px; vertical-align: middle;}
+        .column-layout { display: flex; flex-wrap: wrap; gap: 20px; }
+        .column { flex: 1; min-width: 250px; }
+        .confidence-marker { font-size: 0.8em; margin-left: 5px; }
+        .confidence-high { color: green; } .confidence-medium { color: orange; } .confidence-low { color: red; }
+        #parsePreviewTable { width: 100%; border-collapse: collapse; margin-top: 10px;}
+        #parsePreviewTable th, #parsePreviewTable td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        #parsePreviewTable th { background-color: #f2f2f2;}
+        .risk-matrix-table, .actions-table { width:100%; border-collapse:collapse; margin-top:10px;}
+        .risk-matrix-table th, .risk-matrix-table td, .actions-table th, .actions-table td { border:1px solid #ccc; padding:8px; text-align:left;}
+        .risk-matrix-table input[type="radio"], .risk-matrix-table input[type="checkbox"] { margin-right:5px;}
+        .report-table { width: 100%; border-collapse: collapse; margin-bottom:15px; font-size:10pt;}
+        .report-table th, .report-table td { border: 1px solid #000; padding: 5px; text-align: left; vertical-align: top; }
+        .report-table th { background-color: #e0e0e0; font-weight: bold;}
+        .report-checkbox { display:inline-block; width:12px; height:12px; border:1px solid #000; margin-right:5px; text-align:center; line-height:12px; }
+        .report-section-title { font-weight:bold; background-color:#c0c0c0; padding:5px; margin-top:10px; text-align:center;}
+        .report-logo { max-height:50px; margin-bottom:10px;}
+        .app-footer { text-align: center; padding: 15px; background-color: #f8f9fa; border-top: 1px solid #e7e7e7; font-size: 0.8em; color: #6c757d; margin-top: auto; }
+        .smart-summary { background-color: #e9f5ff; border: 1px solid #00558c; padding: 15px; margin-bottom: 20px; border-radius: 4px;}
+        .smart-summary h4 { margin-top:0; color: #00558c;}
+        .editable-note {font-size: 0.8em; color: #666; margin-left: 5px;}
+        .greyed-out { opacity: 0.5; pointer-events: none; }
+
+        @media print {
+            body, .app-container { background: #fff; box-shadow: none; margin: 0; padding: 0; }
+            .app-header { display: none; }
+            .app-footer { display: block; text-align: center; font-size:0.7em; margin-top:10px;}
+            .app-container { width: 100%; }
+            .tab-header, form > *:not(#outputTab), #outputTab button:not(.print-button), #msdsInputTab, #msdsPreviewPane { display: none !important; }
+            #outputTab, #fullReportOutput, #reportContent { display: block !important; }
+            #fullReportOutput { border: none; padding: 0; margin:0; }
+            .report-table { font-size: 8pt; } .report-table th, .report-table td { padding: 3px; }
+            .smart-summary { font-size: 9pt; background-color: #f0f0f0 !important; border: 1px solid #ccc !important;}
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- pdf.js worker script is set inside DOMContentLoaded -->
+</head>
+<body>
+
+<div class="app-header">
+    <img src="https://www.cabi.org/wp-content/uploads/CABI-Logo_Accessible_RGB.png" alt="CABI Logo">
+    <h1>CABI COSHH Helper</h1>
+</div>
+
+<div class="app-container">
+    <div class="tab-header">
+        <button class="tab-button active" onclick="openTab(event, 'msdsInputTab')">MSDS</button>
+        <button class="tab-button" onclick="openTab(event, 'personnelTab')">1. Personnel</button>
+        <button class="tab-button" onclick="openTab(event, 'substanceTabInternal')">2. Substance & Task</button>
+        <button class="tab-button" onclick="openTab(event, 'hazardsTabInternal')">3. Hazards</button>
+        <button class="tab-button" onclick="openTab(event, 'procedureTabInternal')">4. Procedure</button>
+        <button class="tab-button" onclick="openTab(event, 'riskEvalTab')">5. Risk Eval</button>
+        <button class="tab-button" onclick="openTab(event, 'controlsTabInternal')">6. Controls</button>
+        <button class="tab-button" onclick="openTab(event, 'furtherActionsTab')">7. Actions</button>
+        <button class="tab-button" onclick="openTab(event, 'ackReviewTab')">8. Acknowledge</button>
+        <button class="tab-button" onclick="openTab(event, 'outputTab')">Report</button>
+    </div>
+
+    <form id="coshhFullForm">
+        <!-- MSDS Input & Preview (Tab 0) -->
+        <div id="msdsInputTab" class="tab-pane active">
+            <h2>MSDS Input & Parsing</h2>
+            <p>This step helps auto-fill hazard information. You can skip or manually enter data later.</p>
+            <!-- In msdsInputTab or a new "Data Management" Tab -->
+            <label for="msdsFile">Upload MSDS PDF:</label>
+            <input type="file" id="msdsFile" name="msdsFile" accept=".pdf">
+            <button type="button" class="action-button" id="parsePdfButton">Parse Uploaded PDF</button>
+            <hr style="margin: 20px 0;">
+            <label for="msdsTextPaste">Or Paste MSDS Text:</label>
+            <textarea id="msdsTextPaste" name="msdsTextPaste" rows="8" placeholder="Paste text from MSDS here..."></textarea>
+            <button type="button" class="action-button" id="parseTextButton">Parse Pasted Text</button>
+            <div id="parserStatus" style="margin-top:10px;"></div>
+            <hr style="margin: 20px 0;">
+            <hr style="margin: 20px 0;">
+            <h4>Manage Assessment Data</h4>
+            <label for="importFile">Import COSHH Assessment (JSON file):</label>
+            <input type="file" id="importFile" name="importFile" accept=".json">
+            <button type="button" class="secondary-button" id="importJsonButton">Import from JSON File</button>
+            <div id="msdsPreviewPane" style="display:none;">
+                <h3>MSDS Parse Preview & Confirmation</h3>
+                <p>Review extracted data. Edit if necessary. Parsed data will auto-fill relevant form fields.</p>
+                <table id="parsePreviewTable">
+                    <thead><tr><th>Field</th><th>Extracted Value(s)</th><th>Confidence</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                <button type="button" class="action-button" id="applyParsedDataButton">Apply Parsed Data & Proceed to Form</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Personnel Details -->
+        <div id="personnelTab" class="tab-pane">
+            <h3>Step 1 (Part A): Personnel & Assessment Details</h3>
+            <div class="form-section">
+                <h4>Assessment Details</h4>
+                <div class="column-layout">
+                    <div class="column"><label for="carriedOutBy">Carried Out By (Step 1):</label><input type="text" id="carriedOutBy" name="carriedOutBy"></div>
+                    <div class="column"><label for="department">Department:</label><input type="text" id="department" name="department"></div>
+                </div>
+                <div class="column-layout">
+                    <div class="column"><label for="ref">Ref:</label><input type="text" id="ref" name="ref"></div>
+                    <div class="column"><label for="signatureCarriedOut">Signature (Type Name):</label><input type="text" id="signatureCarriedOut" name="signatureCarriedOut"></div>
+                    <div class="column"><label for="dateCarriedOut">Date:</label><input type="date" id="dateCarriedOut" name="dateCarriedOut"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 2: Substance & Task Overview -->
+        <div id="substanceTabInternal" class="tab-pane">
+            <h3>Step 1 (Part B): Substance & Task Overview</h3>
+             <div class="form-section">
+                <h4>Substance Identification</h4>
+                <label for="chemicalName">Chemical Name (Product Name from MSDS): <span id="chemicalNameConfidence" class="confidence-marker"></span></label>
+                <input type="text" id="chemicalName" name="chemicalName" placeholder="Auto-filled from MSDS or enter manually">
+                <div class="column-layout">
+                    <div class="column"><label for="casNumber">CAS Number: <span id="casNumberConfidence" class="confidence-marker"></span></label><input type="text" id="casNumber" name="casNumber" placeholder="Auto-filled from MSDS"></div>
+                    <div class="column"><label for="supplier">Supplier:</label><input type="text" id="supplier" name="supplier"></div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h4>Task & Process</h4>
+                <label for="activityDescription">Describe the activity or work process, product(s) and location:</label>
+                <textarea id="activityDescription" name="activityDescription" rows="3" placeholder="Will be partly auto-filled by Procedure selection"></textarea>
+                <label class="label-header">Identify who is exposed:</label>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" name="whoExposed" value="Employees" checked> Employees</label>
+                    <label><input type="checkbox" name="whoExposed" value="Contractors"> Contractors</label>
+                    <label><input type="checkbox" name="whoExposed" value="Others"> Others e.g. visitors</label>
+                </div>
+                <label for="materialTypeForm">What type of material is used? <span class="editable-note">(Influences Physical Characteristics)</span></label>
+                <select id="materialTypeForm" name="materialTypeForm">
+                    <option value="liquid_volatile">Liquid - Volatile</option>
+                    <option value="liquid_nonvolatile">Liquid - Non-Volatile</option>
+                    <option value="solid_powder_dusty">Solid - Powder/Dusty</option>
+                    <option value="solid_pellet_granule">Solid - Pellet/Granule (Low dust)</option>
+                    <option value="gas_direct_use">Gas (Direct use/piped)</option>
+                    <option value="gas_cylinder_handling">Gas (Cylinder handling)</option>
+                    <option value="aerosol_generated">Aerosol (Generated by process)</option>
+                </select>
+                 <div class="checkbox-inline" style="margin-top:10px;"><label><input type="checkbox" id="msdsAttached" name="msdsAttached" value="on"> MSDS attached to this assessment?</label></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Hazard Details (from Form/MSDS) -->
+        <div id="hazardsTabInternal" class="tab-pane">
+             <h3>Step 1 (Part C): Hazard Identification</h3>
+             <div class="form-section">
+                <label class="label-header">What are the hazards? (New Symbols - tick all that apply) <span id="pictogramsConfidence" class="confidence-marker"></span></label>
+                <div class="checkbox-inline" style="display:flex; flex-wrap:wrap; gap:10px;">
+                    <label title="GHS07: Harmful / Irritant"><input type="checkbox" name="ghsPictogram" value="GHS07_HarmfulIrritant"> <img src="./ghs_exclam.svg" alt="Exclamation Mark" style="height:20px; vertical-align:middle;"> Harmful/Irritant</label>
+                    <label title="GHS09: Hazardous to the Environment"><input type="checkbox" name="ghsPictogram" value="GHS09_Environment"> <img src="./ghs_environment.svg" alt="Environment" style="height:20px; vertical-align:middle;"> Environment</label>
+                    <label title="GHS06: Toxic / Very Toxic"><input type="checkbox" name="ghsPictogram" value="GHS06_Toxic"> <img src="./ghs_skull.svg" alt="Skull" style="height:20px; vertical-align:middle;"> Toxic/Very Toxic</label>
+                    <label title="GHS05: Corrosive"><input type="checkbox" name="ghsPictogram" value="GHS05_Corrosive"> <img src="./ghs_corrosive.svg" alt="Corrosive" style="height:20px; vertical-align:middle;"> Corrosive</label>
+                    <label title="GHS02: Flammable / Highly or Extremely Flammable"><input type="checkbox" name="ghsPictogram" value="GHS02_Flammable"> <img src="./ghs_flammable.svg" alt="Flammable" style="height:20px; vertical-align:middle;"> Flammable</label>
+                    <label title="GHS03: Oxidising"><input type="checkbox" name="ghsPictogram" value="GHS03_Oxidising"> <img src="./ghs_oxidising.svg" alt="Oxidising" style="height:20px; vertical-align:middle;"> Oxidising</label>
+                    <label title="GHS01: Explosive"><input type="checkbox" name="ghsPictogram" value="GHS01_Explosive"> <img src="./ghs_explosive.svg" alt="Explosive" style="height:20px; vertical-align:middle;"> Explosive</label>
+                    <label title="GHS08: Health Hazard (Carcinogen/Mutagen/Reproductive Toxin/Sensitiser/STOT/Aspiration)"><input type="checkbox" name="ghsPictogram" value="GHS08_HealthHazard"> <img src="./ghs_health_hazard.svg" alt="Health Hazard" style="height:20px; vertical-align:middle;"> Health Hazard</label>
+                    <label title="GHS04: Gas Under Pressure"><input type="checkbox" name="ghsPictogram" value="GHS04_GasPressure"> <img src="./ghs_gas_cylinder.svg" alt="Gas Cylinder" style="height:20px; vertical-align:middle;"> Gas Under Pressure</label>
+                </div>
+                <input type="hidden" id="parsedRawPictograms" name="parsedRawPictograms"> 
+
+                <label for="hPhrasesForm">H (Hazard) statements (from MSDS): <span id="hPhrasesConfidence" class="confidence-marker"></span> <span class="editable-note">(Influences Hazard Group)</span></label>
+                <textarea id="hPhrasesForm" name="hPhrasesForm" rows="3" placeholder="e.g., H302, H330 - Auto-filled from MSDS if parsed. Add exposure type if known e.g. (contact), (inhalation)"></textarea>
+            </div>
+            <div class="form-section">
+                <label class="label-header">Workplace Exposure Levels (WEL) (if assigned)</label>
+                <div class="column-layout">
+                    <div class="column"><label for="stelPPM">STEL (ppm):</label><input type="text" id="stelPPM" name="stelPPM"></div>
+                    <div class="column"><label for="stelMgM3">STEL (mg/m³):</label><input type="text" id="stelMgM3" name="stelMgM3"></div>
+                </div>
+                <div class="column-layout">
+                    <div class="column"><label for="twaPPM">TWA (ppm):</label><input type="text" id="twaPPM" name="twaPPM"></div>
+                    <div class="column"><label for="twaMgM3">TWA (mg/m³):</label><input type="text" id="twaMgM3" name="twaMgM3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab 4: Procedure Details -->
+        <div id="procedureTabInternal" class="tab-pane">
+            <h3>Step 1 (Part D): Procedure Details & Exposure Factors</h3>
+            <div class="form-section">
+                <label for="labProcedure">Common Lab Procedure: <span class="editable-note">(Influences Task Desc, Quantity Group, Exposure Routes, Risk)</span></label>
+                <select id="labProcedure" name="labProcedure">
+                    <option value="">--Select or describe manually--</option>
+                    <option value="pipetting_micro">Pipetting (Microlitres, e.g. <1mL)</option>
+                    <option value="pipetting_small">Pipetting (Small Vol, e.g. 1-50mL)</option>
+                    <option value="pipetting_large">Pipetting (Larger Vol, e.g. >50mL)</option>
+                    <option value="decanting_small">Decanting Liquids (Small Scale)</option>
+                    <option value="decanting_large">Decanting Liquids (Large Scale)</option>
+                    <option value="weighing_solid_trace">Weighing Solids (Trace/mg, Enclosed Balance)</option>
+                    <option value="weighing_solid_small_enclosed">Weighing Solids (g, Enclosed Balance)</option>
+                    <option value="weighing_solid_open">Weighing Solids (Open Bench - potential dust)</option>
+                    <option value="mixing_stirring_closed">Mixing/Stirring (Closed Vessel)</option>
+                    <option value="mixing_stirring_open">Mixing/Stirring (Open Vessel)</option>
+                    <option value="vortexing_closed">Vortexing (Capped Tube)</option>
+                    <option value="vortexing_open">Vortexing (Open Tube - aerosol risk)</option>
+                    <option value="centrifuging_sealed">Centrifuging (Sealed Rotors/Tubes)</option>
+                    <option value="centrifuging_unsealed">Centrifuging (Unsealed - aerosol risk)</option>
+                    <option value="heating_reflux_closed">Heating/Reflux (Closed System)</option>
+                    <option value="heating_open_beaker">Heating (Open Beaker)</option>
+                    <option value="surface_wiping_small">Surface Wiping (Small Area)</option>
+                    <option value="surface_wiping_large">Surface Wiping (Large Area)</option>
+                    <option value="other_manual">Other (Describe Manually)</option>
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="quantityValue">Approximate Quantity Used per Task: <span class="editable-note">(Influences Quantity Group)</span></label>
+                <div class="column-layout">
+                    <div class="column"><input type="number" id="quantityValue" name="quantityValue" placeholder="e.g., 10, 500"></div>
+                    <div class="column">
+                        <select id="quantityUnit" name="quantityUnit">
+                            <option value="µL">µL</option> <option value="mL" selected>mL</option> <option value="L">L</option>
+                            <option value="µg">µg</option> <option value="mg">mg</option> <option value="g">g</option> <option value="kg">kg</option>
+                        </select>
+                    </div>
+                </div>
+                <label for="concentration">Concentration (if applicable):</label>
+                <input type="text" id="concentration" name="concentration" placeholder="e.g., 70%, Neat, 0.1M">
+                <label for="taskFrequency">Frequency of Task: <span class="editable-note">(Influences Likelihood)</span></label>
+                <select id="taskFrequency" name="taskFrequency">
+                    <option value="rarely">Rarely/Annually (<1/month)</option>
+                    <option value="monthly">Monthly (1-4 times/month)</option>
+                    <option value="weekly" selected>Weekly (1-4 times/week)</option>
+                    <option value="daily">Daily (Once per day)</option>
+                    <option value="multiple_daily">Multiple times per day</option>
+                </select>
+                 <label for="taskDuration">Typical Duration of Exposure per Task: <span class="editable-note">(Influences Likelihood)</span></label>
+                <select id="taskDuration" name="taskDuration">
+                    <option value="short">< 15 minutes</option>
+                    <option value="medium" selected>15 - 60 minutes</option>
+                    <option value="long">1 - 4 hours</option>
+                    <option value="very_long">> 4 hours (full shift)</option>
+                </select>
+            </div>
+            <div class="form-section">
+                <label class="label-header">Anticipated Routes of Exposure: <span class="editable-note">(Auto-suggested by procedure, confirm/edit)</span></label>
+                <div id="routesOfExposureCheckboxes" class="checkbox-inline">
+                    <label><input type="checkbox" name="exposureRoute" value="Inhalation"> Inhalation</label>
+                    <label><input type="checkbox" name="exposureRoute" value="SkinContact"> Skin Contact</label>
+                    <label><input type="checkbox" name="exposureRoute" value="EyeContact"> Eye Contact</label>
+                    <label><input type="checkbox" name="exposureRoute" value="Ingestion"> Ingestion (accidental)</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Risk Assessment Evaluation (Dynamic) -->
+        <div id="riskEvalTab" class="tab-pane">
+            <h3>Step 2: The Risk Assessment Evaluation <span class="editable-note">(Auto-populated, review & override if needed)</span></h3>
+            <p style="font-size:0.9em; color:#555;">Internal Risk Score (for logic): Severity <span id="calculatedSeverityScore">0</span> x Likelihood <span id="calculatedLikelihoodScore">0</span> = Total <span id="calculatedTotalRiskScore">0</span></p>
+            <table class="risk-matrix-table">
+                 <thead><tr><th>Factor</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>S (Specialist)</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>Hazard Group <span class="editable-note">(from H-phrases)</span></td>
+                        <td><label><input type="radio" name="hazardGroup" value="A"> A</label></td>
+                        <td><label><input type="radio" name="hazardGroup" value="B"> B</label></td>
+                        <td><label><input type="radio" name="hazardGroup" value="C"> C</label></td>
+                        <td><label><input type="radio" name="hazardGroup" value="D"> D</label></td>
+                        <td><label><input type="radio" name="hazardGroup" value="E"> E</label></td>
+                        <td><label><input type="radio" name="hazardGroup" value="S"> S</label></td>
+                    </tr>
+                    <tr>
+                        <td>Quantity / Volume Group <span class="editable-note">(from Procedure/Qty)</span></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="quantityGroup" value="Small"> Small</label></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="quantityGroup" value="Medium"> Medium</label></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="quantityGroup" value="Large"> Large</label></td>
+                    </tr>
+                    <tr>
+                        <td>Physical Characteristics Group <span class="editable-note">(from Material Type/Volatility)</span></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="physCharGroup" value="Low"> Low (e.g. non-volatile liquid, pellets)</label></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="physCharGroup" value="Medium"> Medium (e.g. some liquids, granules)</label></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="physCharGroup" value="High"> High (e.g. volatile liquid, fine dust, gas)</label></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Control Group Determined</strong> <span class="editable-note">(from Risk Assessment)</span></td>
+                        <td><label><input type="radio" name="controlGroup" value="1"> 1</label></td>
+                        <td><label><input type="radio" name="controlGroup" value="2"> 2</label></td>
+                        <td><label><input type="radio" name="controlGroup" value="3"> 3</label></td>
+                        <td><label><input type="radio" name="controlGroup" value="4"> 4</label></td>
+                        <td colspan="2" style="text-align:center;"><label><input type="radio" name="controlGroup" value="S"> S (Specialist)</label></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="form-section" style="margin-top:20px;">
+                <h4>Reviewer Details (for Step 2 & 3)</h4>
+                <div class="column-layout">
+                    <div class="column"><label for="reviewedBy">Reviewed By (Steps 2 & 3):</label><input type="text" id="reviewedBy" name="reviewedBy"></div>
+                    <div class="column"><label for="signatureReviewedBy">Signature (Type Name):</label><input type="text" id="signatureReviewedBy" name="signatureReviewedBy"></div>
+                    <div class="column"><label for="dateReviewedBy">Date:</label><input type="date" id="dateReviewedBy" name="dateReviewedBy"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Suitable Controls (Dynamic Defaults) -->
+        <div id="controlsTabInternal" class="tab-pane">
+            <h3>Step 3: The Suitable Controls <span class="editable-note">(Auto-suggested based on Control Group, review & override)</span></h3>
+             <div class="column-layout">
+                 <div class="column"><label for="approvalConfirmedBy">Approval for use confirmed by:</label><input type="text" id="approvalConfirmedBy" name="approvalConfirmedBy"></div>
+                 <div class="column"><label for="approvalDate">Date:</label><input type="date" id="approvalDate" name="approvalDate"></div>
+            </div>
+            <button type="button" class="secondary-button" id="recalculateControlsButtonInternal">Re-calculate Control Suggestions</button>
+            <div class="form-section">
+                <h4>General control measures <small>(HSE Control Guidance Sheet No: <span id="gcGuidanceSheetNo">N/A</span>)</small></h4>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" name="generalControl" value="Ventilation100"> General Ventilation (100)</label>
+                    <label><input type="checkbox" name="generalControl" value="LEV200_201"> LEV (fume cupboard) (200/201)</label>
+                    <label><input type="checkbox" name="generalControl" value="Containment300_301"> Containment (glove box etc) (300/301)</label>
+                    <label><input type="checkbox" name="generalControl" value="Specialist400"> Specialist Control Approaches (400)</label>
+                    <label><input type="checkbox" name="generalControl" value="AdditionalS100_S200"> Additional Precautions (S100/S200)</label>
+                </div>
+            </div>
+            <div class="form-section">
+                <h4>Personal Protective Equipment <small>(HSE Control Guidance Sheet No: <span id="ppeGuidanceSheetNo">N/A</span>)</small></h4>
+                <div class="checkbox-inline">
+                    <label><input type="checkbox" name="ppeControl" value="Clothing100"> Protective Clothing (100)</label>
+                    <label><input type="checkbox" name="ppeControl" value="Gloves200_201"> Gloves/Footwear (200/201)</label>
+                    <label><input type="checkbox" name="ppeControl" value="Eye300_301"> Eye Protection (300/301)</label>
+                    <label id="respiratoryPPELabel"><input type="checkbox" name="ppeControl" value="Respiratory400"> Respiratory Protection (400)</label>
+                    <label><input type="checkbox" name="ppeControl" value="OtherS100_S200"> Other (S100/S200)</label>
+                </div>
+                <label for="ppeSpecifyType">Specify type (Gloves, Respirator etc.): <span class="editable-note">(Auto-suggested, edit as needed)</span></label>
+                <textarea id="ppeSpecifyType" name="ppeSpecifyType" rows="3"></textarea>
+            </div>
+             <div class="form-section">
+                <label for="firstAidReqs">Specific First Aid requirements? <span id="firstAidConfidence" class="confidence-marker"></span></label>
+                <textarea id="firstAidReqs" name="firstAidReqs" rows="3" placeholder="Auto-filled from MSDS if parsed"></textarea>
+                <label for="fireExtinguisherReqs">Particular fire extinguisher requirements? <span class="editable-note">(Auto-suggested)</span></label>
+                <input type="text" id="fireExtinguisherReqs" name="fireExtinguisherReqs">
+                <label for="spillReqs">Accidental Release / Spillage requirements e.g. spill kit <span id="spillageConfidence" class="confidence-marker"></span></label>
+                <textarea id="spillReqs" name="spillReqs" rows="3" placeholder="Auto-filled from MSDS if parsed"></textarea>
+                 <label for="storageReqs">Handling and storage requirements? Note any incompatibilities. <span id="handlingStorageConfidence" class="confidence-marker"></span></label>
+                <textarea id="storageReqs" name="storageReqs" rows="3" placeholder="Auto-filled from MSDS Section 7 if parsed"></textarea>
+                <label for="disposalPrecautions">Disposal precautions? Note any incompatibilities. <span id="disposalConfidence" class="confidence-marker"></span></label>
+                <textarea id="disposalPrecautions" name="disposalPrecautions" rows="3" placeholder="Auto-filled from MSDS if parsed"></textarea>
+                <label for="trainingNeeded">Particular Instruction and training needed on use?</label>
+                <input type="text" id="trainingNeeded" name="trainingNeeded">
+                <label for="symptomsToReport">Any specific symptoms to be aware of and to report?</label>
+                <input type="text" id="symptomsToReport" name="symptomsToReport">
+                <label for="healthSurveillance">Health Surveillance requirements?</label>
+                <input type="text" id="healthSurveillance" name="healthSurveillance">
+                <label for="workplaceMonitoring">Workplace and Personal Monitoring requirements?</label>
+                <input type="text" id="workplaceMonitoring" name="workplaceMonitoring">
+                <label for="emergencyPlans">Emergency Plans required or not?</label>
+                <input type="text" id="emergencyPlans" name="emergencyPlans">
+            </div>
+        </div>
+
+        <!-- Tab 7: Further Actions -->
+        <div id="furtherActionsTab" class="tab-pane">
+            <h3>Step 4: Further Actions or Additional Measures Required</h3>
+            <table class="actions-table">
+                <thead><tr><th>Actions / Measures Required</th><th>Who</th><th>When</th><th>Check</th></tr></thead>
+                <tbody>
+                    <tr><td><input type="text" name="action_1_measure"></td><td><input type="text" name="action_1_who"></td><td><input type="date" name="action_1_when"></td><td><input type="text" name="action_1_check"></td></tr>
+                    <tr><td><input type="text" name="action_2_measure"></td><td><input type="text" name="action_2_who"></td><td><input type="date" name="action_2_when"></td><td><input type="text" name="action_2_check"></td></tr>
+                    <tr><td><input type="text" name="action_3_measure"></td><td><input type="text" name="action_3_who"></td><td><input type="date" name="action_3_when"></td><td><input type="text" name="action_3_check"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab 8: Acknowledgement and Review (Final) -->
+        <div id="ackReviewTab" class="tab-pane">
+             <h3>Step 5: Acknowledgement and Review</h3>
+            <p>I declare that I have read, understood and been instructed in the measures to be applied and agree to abide by the findings.</p>
+            <div class="column-layout">
+                <div class="column"><label for="finalReviewerName">Name:</label><input type="text" id="finalReviewerName" name="finalReviewerName"></div>
+                <div class="column"><label for="finalSignature">Signature (Type Name):</label><input type="text" id="finalSignature" name="finalSignature"></div>
+            </div>
+            <div class="column-layout">
+                <div class="column"><label for="finalReviewDate">Review Date (Next):</label><input type="date" id="finalReviewDate" name="finalReviewDate"></div>
+                 <div class="column"><label for="finalDateSigned">Date Signed:</label><input type="date" id="finalDateSigned" name="finalDateSigned"></div>
+            </div>
+        </div>
+
+        <!-- Tab 9: Output & Save (Report Generation) -->
+        <div id="outputTab" class="tab-pane">
+            <h2>Generated COSHH Assessment Report</h2>
+            <button type="button" class="action-button" id="generateReportButtonInternal">Generate/Refresh Report</button>
+            <button type="button" class="secondary-button" id="saveLocalButtonInternal">Save Form Data Locally</button>
+            <button type="button" class="secondary-button" id="loadLocalButtonInternal">Load Saved Data</button>
+            <button type="button" class="secondary-button" id="exportJsonButtonInternal">Export Data (JSON)</button>
+            <div id="fullReportOutput" class="output-section" style="margin-top:20px; display:none;">
+                <div id="reportContent"></div>
+                <button type="button" class="print-button" id="printReportButtonInternal">Print Report (or Save as PDF)</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="app-footer">
+    <p>This CABI COSHH Helper application was prototyped with assistance from AI (e.g., Gemini model family, version as of May 2024) to help automate and streamline parts of the COSHH assessment process.</p>
+    <p><strong>Disclaimer:</strong> This tool is intended as an aid and does not replace the need for expert judgment. All generated assessments and suggestions <strong>must be thoroughly reviewed, verified, and approved by the responsible Lab Manager, COSHH Assessor, and/or other qualified safety personnel</strong> before any work commences. Users are responsible for ensuring compliance with all relevant safety regulations and local procedures.</p>
+</div>
+
+<script>
+    console.log("Script execution started.");
+    // --- Global variable for parsed MSDS data ---
+    let masterParsedMSDSData = {}; 
+
+    // --- Data Structures for Dynamic Logic ---
+    const procedureData = { 
+        "pipetting_micro": { desc: "Pipetting microlitre volumes (<1mL)", volCat: "Small", exposureFactor: 0.2, routes: ["SkinContact", "EyeContact"], aerosol: 0.1 },
+        "pipetting_small": { desc: "Pipetting small volumes (1-50mL)", volCat: "Small", exposureFactor: 0.3, routes: ["SkinContact", "EyeContact", "Ingestion"], aerosol: 0.2 },
+        "pipetting_large": { desc: "Pipetting larger volumes (>50mL)", volCat: "Medium", exposureFactor: 0.4, routes: ["SkinContact", "EyeContact", "Ingestion"], aerosol: 0.3 },
+        "decanting_small": { desc: "Decanting liquids (small scale, <1L)", volCat: "Medium", exposureFactor: 0.4, routes: ["SkinContact", "EyeContact", "Inhalation"], aerosol: 0.3 },
+        "decanting_large": { desc: "Decanting liquids (large scale, >1L)", volCat: "Large", exposureFactor: 0.6, routes: ["SkinContact", "EyeContact", "Inhalation"], aerosol: 0.4 },
+        "weighing_solid_trace": { desc: "Weighing trace/mg solids (enclosed balance)", volCat: "Small", exposureFactor: 0.1, routes: ["SkinContact"], aerosol: 0.05 },
+        "weighing_solid_small_enclosed": { desc: "Weighing grams of solid (enclosed balance)", volCat: "Small", exposureFactor: 0.2, routes: ["SkinContact"], aerosol: 0.1 },
+        "weighing_solid_open": { desc: "Weighing solids (open bench, potential for dust)", volCat: "Medium", exposureFactor: 0.7, routes: ["Inhalation", "SkinContact"], aerosol: 0.6 },
+        "mixing_stirring_closed": { desc: "Mixing/stirring in a closed vessel", volCat: "Medium", exposureFactor: 0.2, routes: ["SkinContact"], aerosol: 0.1 },
+        "mixing_stirring_open": { desc: "Mixing/stirring in an open vessel", volCat: "Medium", exposureFactor: 0.5, routes: ["SkinContact", "EyeContact", "Inhalation"], aerosol: 0.4 },
+        "vortexing_closed": { desc: "Vortexing in a capped tube", volCat: "Small", exposureFactor: 0.1, routes: [], aerosol: 0.05 },
+        "vortexing_open": { desc: "Vortexing in an open tube (aerosol risk)", volCat: "Small", exposureFactor: 0.8, routes: ["Inhalation", "EyeContact"], aerosol: 0.8 },
+        "centrifuging_sealed": { desc: "Centrifuging with sealed rotors/tubes", volCat: "Medium", exposureFactor: 0.1, routes: [], aerosol: 0.05 },
+        "centrifuging_unsealed": { desc: "Centrifuging with unsealed tubes (aerosol risk)", volCat: "Medium", exposureFactor: 0.9, routes: ["Inhalation"], aerosol: 0.9 },
+        "heating_reflux_closed": { desc: "Heating/reflux in a closed system", volCat: "Medium", exposureFactor: 0.2, routes: ["Inhalation"], aerosol: 0.1 },
+        "heating_open_beaker": { desc: "Heating in an open beaker", volCat: "Medium", exposureFactor: 0.6, routes: ["Inhalation", "EyeContact"], aerosol: 0.5 },
+        "surface_wiping_small": { desc: "Surface wiping/cleaning (small area)", volCat: "Small", exposureFactor: 0.4, routes: ["SkinContact", "Inhalation"], aerosol: 0.2 },
+        "surface_wiping_large": { desc: "Surface wiping/cleaning (large area)", volCat: "Medium", exposureFactor: 0.6, routes: ["SkinContact", "Inhalation"], aerosol: 0.3 },
+        "other_manual": { desc: "User described procedure:", volCat: "Medium", exposureFactor: 0.5, routes: ["SkinContact", "Inhalation", "EyeContact", "Ingestion"], aerosol: 0.3 }
+    };
+    const hPhraseSeverityMap = { 
+        "H300": 5, "H310": 5, "H330": 5, "H340": 5, "H350": 5, "H360": 5, "H370": 5, "H372": 5,
+        "H301": 4, "H311": 4, "H331": 4, "H314": 4, "H318": 4, "H334": 4, "H341": 4, "H351": 4, "H361": 4, "H371": 4, "H373": 4,
+        "H302": 3, "H312": 3, "H332": 3, "H315": 3, "H319": 3, "H317": 3, "H335": 3, "H336": 3,
+        "H220": 2, "H221": 2, "H222": 2, "H223": 2, "H224": 3, "H225": 2, "H226": 1, "H228": 1, 
+        "default": 1 
+    };
+    const hPhraseToHazardGroup = { 
+        "H300": "E", "H310": "E", "H330": "E", "H340": "S", "H350": "S", "H360": "S", "H370": "E", "H372": "E",
+        "H301": "D", "H311": "D", "H331": "D", "H314": "D", "H318": "D", "H334": "S",
+        "H302": "C", "H312": "C", "H332": "C", "H315": "C", "H319": "C", "H317": "C",
+        "H224": "C", "H225": "C", 
+        "default_low_sev": "B", 
+        "default_no_sig_haz": "A" 
+    };
+    const controlBandData = { 
+        "1": { general: "Ventilation100", ppeSheet: "S100_S200", ppeText: "Basic PPE: Lab coat, safety glasses. Check MSDS for glove type if skin contact likely." },
+        "2": { general: "LEV200_201", ppeSheet: "S100_S200", ppeText: "Effective LEV. PPE: As per Band 1 + specific gloves based on MSDS/breakthrough, consider face shield if splash risk." },
+        "3": { general: "Containment300_301", ppeSheet: "S100_S200", ppeText: "Full containment. PPE: As per Band 2, higher level gloves, potential for RPE during maintenance/breach." },
+        "4": { general: "Specialist400", ppeSheet: "S100_S200", ppeText: "Specialist advice required for controls and PPE. Likely full containment and high-level RPE." },
+        "S": { general: "Specialist400", ppeSheet: "S100_S200", ppeText: "Specialist advice required (e.g., for carcinogens, mutagens, respiratory sensitisers). High level controls & PPE expected." }
+    };
+
+    // --- Initialize Tabs & Defaults & Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOMContentLoaded event fired.");
+
+        if (typeof pdfjsLib !== 'undefined') {
+            try {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+                console.log("pdf.js workerSrc set.");
+            } catch (e) {
+                console.error("Error setting pdf.js workerSrc:", e);
+            }
+        } else {
+            console.error("pdfjsLib is not defined when trying to set workerSrc.");
+        }
+
+        openTab(null, 'msdsInputTab'); 
+        console.log("Initial tab 'msdsInputTab' opened.");
+
+        const today = new Date().toISOString().split('T')[0];
+        ['dateCarriedOut', 'dateReviewedBy', 'approvalDate', 'finalDateSigned'].forEach(id => {
+            const el = document.getElementById(id); if (el) el.value = today;
+        });
+        const nextYear = new Date(); nextYear.setFullYear(nextYear.getFullYear() + 1);
+        const finalReviewDateEl = document.getElementById('finalReviewDate');
+        if (finalReviewDateEl) finalReviewDateEl.value = nextYear.toISOString().split('T')[0];
+        console.log("Default dates set.");
+        
+        document.getElementById('parsePdfButton')?.addEventListener('click', parseUploadedMSDS);
+        document.getElementById('parseTextButton')?.addEventListener('click', parsePastedMSDS);
+        document.getElementById('applyParsedDataButton')?.addEventListener('click', applyParsedDataToForm);
+        
+        const recalcControlsBtn = document.getElementById('recalculateControlsButtonInternal') || document.getElementById('recalculateControlsButton');
+        if(recalcControlsBtn) recalcControlsBtn.addEventListener('click', updateControlSuggestions);
+        else console.warn("Recalculate controls button not found with expected IDs.");
+
+        const genReportBtn = document.getElementById('generateReportButtonInternal') || document.getElementById('generateReportButton');
+        if(genReportBtn) genReportBtn.addEventListener('click', generateFullReport);
+        else console.warn("Generate report button not found with expected IDs.");
+        
+        const saveLocalBtn = document.getElementById('saveLocalButtonInternal') || document.getElementById('saveLocalButton');
+        if(saveLocalBtn) saveLocalBtn.addEventListener('click', saveLocally);
+        else console.warn("Save local button not found with expected IDs.");
+
+        const loadLocalBtn = document.getElementById('loadLocalButtonInternal') || document.getElementById('loadLocalButton');
+        if(loadLocalBtn) loadLocalBtn.addEventListener('click', loadLocally);
+        else console.warn("Load local button not found with expected IDs.");
+            // Inside your DOMContentLoaded event listener, add this:
+    document.getElementById('importJsonButton')?.addEventListener('click', importFromJsonFile);
+    console.log("Import JSON button listener attached."); // DEBUG
+        const exportJsonBtn = document.getElementById('exportJsonButtonInternal') || document.getElementById('exportJsonButton');
+        if(exportJsonBtn) exportJsonBtn.addEventListener('click', exportToJson);
+        else console.warn("Export JSON button not found with expected IDs.");
+
+        const printReportBtn = document.getElementById('printReportButtonInternal') || document.getElementById('printReportButton');
+        if(printReportBtn) printReportBtn.addEventListener('click', printReport);
+        else console.warn("Print report button not found with expected IDs.");
+        
+        console.log("Main button listeners attached.");
+
+        const labProcedureEl = document.getElementById('labProcedure');
+        if (labProcedureEl) labProcedureEl.addEventListener('change', handleProcedureChange);
+        else console.error("Element with ID 'labProcedure' not found for event listener.");
+        
+        ['quantityValue', 'quantityUnit', 'taskFrequency', 'taskDuration', 'materialTypeForm', 'hPhrasesForm'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('change', runFullRiskAssessmentLogic);
+            else console.warn(`Element with ID '${id}' for dynamic logic not found.`);
+        });
+        document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => cb.addEventListener('change', runFullRiskAssessmentLogic));
+        document.querySelectorAll('#riskEvalTab input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateControlSuggestions);
+        });
+        console.log("Dynamic input listeners attached.");
+        console.log("DOMContentLoaded setup complete.");
+    });
+
+    // --- Tab Navigation ---
+    function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-pane");
+        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; tabcontent[i].classList.remove("active"); }
+        tablinks = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+        
+        const targetTab = document.getElementById(tabName);
+        if (targetTab) {
+            targetTab.style.display = "block";
+            targetTab.classList.add("active");
+        } else { console.error("Target tab not found:", tabName); return; }
+
+        let clickedButton = evt ? evt.currentTarget : null;
+        if (!clickedButton) { 
+             clickedButton = Array.from(tablinks).find(btn => btn.getAttribute('onclick')?.includes(`openTab(event, '${tabName}')`));
+        }
+        if (clickedButton) {
+            clickedButton.classList.add("active");
+        } else if (tabName === 'msdsInputTab' && tablinks.length > 0) { 
+            tablinks[0].classList.add('active');
+        }
+    }
+    
+    // --- MSDS Parsing Functions ---
+    // The refined processMSDSText, displayParsePreview, applyParsedDataToForm from the previous response
+    // are integrated here.
+    async function parseUploadedMSDS() {
+        console.log("parseUploadedMSDS called"); 
+        const fileInput = document.getElementById('msdsFile');
+        const statusDiv = document.getElementById('parserStatus');
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            if (statusDiv) statusDiv.textContent = "Please select an MSDS PDF file."; return;
+        }
+        const file = fileInput.files[0];
+        if (statusDiv) statusDiv.textContent = `Processing ${file.name}...`;
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            if (typeof pdfjsLib === 'undefined') { console.error("pdf.js is not loaded."); if(statusDiv) statusDiv.textContent = "PDF library not loaded."; return; }
+            const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+            let fullText = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+            }
+            if (statusDiv) statusDiv.textContent = "PDF text extracted. Now parsing...";
+            processMSDSText(fullText);
+        } catch (error) {
+            console.error("Error parsing PDF:", error);
+            if (statusDiv) statusDiv.textContent = "Error parsing PDF. " + error.message;
+        }
+    }
+    function parsePastedMSDS() {
+        console.log("parsePastedMSDS called"); 
+        const textEl = document.getElementById('msdsTextPaste');
+        const statusDiv = document.getElementById('parserStatus');
+        if (!textEl || !textEl.value.trim()) { if (statusDiv) statusDiv.textContent = "Please paste text from MSDS."; return; }
+        if (statusDiv) statusDiv.textContent = "Parsing pasted text...";
+        processMSDSText(textEl.value);
+    }
+// Inside the <script> tag
+// ... (other parts of the script) ...
+
+    function processMSDSText(text) {
+        console.log("processMSDSText called");
+        masterParsedMSDSData = {}; // Reset
+        const data = {};
+
+        // 1. Chemical Name / Product Name (Enhanced for more precision)
+        let chemicalNameValue = "";
+        let chemicalNameConfidence = "low";
+
+        // Try specific keywords first, looking for content after a colon, possibly on next line.
+        // Pattern: (Keyword Label) \s* : \s* (Captured Name up to newline or other known delimiters)
+        let nameMatch = text.match(/(?:Product name|Substance name|Trade name|Chemical Name|Product Identifier)\s*:\s*([^\n\r]+?)(?:\s*Product number|\s*Brand|\s*CAS No\.|\s*EC No\.|\s*Index No\.|$)/im);
+        
+        if (nameMatch && nameMatch[1].trim()) {
+            chemicalNameValue = nameMatch[1].trim();
+            chemicalNameConfidence = "high";
+        } else {
+            // Fallback: Try to get capitalized line(s) often found at the very top or before CAS/EC numbers if more specific patterns fail.
+            // This is more heuristic.
+            nameMatch = text.match(/^\s*([A-Z][A-Za-z0-9\s\-(,).]+?)[\n\r]+\s*(?:1\.\d|SECTION 1|CAS|EC Number|Synonyms|Product number)/m);
+            if (nameMatch && nameMatch[1].trim()) {
+                chemicalNameValue = nameMatch[1].trim().split(/[\n\r]/)[0]; // Take first line of a multi-line match
+                chemicalNameConfidence = "medium";
+            } else {
+                // Broader attempt if the above fail, looking for capitalized words often at the start.
+                nameMatch = text.match(/^\s*([A-Z][A-Z0-9\s\-(),]{5,})/m); // At least 5 chars, capitalized
+                 if (nameMatch && nameMatch[1].trim()) {
+                    chemicalNameValue = nameMatch[1].trim();
+                    chemicalNameConfidence = "low";
+                }
+            }
+        }
+        // Clean up common prefixes if they were accidentally included due to broad matching
+        chemicalNameValue = chemicalNameValue.replace(/^(?:Product name|Substance name|Trade name|Chemical Name|Product Identifier)\s*:\s*/i, '').trim();
+        data.chemicalName = { value: chemicalNameValue || "Not clearly found", confidence: chemicalNameValue ? chemicalNameConfidence : "low" };
+
+
+// Inside processMSDSText function:
+
+        // ... (Chemical Name parsing remains the same as the last fix) ...
+
+        // 2. CAS Number (Further Enhanced for specific "CAS-No. : number" pattern)
+        let casValue = "";
+        let casConfidence = "low";
+
+        // Pattern 1: Specifically look for "CAS-No." followed by optional whitespace, colon, optional whitespace, then the number.
+        // This is tailored to your example: "CAS-No.        : 60-24-2"
+        let casMatchSpecific = text.match(/CAS-No\.\s*:\s*(\d{2,7}-\d{2}-\d)/i);
+        
+        if (casMatchSpecific && casMatchSpecific[1]) {
+            casValue = casMatchSpecific[1].trim(); // Trim just in case, though the regex group should be tight
+            casConfidence = "high";
+        } else {
+            // Pattern 2: More general pattern if the specific one fails
+            // (CAS Label with variations) \s* :? \s* (Captured CAS Number allowing internal spaces/dashes)
+            let casMatchGeneral = text.match(/(?:CAS\s*(?:–\s*No\.|Number|No\.?|-num|RN| Number:?)\s*:?\s*|Chemical Abstracts Service number\s*:\s*)\s*([\d\s–-]{4,12}\d)/i);
+            if (casMatchGeneral && casMatchGeneral[1]) {
+                // Normalize: remove internal spaces and en-dashes, keep hyphens that are part of the number
+                casValue = casMatchGeneral[1].replace(/\s*–\s*/g, '-').replace(/\s+/g, ''); 
+                // Further ensure it matches the X-XX-X or XXXX-XX-X format after cleaning
+                if (casValue.match(/^\d{2,7}-\d{2}-\d$/)) {
+                    casConfidence = "medium";
+                } else {
+                    casValue = ""; // Invalid format after cleaning
+                    casConfidence = "low";
+                }
+            } else {
+                // Fallback 3: Simplest pattern just looking for the number format if others fail
+                // More prone to false positives, so used last and with lower confidence.
+                // Search in a limited portion of text to reduce false positives.
+                const earlyText = text.substring(0, 1500); // Increased search window slightly
+                let casMatchSimple = earlyText.match(/\b(\d{2,7}-\d{2}-\d)\b/);
+                if (casMatchSimple && casMatchSimple[1]) {
+                    casValue = casMatchSimple[1];
+                    casConfidence = "medium"; // Still medium as it's a format match
+                }
+            }
+        }
+        data.casNumber = { value: casValue, confidence: casValue ? casConfidence : "low" };
+
+        // ... (Signal Word, Pictograms, H-Phrases, P-Phrases, Section Extractions - remain the same as last version) ...
+
+        // 3. Signal Word (Keep as is, seems to work from screenshot)
+        let signalMatch = text.match(/Signal Word\s*[:\-]?\s*(Danger|Warning)/i);
+        data.signalWord = { value: signalMatch ? signalMatch[1] : "None", confidence: signalMatch ? "high" : "medium" };
+
+        // 4. Pictograms (GHS Codes - Stricter: Only explicit GHSXX)
+        let pictograms = new Set();
+        const ghsCodeRegex = /\b(GHS\d{2})\b/gi;
+        let pictogramMatch;
+        while ((pictogramMatch = ghsCodeRegex.exec(text)) !== null) {
+            pictograms.add(pictogramMatch[1].toUpperCase());
+        }
+        data.parsedRawPictograms = { value: [...pictograms].join(', '), confidence: pictograms.size > 0 ? "high" : "low" };
+
+        // 5. Hazard Statements (H-phrases) - Keep as is
+        const hPhraseRegex = /\b(H\d{3}[A-Za-z+]*(?:\s*\+\s*H\d{3}[A-Za-z+]*)*)\b/gi;
+        let hPhrases = new Set();
+        while ((match = hPhraseRegex.exec(text)) !== null) { // Renamed 'match' to avoid conflict
+            hPhrases.add(match[1].replace(/\s/g, '').toUpperCase());
+        }
+        data.hPhrases = { value: [...hPhrases].join(', '), confidence: hPhrases.size > 0 ? "high" : "medium" };
+
+        // 6. Precautionary Statements (P-phrases) - Keep as is
+        const pPhraseRegex = /\b(P\d{3}[A-Za-z+]*(?:\s*\+\s*P\d{3}[A-Za-z+]*)*)\b/gi;
+        let pPhrasesSet = new Set(); // Renamed to avoid conflict with 'pPhrases' in outer scope if any
+        while ((match = pPhraseRegex.exec(text)) !== null) {
+            pPhrasesSet.add(match[1].replace(/\s/g, '').toUpperCase());
+        }
+        data.pPhrases = { value: [...pPhrasesSet].join(', '), confidence: pPhrasesSet.size > 0 ? "high" : "medium" };
+
+        // Helper function to extract sections (Keep as is, but ensure keywords are robust)
+        function extractSection(text, sectionKeywords, stopKeywords = ["SECTION", "\\d{1,2}\\.\\s*(?:[A-Z][a-z]+|[A-Z]+(?:\\s+[A-Z]+)*)"]) {
+            let sectionText = ""; let confidence = "low";
+            const escapedSectionKeywords = sectionKeywords.map(kw => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/(\d+\.)/g, '$1\\s*'));
+            const sectionStartRegexStr = `(?:${escapedSectionKeywords.join('|')})`;
+            const sectionStartRegex = new RegExp(sectionStartRegexStr, 'im');
+            
+            const escapedStopKeywords = stopKeywords.map(kw => kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+            const nextSectionRegex = new RegExp(`(?:${escapedStopKeywords.join('|')})`, 'im');
+            
+            let sectionMatchResult = text.match(sectionStartRegex); // Renamed 'match'
+            let startIndex = -1;
+            if (sectionMatchResult) { 
+                startIndex = sectionMatchResult.index + sectionMatchResult[0].length; 
+                confidence = "medium"; 
+            }
+            
+            if (startIndex !== -1) {
+                let remainingText = text.substring(startIndex);
+                let endIndexMatch = remainingText.match(nextSectionRegex);
+                if (endIndexMatch) { 
+                    sectionText = remainingText.substring(0, endIndexMatch.index); 
+                    confidence = "high"; 
+                } else { 
+                    sectionText = remainingText.substring(0, Math.min(remainingText.length, 5000));
+                }
+                sectionText = sectionText.replace(/^\s*[:\-.\s\n\r]+/, '').replace(/\s+$/, '').trim();
+            }
+            return { value: sectionText || "Not clearly found in MSDS.", confidence: sectionText && sectionText !== "Not clearly found in MSDS." ? confidence : "low" };
+        }
+
+        // 7. First Aid Measures (Section 4)
+        data.firstAid = extractSection(text, ["SECTION 4", "4\\.\\s*First-?aid measures", "First-?Aid Measures"], ["SECTION 5", "5\\.\\s*Fire-?fighting measures"]);
+        
+        // 8. Handling and Storage (Section 7)
+        data.handlingAndStorage = extractSection(text, ["SECTION 7", "7\\.\\s*Handling and storage", "Handling and Storage"], ["SECTION 8", "8\\.\\s*Exposure controls"]);
+
+        // 9. Spill Procedures (Section 6)
+        data.spillage = extractSection(text, ["SECTION 6", "6\\.\\s*Accidental release measures", "Accidental Release Measures"], ["SECTION 7", "7\\.\\s*Handling and storage"]);
+
+        // 10. Disposal Methods (Section 13) - Targeted
+        let disposalSection = extractSection(text, ["SECTION 13", "13\\.\\s*Disposal considerations", "Disposal Considerations"], ["SECTION 14", "14\\.\\s*Transport information"]);
+        let actionableDisposal = "Refer to full Section 13 of MSDS."; 
+        if (disposalSection.value && disposalSection.value !== "Not clearly found in MSDS.") {
+            const lines = disposalSection.value.split(/[\n\r]+/).map(l => l.trim()).filter(l => l.length > 10); 
+            let relevantLines = lines.filter(l => 
+                l.match(/\b(dispose|disposal|waste|container|regulation|accordance|local|national|authority)\b/i) &&
+                !l.match(/^\d{1,2}\.\d{1,2}/) 
+            );
+            if (relevantLines.length > 0) {
+                let priorityLines = relevantLines.filter(l => l.match(/must be disposed|in accordance with|handle .* like the product/i));
+                if (priorityLines.length > 0) {
+                    actionableDisposal = priorityLines.slice(0, 3).join(" "); 
+                } else {
+                    actionableDisposal = relevantLines.slice(0, 3).join(" "); 
+                }
+                if (actionableDisposal.length > 300) actionableDisposal = actionableDisposal.substring(0, 300) + "... (see full section)";
+            } else if (lines.length > 0) {
+                actionableDisposal = lines.slice(0,2).join(" ")
+                if (actionableDisposal.length > 300) actionableDisposal = actionableDisposal.substring(0, 300) + "... (see full section)";
+            }
+        }
+        data.disposal = { value: actionableDisposal, confidence: disposalSection.confidence };
+
+        masterParsedMSDSData = data;
+        const msdsPreviewPaneEl = document.getElementById('msdsPreviewPane');
+        if (msdsPreviewPaneEl) msdsPreviewPaneEl.style.display = 'block';
+        displayParsePreview(masterParsedMSDSData); 
+        const parserStatusEl = document.getElementById('parserStatus');
+        if (parserStatusEl) parserStatusEl.textContent = "Parsing complete. Review data above and click 'Apply Parsed Data'.";
+    }
+
+// ... (rest of your JavaScript: displayParsePreview, applyParsedDataToForm, dynamic logic, report generation, etc.)
+// Make sure the applyParsedDataToForm function correctly populates the CAS number field in the main form.
+// e.g., inside applyParsedDataToForm:
+// const casNumberEl = document.getElementById('casNumber');
+// if (casNumberEl && masterParsedMSDSData.casNumber) {
+//     casNumberEl.value = masterParsedMSDSData.casNumber.value;
+// }
+
+    function displayParsePreview(parsedData) {
+        const tableBody = document.querySelector("#parsePreviewTable tbody");
+        if (!tableBody) { console.error("Preview table body not found"); return; }
+        tableBody.innerHTML = "";
+        // Added casNumber and handlingAndStorage to preview
+        const previewFields = ['chemicalName', 'casNumber', 'signalWord', 'parsedRawPictograms', 'hPhrases', 'pPhrases', 'firstAid', 'handlingAndStorage', 'spillage', 'disposal'];
+        previewFields.forEach(key => {
+            if (parsedData[key]) {
+                const item = parsedData[key]; const row = tableBody.insertRow();
+                row.insertCell().textContent = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                const valueCell = row.insertCell();
+                const isTextArea = item.value.length > 70 || ['firstAid', 'handlingAndStorage', 'spillage', 'disposal', 'hPhrases', 'pPhrases'].includes(key);
+                const valueInput = document.createElement(isTextArea ? 'textarea' : 'input');
+                valueInput.type = isTextArea ? undefined : 'text';
+                valueInput.value = item.value; valueInput.id = `preview_${key}`;
+                valueInput.style.width = '95%'; if (isTextArea) valueInput.rows = 3; // Reduced rows slightly for compactness
+                valueCell.appendChild(valueInput);
+                const confidenceCell = row.insertCell();
+                confidenceCell.innerHTML = `<span class="confidence-marker confidence-${item.confidence}">${item.confidence.toUpperCase()}</span>`;
+            }
+        });
+    }
+
+    function applyParsedDataToForm() {
+        console.log("applyParsedDataToForm called");
+        for (const key in masterParsedMSDSData) {
+            const inputElement = document.getElementById(`preview_${key}`);
+            if (inputElement) masterParsedMSDSData[key].value = inputElement.value;
+        }
+
+        // Apply Chemical Name
+        const chemicalNameEl = document.getElementById('chemicalName');
+        if (chemicalNameEl && masterParsedMSDSData.chemicalName) {
+             chemicalNameEl.value = masterParsedMSDSData.chemicalName.value;
+             updateConfidenceMarker('chemicalNameConfidence', masterParsedMSDSData.chemicalName.confidence);
+        }
+        const activityDescEl = document.getElementById('activityDescription');
+        if (activityDescEl && masterParsedMSDSData.chemicalName?.value && !activityDescEl.value.includes(masterParsedMSDSData.chemicalName.value) ) {
+            activityDescEl.value = `Working with ${masterParsedMSDSData.chemicalName.value}. (Auto-filled, please complete/select procedure)`;
+        }
+
+        // Apply CAS Number
+        const casNumberEl = document.getElementById('casNumber');
+        if (casNumberEl && masterParsedMSDSData.casNumber) {
+            casNumberEl.value = masterParsedMSDSData.casNumber.value;
+            // Optionally add a confidence marker for CAS if desired
+        }
+
+        // Apply Pictograms (stricter: only from parsed GHS codes)
+        // Clear existing pictogram checkboxes first
+        document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => cb.checked = false);
+        if (masterParsedMSDSData.parsedRawPictograms && masterParsedMSDSData.parsedRawPictograms.value) {
+            const pictogramCodes = masterParsedMSDSData.parsedRawPictograms.value.split(',').map(s => s.trim().toUpperCase());
+            document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => {
+                // Value of checkbox is like "GHS07_HarmfulIrritant", so split to get "GHS07"
+                if (pictogramCodes.includes(cb.value.split('_')[0].toUpperCase())) {
+                    cb.checked = true;
+                }
+            });
+            const parsedRawPictogramsEl = document.getElementById('parsedRawPictograms'); // Hidden field
+            if (parsedRawPictogramsEl) parsedRawPictogramsEl.value = masterParsedMSDSData.parsedRawPictograms.value;
+            updateConfidenceMarker('pictogramsConfidence', masterParsedMSDSData.parsedRawPictograms.confidence);
+        } else {
+            // If no pictograms parsed, ensure the confidence marker reflects this
+            updateConfidenceMarker('pictogramsConfidence', 'low'); // Or some other indicator
+            const parsedRawPictogramsEl = document.getElementById('parsedRawPictograms');
+            if (parsedRawPictogramsEl) parsedRawPictogramsEl.value = ""; // Clear hidden field
+        }
+
+
+        // Apply H-Phrases
+        const hPhrasesFormEl = document.getElementById('hPhrasesForm');
+        if (hPhrasesFormEl && masterParsedMSDSData.hPhrases) {
+            hPhrasesFormEl.value = masterParsedMSDSData.hPhrases.value;
+            updateConfidenceMarker('hPhrasesConfidence', masterParsedMSDSData.hPhrases.confidence);
+        }
+        // P-Phrases are stored in masterParsedMSDSData and used by logic (e.g., PPE suggestions)
+
+        // Apply First Aid, Spillage, Disposal
+        const firstAidReqsEl = document.getElementById('firstAidReqs');
+        if (firstAidReqsEl && masterParsedMSDSData.firstAid) {
+            firstAidReqsEl.value = masterParsedMSDSData.firstAid.value;
+            updateConfidenceMarker('firstAidConfidence', masterParsedMSDSData.firstAid.confidence);
+        }
+        
+        const spillReqsEl = document.getElementById('spillReqs');
+        if (spillReqsEl && masterParsedMSDSData.spillage) {
+            spillReqsEl.value = masterParsedMSDSData.spillage.value;
+            updateConfidenceMarker('spillageConfidence', masterParsedMSDSData.spillage.confidence);
+        }
+        
+        const disposalPrecautionsEl = document.getElementById('disposalPrecautions');
+        if (disposalPrecautionsEl && masterParsedMSDSData.disposal) {
+            disposalPrecautionsEl.value = masterParsedMSDSData.disposal.value;
+            updateConfidenceMarker('disposalConfidence', masterParsedMSDSData.disposal.confidence);
+        }
+
+        // Apply Handling and Storage (New)
+        const handlingStorageEl = document.getElementById('storageReqs'); // Assuming this is the ID
+        if (handlingStorageEl && masterParsedMSDSData.handlingAndStorage) {
+            handlingStorageEl.value = masterParsedMSDSData.handlingAndStorage.value;
+            // Optionally add a confidence marker here if you create one in the HTML
+        }
+        
+        alert("Parsed MSDS data applied. Please review and complete the form.");
+        openTab(null, 'personnelTab'); 
+        runFullRiskAssessmentLogic(); // Trigger calculation based on newly populated data
+    }
+    function updateConfidenceMarker(elementId, confidence) {
+        const el = document.getElementById(elementId);
+        if(el) {
+            el.textContent = confidence === 'high' ? '✅' : confidence === 'medium' ? '⚠️' : '❓';
+            el.className = `confidence-marker confidence-${confidence}`; el.title = `Extraction confidence: ${confidence}`;
+        }
+    }
+
+    // --- Dynamic Logic Functions ---
+    function handleProcedureChange() { /* ... (Full function from previous correct version) ... */
+        console.log("handleProcedureChange called");
+        const procedureKey = document.getElementById('labProcedure')?.value;
+        const details = procedureData[procedureKey];
+        const chemicalName = document.getElementById('chemicalName')?.value || "[Chemical Name]";
+        const activityDescriptionEl = document.getElementById('activityDescription');
+
+        if (details && activityDescriptionEl) {
+            activityDescriptionEl.value = `${details.desc} with ${chemicalName}.`;
+            document.querySelectorAll('input[name="exposureRoute"]').forEach(cb => cb.checked = false);
+            details.routes.forEach(routeKey => {
+                const cb = document.querySelector(`input[name="exposureRoute"][value="${routeKey}"]`);
+                if (cb) cb.checked = true;
+            });
+        } else if (activityDescriptionEl) {
+            activityDescriptionEl.value = `User defined procedure with ${chemicalName}.`;
+        }
+        runFullRiskAssessmentLogic();
+    }
+    function getHphrases() { /* ... (Full function from previous correct version) ... */
+        const hPhrasesFormEl = document.getElementById('hPhrasesForm');
+        return (hPhrasesFormEl?.value || masterParsedMSDSData.hPhrases?.value || "").toUpperCase().split(/[,;\s]+/).filter(Boolean);
+    }
+    function getSignalWord() { return masterParsedMSDSData.signalWord?.value || "None"; }
+    function calculateOverallSeverity() { /* ... (Full function from previous correct version) ... */
+        const hPhrases = getHphrases(); let maxSeverity = 0;
+        if (hPhrases.length === 0) maxSeverity = 1;
+        hPhrases.forEach(phrase => {
+            for (const pattern in hPhraseSeverityMap) {
+                if (phrase.startsWith(pattern)) { if (hPhraseSeverityMap[pattern] > maxSeverity) maxSeverity = hPhraseSeverityMap[pattern]; }
+            }
+        });
+        if (maxSeverity === 0 && hPhrases.length > 0) maxSeverity = hPhraseSeverityMap["default"];
+        const signalWord = getSignalWord();
+        if (signalWord === "Danger" && maxSeverity < 4) maxSeverity = Math.max(maxSeverity, 3);
+        if (signalWord === "Warning" && maxSeverity < 2) maxSeverity = Math.max(maxSeverity, 2);
+        return maxSeverity;
+    }
+    function calculateOverallLikelihood() { /* ... (Full function from previous correct version) ... */
+        let likelihoodScore = 0;
+        const procedureKey = document.getElementById('labProcedure')?.value;
+        const procDetails = procedureData[procedureKey];
+        if (procDetails) { likelihoodScore += (procDetails.exposureFactor || 0.5) * 3; likelihoodScore += (procDetails.aerosol || 0) * 2; } 
+        else { likelihoodScore += 1.5; }
+
+        const quantityValueEl = document.getElementById('quantityValue');
+        const quantityValue = quantityValueEl ? parseFloat(quantityValueEl.value) || 0 : 0;
+        const quantityUnitEl = document.getElementById('quantityUnit');
+        const quantityUnit = quantityUnitEl ? quantityUnitEl.value : 'mL';
+
+        let normalizedQuantity = quantityValue;
+        if (['µL', 'µg'].includes(quantityUnit)) normalizedQuantity /= 1000;
+        if (['L', 'kg'].includes(quantityUnit)) normalizedQuantity *= 1000;
+        if (normalizedQuantity > 500) likelihoodScore += 3; else if (normalizedQuantity > 50) likelihoodScore += 2; else if (normalizedQuantity > 1) likelihoodScore += 1;
+
+        const materialTypeEl = document.getElementById('materialTypeForm');
+        const materialType = materialTypeEl ? materialTypeEl.value : "";
+        if (materialType && (materialType.includes("volatile") || materialType.includes("dusty") || materialType.includes("gas") || materialType.includes("aerosol"))) likelihoodScore += 2;
+        
+        const frequencyEl = document.getElementById('taskFrequency');
+        const frequency = frequencyEl ? frequencyEl.value : "weekly";
+        if (frequency === "multiple_daily") likelihoodScore += 3; else if (frequency === "daily") likelihoodScore += 2; else if (frequency === "weekly") likelihoodScore += 1;
+
+        const durationEl = document.getElementById('taskDuration');
+        const duration = durationEl ? durationEl.value : "medium";
+        if (duration === "very_long") likelihoodScore += 3; else if (duration === "long") likelihoodScore += 2; else if (duration === "medium") likelihoodScore += 1;
+        return Math.min(10, likelihoodScore);
+    }
+    function determineRiskEvaluationParameters() { /* ... (Full function from previous correct version) ... */
+        const hPhrases = getHphrases(); let determinedHazardGroup = "A"; let maxHGSeverity = 0;
+        hPhrases.forEach(phrase => {
+            for (const pattern in hPhraseToHazardGroup) {
+                if (phrase.startsWith(pattern) && pattern !== "default_low_sev" && pattern !== "default_no_sig_haz") {
+                    const groupSeverity = {'E':5, 'S':5, 'D':4, 'C':3, 'B':2, 'A':1}[hPhraseToHazardGroup[pattern]] || 0;
+                    if(groupSeverity > maxHGSeverity){ determinedHazardGroup = hPhraseToHazardGroup[pattern]; maxHGSeverity = groupSeverity; }
+                }
+            }
+        });
+        if(maxHGSeverity === 0 && hPhrases.length > 0) determinedHazardGroup = hPhraseToHazardGroup["default_low_sev"];
+        if(hPhrases.length === 0) determinedHazardGroup = hPhraseToHazardGroup["default_no_sig_haz"];
+        setRadio("hazardGroup", determinedHazardGroup);
+
+        const procedureKey = document.getElementById('labProcedure')?.value;
+        const procDetails = procedureData[procedureKey];
+        let quantityCat = procDetails ? procDetails.volCat : "Medium";
+        const quantityValueEl = document.getElementById('quantityValue');
+        const quantityValue = quantityValueEl ? parseFloat(quantityValueEl.value) || 0 : 0;
+        const quantityUnitEl = document.getElementById('quantityUnit');
+        const quantityUnit = quantityUnitEl ? quantityUnitEl.value : 'mL';
+        let normalizedQuantity = quantityValue; 
+        if (['µL', 'µg'].includes(quantityUnit)) normalizedQuantity /= 1000; if (['L', 'kg'].includes(quantityUnit)) normalizedQuantity *= 1000;
+        if (normalizedQuantity <= 10) quantityCat = "Small"; else if (normalizedQuantity > 10 && normalizedQuantity <= 250) quantityCat = "Medium"; else if (normalizedQuantity > 250) quantityCat = "Large";
+        setRadio("quantityGroup", quantityCat);
+
+        const materialTypeEl = document.getElementById('materialTypeForm');
+        const materialType = materialTypeEl ? materialTypeEl.value : "";
+        let physCharCat = "Low";
+        if (materialType && (materialType.includes("volatile") || materialType.includes("dusty") || materialType.includes("gas_direct_use") || materialType.includes("aerosol_generated"))) physCharCat = "High";
+        else if (materialType && (materialType.includes("liquid_nonvolatile") || materialType.includes("solid_pellet_granule"))) physCharCat = "Low";
+        else physCharCat = "Medium"; 
+        setRadio("physCharGroup", physCharCat);
+
+        const severityScore = calculateOverallSeverity(); const likelihoodScore = calculateOverallLikelihood(); let controlBand = "1";
+        const totalRiskScore = severityScore * (likelihoodScore / 2); 
+        
+        const sevScoreEl = document.getElementById('calculatedSeverityScore'); if(sevScoreEl) sevScoreEl.textContent = severityScore.toFixed(1);
+        const likeScoreEl = document.getElementById('calculatedLikelihoodScore'); if(likeScoreEl) likeScoreEl.textContent = likelihoodScore.toFixed(1);
+        const totalScoreEl = document.getElementById('calculatedTotalRiskScore'); if(totalScoreEl) totalScoreEl.textContent = totalRiskScore.toFixed(1);
+
+        if (determinedHazardGroup === "S" || severityScore >= 5) controlBand = "S";
+        else if (severityScore >= 4 && likelihoodScore >= 5) controlBand = "3";
+        else if (severityScore >= 3 && likelihoodScore >= 3) controlBand = "2";
+        else if (severityScore >= 2 && likelihoodScore >= 2) controlBand = "2";
+        else controlBand = "1";
+        if (hPhrases.some(p => ["H340", "H350", "H360", "H334"].includes(p))) controlBand = "S";
+        setRadio("controlGroup", controlBand);
+    }
+    function updateControlSuggestions() { /* ... (Full, corrected function from previous response) ... */
+        console.log("updateControlSuggestions called");
+        const controlGroupChecked = document.querySelector('input[name="controlGroup"]:checked');
+        if (!controlGroupChecked) {
+            console.log("updateControlSuggestions: No control group selected.");
+            return;
+        }
+        const controlGroup = controlGroupChecked.value;
+        const guidance = controlBandData[controlGroup];
+        document.querySelectorAll('input[name="generalControl"], input[name="ppeControl"]').forEach(cb => cb.checked = false);
+        
+        const gcSheetEl = document.getElementById('gcGuidanceSheetNo');
+        const ppeSheetEl = document.getElementById('ppeGuidanceSheetNo');
+
+        if (guidance) {
+            if (gcSheetEl) gcSheetEl.textContent = guidance.general.split(/([0-9S/_]+)/).pop() || 'N/A';
+            if (ppeSheetEl) ppeSheetEl.textContent = guidance.ppeSheet.split(/([0-9S/_]+)/).pop() || 'N/A';
+            
+            const gcCheckboxExact = document.querySelector(`input[name="generalControl"][value="${guidance.general}"]`);
+            if (gcCheckboxExact) {
+                gcCheckboxExact.checked = true;
+            } else { 
+                const gcCheckboxLEV = document.querySelector('input[name="generalControl"][value="LEV200_201"]');
+                const gcCheckboxContain = document.querySelector('input[name="generalControl"][value="Containment300_301"]');
+
+                if (guidance.general.toLowerCase().includes("lev") || guidance.general.toLowerCase().includes("200")) {
+                    if (gcCheckboxLEV) gcCheckboxLEV.checked = true;
+                }
+                if (guidance.general.toLowerCase().includes("contain") || guidance.general.toLowerCase().includes("300")) {
+                    if (gcCheckboxContain) gcCheckboxContain.checked = true;
+                }
+            }
+
+            let ppeText = guidance.ppeText;
+            const pPhrases = masterParsedMSDSData.pPhrases?.value?.toUpperCase().split(/[,;\s]+/).filter(Boolean) || [];
+            let pPhrasePPE = new Set();
+            pPhrases.forEach(p => {
+                if (p.includes("P280")) pPhrasePPE.add("MSDS P280: Wear protective gloves/clothing/eye/face protection.");
+                if (p.includes("P261") || p.includes("P271")) pPhrasePPE.add("MSDS P261/P271: Avoid breathing dust/fume/gas/mist/vapours/spray. Use only outdoors or in a well-ventilated area.");
+                if (p.includes("P284") || p.includes("P285")) pPhrasePPE.add("MSDS P284/P285: Wear respiratory protection.");
+            });
+            if (pPhrasePPE.size > 0) ppeText += "\n\nMSDS Specific P-phrases suggest:\n" + [...pPhrasePPE].join("\n");
+            const ppeSpecifyEl = document.getElementById('ppeSpecifyType'); if(ppeSpecifyEl) ppeSpecifyEl.value = ppeText;
+            
+            const ppeGloveCb = document.querySelector('input[name="ppeControl"][value="Gloves200_201"]');
+            if (ppeGloveCb && ppeText.toLowerCase().includes("glove")) ppeGloveCb.checked = true;
+            
+            const ppeEyeCb = document.querySelector('input[name="ppeControl"][value="Eye300_301"]');
+            if (ppeEyeCb && (ppeText.toLowerCase().includes("eye") || ppeText.toLowerCase().includes("goggle") || ppeText.toLowerCase().includes("face shield"))) ppeEyeCb.checked = true;
+            
+            const ppeClothingCb = document.querySelector('input[name="ppeControl"][value="Clothing100"]');
+            if (ppeClothingCb && (ppeText.toLowerCase().includes("clothing") || ppeText.toLowerCase().includes("lab coat") || ppeText.toLowerCase().includes("apron"))) ppeClothingCb.checked = true;
+            
+            const ppeRespCb = document.querySelector('input[name="ppeControl"][value="Respiratory400"]');
+            if (ppeRespCb && (ppeText.toLowerCase().includes("respiratory") || ppeText.toLowerCase().includes("rpe"))) ppeRespCb.checked = true;
+        }
+
+        const hPhrases = getHphrases();
+        const ghsPictogramsChecked = Array.from(document.querySelectorAll('input[name="ghsPictogram"]:checked')).map(cb => cb.value);
+        const isFlammable = hPhrases.some(p => p.startsWith("H22")) || ghsPictogramsChecked.includes("GHS02_Flammable");
+        const fireExtEl = document.getElementById('fireExtinguisherReqs');
+        if (fireExtEl) fireExtEl.value = isFlammable ? "Ensure appropriate fire extinguisher for flammable substance is available (e.g., CO2, Dry Powder - check substance compatibility)." : "No special fire extinguisher required beyond standard lab provision, unless other flammable materials are present.";
+
+        const respLabel = document.getElementById('respiratoryPPELabel');
+        const inhalationRouteChecked = document.querySelector('input[name="exposureRoute"][value="Inhalation"]')?.checked;
+        const materialTypeEl = document.getElementById('materialTypeForm');
+        const materialTypeVal = materialTypeEl ? materialTypeEl.value : "";
+        const isDustyVolatileAerosol = materialTypeVal.includes("volatile") || materialTypeVal.includes("dusty") || materialTypeVal.includes("aerosol") || materialTypeVal.includes("gas");
+        const controlGroupVal = document.querySelector('input[name="controlGroup"]:checked')?.value;
+        const requiresRPE = hPhrases.some(p => p.startsWith("H33") && !p.startsWith("H335") && !p.startsWith("H336")) || 
+                            (inhalationRouteChecked && isDustyVolatileAerosol && controlGroupVal && (controlGroupVal === "2" || controlGroupVal === "3" || controlGroupVal === "4" || controlGroupVal === "S"));
+        
+        if (respLabel) {
+            const respCheckbox = document.querySelector('input[name="ppeControl"][value="Respiratory400"]');
+            if (!requiresRPE) {
+                respLabel.classList.add('greyed-out');
+                if(respCheckbox) respCheckbox.checked = false;
+                const ppeSpecifyEl = document.getElementById('ppeSpecifyType');
+                if (guidance && guidance.ppeText.toLowerCase().includes("respiratory") && ppeSpecifyEl && ppeSpecifyEl.value.includes(guidance.ppeText)) {
+                     ppeSpecifyEl.value += "\n(RPE likely not required based on hazard/exposure assessment; confirm if high aerosol/dust generation.)";
+                }
+            } else { 
+                respLabel.classList.remove('greyed-out');
+            }
+        }
+    }
+    function runFullRiskAssessmentLogic() { 
+        console.log("runFullRiskAssessmentLogic called");
+        determineRiskEvaluationParameters(); updateControlSuggestions(); 
+    }
+    function setRadio(name, value) { /* ... (Full function from previous correct version) ... */
+        const LCaseValue = value ? String(value).toLowerCase() : "";
+        const radios = document.querySelectorAll(`input[name="${name}"]`);
+        radios.forEach(radio => { radio.checked = false; }); 
+        let found = false;
+        radios.forEach(radio => {
+            if (radio.value.toLowerCase() === LCaseValue) { radio.checked = true; found = true; } 
+        });
+        if (!found && name === "hazardGroup" && LCaseValue === "s") { 
+            const sRadio = document.querySelector(`input[name="hazardGroup"][value="S"]`); if(sRadio) sRadio.checked = true;
+        }
+    }
+    
+    // --- Report Generation (generateFullReport, printReport) ---
+    function generateFullReport() { /* ... (Full, corrected function from previous response) ... */
+        console.log("generateFullReport called");
+        const form = document.getElementById('coshhFullForm'); const formData = new FormData(form); const data = {};
+        formData.forEach((value, key) => {
+            const element = form.elements[key];
+            if (element && element.type === 'checkbox') { if (!data[key]) data[key] = []; data[key].push(value); } 
+            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; } 
+            else { data[key] = value; }
+        });
+        ['hazardGroup', 'quantityGroup', 'physCharGroup', 'controlGroup'].forEach(groupName => {
+            if (!data[groupName]) data[groupName] = document.querySelector(`input[name="${groupName}"]:checked`)?.value || "N/A";
+        });
+        data.ghsPictogramForm = Array.from(document.querySelectorAll('input[name="ghsPictogram"]:checked')).map(cb => cb.value);
+
+        const taskSummary = data.activityDescription || "N/A";
+        const chemicalSummary = data.chemicalName || "N/A";
+        let hazardClassSummary = "N/A";
+        const hPhrasesReport = data.hPhrasesForm || masterParsedMSDSData.hPhrases?.value || "";
+        if (hPhrasesReport) {
+            const mainHPhrases = hPhrasesReport.toUpperCase().split(/[,;\s]+/).filter(Boolean);
+            let classes = new Set();
+            if (mainHPhrases.some(p => p.startsWith("H22"))) classes.add("Flammable");
+            if (mainHPhrases.some(p => p.startsWith("H300") || p.startsWith("H310") || p.startsWith("H330"))) classes.add("Acutely Toxic (Fatal)");
+            else if (mainHPhrases.some(p => p.startsWith("H301") || p.startsWith("H311") || p.startsWith("H331"))) classes.add("Acutely Toxic");
+            if (mainHPhrases.some(p => p.startsWith("H314") || p.startsWith("H318"))) classes.add("Corrosive/Serious Eye Damage");
+            else if (mainHPhrases.some(p => p.startsWith("H315") || p.startsWith("H319"))) classes.add("Irritant (Skin/Eye)");
+            if (mainHPhrases.some(p => p.startsWith("H317") || p.startsWith("H334"))) classes.add("Sensitiser");
+            if (mainHPhrases.some(p => p.startsWith("H350") || p.startsWith("H351"))) classes.add("Carcinogen");
+            if (mainHPhrases.some(p => p.startsWith("H340") || p.startsWith("H341"))) classes.add("Mutagen");
+            if (mainHPhrases.some(p => p.startsWith("H360") || p.startsWith("H361"))) classes.add("Reproductive Toxin");
+             if (classes.size > 0) hazardClassSummary = [...classes].join(', ');
+             else if (hPhrasesReport) hazardClassSummary = "See H-Phrases";
+        }
+        let keyControlsSummary = [];
+        const generalControls = Array.isArray(data.generalControl) ? data.generalControl : (data.generalControl ? [data.generalControl] : []);
+        const ppeControls = Array.isArray(data.ppeControl) ? data.ppeControl : (data.ppeControl ? [data.ppeControl] : []);
+
+        if (generalControls.length > 0) {
+            generalControls.forEach(gcValue => { 
+                const gcLabelEl = document.querySelector(`input[name="generalControl"][value="${gcValue}"]`);
+                const gcLabel = gcLabelEl ? gcLabelEl.parentElement.textContent.trim().split('(')[0].trim() : gcValue;
+                if (gcLabel) keyControlsSummary.push(gcLabel); 
+            });
+        }
+        if (ppeControls.length > 0) {
+             ppeControls.forEach(ppeValue => { 
+                const ppeLabelEl = document.querySelector(`input[name="ppeControl"][value="${ppeValue}"]`);
+                const ppeLabel = ppeLabelEl ? ppeLabelEl.parentElement.textContent.trim().split('(')[0].trim() : ppeValue;
+                if (ppeLabel) keyControlsSummary.push(ppeLabel);
+            });
+        }
+        if (data.ppeSpecifyType && data.ppeSpecifyType.toLowerCase().includes("glove")) keyControlsSummary.push("Specific Gloves");
+        if (data.ppeSpecifyType && data.ppeSpecifyType.toLowerCase().includes("respiratory")) keyControlsSummary.push("Specific RPE");
+
+        const controlGroupDet = data.controlGroup || "N/A";
+        const residualRiskSummary = `Control Approach ${controlGroupDet} (implies risk managed if controls implemented)`;
+        
+        let smartSummaryHTML = `<div class="smart-summary"><h4>Smart Summary</h4><p><strong>Task:</strong> ${taskSummary}</p><p><strong>Chemical:</strong> ${chemicalSummary}</p><p><strong>Interpreted Hazard Class(es):</strong> ${hazardClassSummary}</p><p><strong>Key Controls Required:</strong> ${keyControlsSummary.length > 0 ? keyControlsSummary.join(', ') : "General lab precautions, specific PPE as per detailed assessment."}</p><p><strong>Required Control Approach / Residual Risk Level:</strong> ${residualRiskSummary}</p></div>`;
+        
+        let reportHTML = smartSummaryHTML +
+            `<div style="text-align:center; margin-bottom:10px;"><img src="https://www.cabi.org/wp-content/uploads/CABI-Logo_Accessible_RGB.png" alt="CABI Logo" class="report-logo"><h2 style="margin:0;">COSHH Assessment</h2></div>` +
+            `<table class="report-table"><tr><td><strong>Carried Out By (Step 1):</strong> ${data.carriedOutBy || ''}</td><td><strong>Department:</strong> ${data.department || ''}</td><td><strong>Ref:</strong> ${data.ref || ''}</td></tr><tr><td><strong>Reviewed By (Steps 2 & 3):</strong> ${data.reviewedBy || ''}</td><td><strong>Signature:</strong> ${data.signatureReviewedBy || ''}</td><td><strong>Date:</strong> ${data.dateReviewedBy || ''}</td></tr></table>` +
+            `<div class="report-section-title">Step 1 The Process, Product(s) & Hazards</div>` +
+            `<table class="report-table"><tr><td colspan="3"><strong>Activity/Work Process, Product(s), Location:</strong><br>${data.activityDescription || ''}</td></tr><tr><td colspan="3"><strong>Who is exposed:</strong> ${data.whoExposed && data.whoExposed.includes('Employees') ? '☑ Employees' : '☐ Employees'} &nbsp; ${data.whoExposed && data.whoExposed.includes('Contractors') ? '☑ Contractors' : '☐ Contractors'} &nbsp; ${data.whoExposed && data.whoExposed.includes('Others') ? '☑ Others' : '☐ Others'}</td></tr><tr><td colspan="3"><strong>Material Type:</strong> ${data.materialTypeForm ? (document.getElementById('materialTypeForm').options[document.getElementById('materialTypeForm').selectedIndex]?.text || data.materialTypeForm) : 'N/A'}</td></tr><tr><td colspan="3"><strong>Hazards (New Symbols):</strong><br><div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;">
+            ${ data.ghsPictogramForm && data.ghsPictogramForm.map(pVal => { const parts = pVal.split('_'); const ghsCode = parts[0]; const text = parts.length > 1 ? parts.slice(1).join(' ') : ghsCode;
+                let imgSrc = '';
+                if(ghsCode === "GHS07") imgSrc = "./ghs_exclam.svg"; if(ghsCode === "GHS09") imgSrc = "./ghs_environment.svg"; if(ghsCode === "GHS06") imgSrc = "./ghs_skull.svg"; if(ghsCode === "GHS05") imgSrc = "./ghs_corrosive.svg"; if(ghsCode === "GHS02") imgSrc = "./ghs_flammable.svg"; if(ghsCode === "GHS03") imgSrc = "./ghs_oxidising.svg"; if(ghsCode === "GHS01") imgSrc = "./ghs_explosive.svg"; if(ghsCode === "GHS08") imgSrc = "./ghs_health_hazard.svg"; if(ghsCode === "GHS04") imgSrc = "./ghs_gas_cylinder.svg";
+                return `<span style="border:1px solid #ccc; padding:2px; display:inline-flex; align-items:center; margin:2px;"><img src="${imgSrc}" alt="${ghsCode}" style="height:20px; margin-right:3px;"> ${text}</span>`;
+            }).join(' ') || (data.parsedRawPictograms ? `Parsed: ${data.parsedRawPictograms}`: 'None selected') }</div></td></tr><tr><td colspan="3"><strong>H-Statements (from MSDS):</strong><br>${data.hPhrasesForm || 'N/A'}</td></tr><tr><td><strong>WEL Assigned?</strong></td><td>STEL: ${data.stelPPM || ''} ppm / ${data.stelMgM3 || ''} mg/m³</td><td>TWA: ${data.twaPPM || ''} ppm / ${data.twaMgM3 || ''} mg/m³</td></tr><tr><td><strong>MSDS Attached?</strong> ${data.msdsAttached === 'on' ? '☑ Yes' : '☐ No'}</td><td colspan="2"><strong>Quantity/Duration/Frequency Summary:</strong><br>Qty: ${data.quantityValue || ''} ${data.quantityUnit || ''}; Freq: ${data.taskFrequency ? (document.getElementById('taskFrequency').options[document.getElementById('taskFrequency').selectedIndex]?.text || data.taskFrequency) : ''}; Dur: ${data.taskDuration ? (document.getElementById('taskDuration').options[document.getElementById('taskDuration').selectedIndex]?.text || data.taskDuration):''}</td></tr></table>` +
+            `<div class="report-section-title">Step 2 The Risk Assessment Evaluation</div>` +
+            `<table class="report-table"><tr><th>Factor</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>S (Specialist)</th></tr><tr><td>Hazard Group</td><td>${data.hazardGroup === 'A' ? '☑' : '☐'}</td><td>${data.hazardGroup === 'B' ? '☑' : '☐'}</td><td>${data.hazardGroup === 'C' ? '☑' : '☐'}</td><td>${data.hazardGroup === 'D' ? '☑' : '☐'}</td><td>${data.hazardGroup === 'E' ? '☑' : '☐'}</td><td>${data.hazardGroup === 'S' ? '☑' : '☐'}</td></tr><tr><td>Quantity / Volume Group</td><td colspan="2" style="text-align:center;">Small ${data.quantityGroup === 'Small' ? '☑' : '☐'}</td><td colspan="2" style="text-align:center;">Medium ${data.quantityGroup === 'Medium' ? '☑' : '☐'}</td><td colspan="2" style="text-align:center;">Large ${data.quantityGroup === 'Large' ? '☑' : '☐'}</td></tr><tr><td>Physical Characteristics Group</td><td colspan="2" style="text-align:center;">Low ${data.physCharGroup === 'Low' ? '☑' : '☐'}</td><td colspan="2" style="text-align:center;">Medium ${data.physCharGroup === 'Medium' ? '☑' : '☐'}</td><td colspan="2" style="text-align:center;">High ${data.physCharGroup === 'High' ? '☑' : '☐'}</td></tr><tr><td><strong>Control Group Determined</strong></td><td>${data.controlGroup === '1' ? '☑' : '☐'} 1</td><td>${data.controlGroup === '2' ? '☑' : '☐'} 2</td><td>${data.controlGroup === '3' ? '☑' : '☐'} 3</td><td>${data.controlGroup === '4' ? '☑' : '☐'} 4</td><td colspan="2" style="text-align:center;">S ${data.controlGroup === 'S' ? '☑' : '☐'}</td></tr></table>` +
+            `<div class="report-section-title">Step 3 The Suitable Controls</div><table class="report-table"><tr><td><strong>Approval for use confirmed by:</strong> ${data.approvalConfirmedBy || ''}</td><td><strong>Date:</strong> ${data.approvalDate || ''}</td></tr></table>` +
+            `<table class="report-table"><tr><td colspan="2"><strong>General control measures (HSE Control Guidance Sheet No: ${document.getElementById('gcGuidanceSheetNo')?.textContent || 'N/A'}):</strong></td></tr><tr><td colspan="2">${generalControls.includes('Ventilation100') ? '☑ General Ventilation' : '☐ General Ventilation'} &nbsp; ${generalControls.includes('LEV200_201') ? '☑ LEV' : '☐ LEV'} &nbsp; ${generalControls.includes('Containment300_301') ? '☑ Containment' : '☐ Containment'} &nbsp; ${generalControls.includes('Specialist400') ? '☑ Specialist' : '☐ Specialist'} &nbsp; ${generalControls.includes('AdditionalS100_S200') ? '☑ Additional' : '☐ Additional'}</td></tr><tr><td colspan="2"><strong>Personal Protective Equipment (HSE Control Guidance Sheet No: ${document.getElementById('ppeGuidanceSheetNo')?.textContent || 'N/A'}):</strong></td></tr><tr><td colspan="2">${ppeControls.includes('Clothing100') ? '☑ Clothing' : '☐ Clothing'} &nbsp; ${ppeControls.includes('Gloves200_201') ? '☑ Gloves/Footwear' : '☐ Gloves/Footwear'} &nbsp; ${ppeControls.includes('Eye300_301') ? '☑ Eye Protection' : '☐ Eye Protection'} &nbsp; ${ppeControls.includes('Respiratory400') ? '☑ Respiratory' : '☐ Respiratory'} &nbsp; ${ppeControls.includes('OtherS100_S200') ? '☑ Other' : '☐ Other'}</td></tr><tr><td colspan="2"><strong>Specify type (PPE):</strong> <pre style="white-space: pre-wrap;">${data.ppeSpecifyType || ''}</pre></td></tr><tr><td><strong>Specific First Aid requirements?</strong></td><td><pre style="white-space: pre-wrap;">${data.firstAidReqs || ''}</pre></td></tr><tr><td><strong>Particular fire extinguisher requirements?</strong></td><td><pre style="white-space: pre-wrap;">${data.fireExtinguisherReqs || ''}</pre></td></tr><tr><td><strong>Accidental Release / Spillage requirements e.g. spill kit</strong></td><td><pre style="white-space: pre-wrap;">${data.spillReqs || ''}</pre></td></tr><tr><td><strong>Handling and storage requirements? Note any incompatibilities.</strong></td><td><pre style="white-space: pre-wrap;">${data.storageReqs || ''}</pre></td></tr><tr><td><strong>Disposal precautions? Note any incompatibilities.</strong></td><td><pre style="white-space: pre-wrap;">${data.disposalPrecautions || ''}</pre></td></tr><tr><td><strong>Particular Instruction and training needed on use?</strong></td><td><pre style="white-space: pre-wrap;">${data.trainingNeeded || ''}</pre></td></tr><tr><td><strong>Any specific symptoms to be aware of and to report?</strong></td><td><pre style="white-space: pre-wrap;">${data.symptomsToReport || ''}</pre></td></tr><tr><td><strong>Health Surveillance requirements?</strong></td><td><pre style="white-space: pre-wrap;">${data.healthSurveillance || ''}</pre></td></tr><tr><td><strong>Workplace and Personal Monitoring requirements?</strong></td><td><pre style="white-space: pre-wrap;">${data.workplaceMonitoring || ''}</pre></td></tr><tr><td><strong>Emergency Plans required or not?</strong></td><td><pre style="white-space: pre-wrap;">${data.emergencyPlans || ''}</pre></td></tr></table>` +
+            `<div class="report-section-title">Step 4 Further Actions or Additional Measures Required</div><table class="report-table"><thead><tr><th>Actions / Measures Required</th><th>Who</th><th>When</th><th>Check</th></tr></thead><tbody><tr><td>${data.action_1_measure || ''}</td><td>${data.action_1_who || ''}</td><td>${data.action_1_when || ''}</td><td>${data.action_1_check || ''}</td></tr><tr><td>${data.action_2_measure || ''}</td><td>${data.action_2_who || ''}</td><td>${data.action_2_when || ''}</td><td>${data.action_2_check || ''}</td></tr><tr><td>${data.action_3_measure || ''}</td><td>${data.action_3_who || ''}</td><td>${data.action_3_when || ''}</td><td>${data.action_3_check || ''}</td></tr></tbody></table>` +
+            `<div class="report-section-title">Step 5 Acknowledgement and Review</div><table class="report-table"><tr><td colspan="3">I declare that I have read, understood and been instructed in the measures to be applied and agree to abide by the findings.</td></tr><tr><td><strong>Name:</strong> ${data.finalReviewerName || ''}</td><td><strong>Signature:</strong> ${data.finalSignature || ''}</td><td><strong>Date:</strong> ${data.finalDateSigned || ''}</td></tr><tr><td colspan="3"><strong>Next Review Date:</strong> ${data.finalReviewDate || ''}</td></tr></table>` +
+            `<div class="app-footer" style="font-size:0.8em; color:#333; background:none; border-top:1px solid #ccc; padding-top:10px; margin-top:20px;"><p>This assessment was generated using the CABI COSHH Helper. <strong>Final checks must be made by the Lab Manager and COSHH Assessor.</strong></p><p><small>AI assistance (e.g., Gemini model family, May 2024) was used in the development of this tool's prototype.</small></p></div>`;
+
+        const reportContentEl = document.getElementById('reportContent');
+        if(reportContentEl) reportContentEl.innerHTML = reportHTML;
+        const fullReportOutputEl = document.getElementById('fullReportOutput');
+        if(fullReportOutputEl) fullReportOutputEl.style.display = 'block';
+        openTab(null, 'outputTab');
+        if(fullReportOutputEl) fullReportOutputEl.scrollIntoView({ behavior: 'smooth' });
+    }
+    function printReport() { window.print(); }
+    const LOCAL_STORAGE_KEY = 'cabiCoshhDynamic_v5_msdsParseFix'; // Incremented key
+    function saveLocally() {
+        console.log("saveLocally called");
+        const form = document.getElementById('coshhFullForm'); const data = {};
+        new FormData(form).forEach((value, key) => {
+            const element = form.elements[key];
+            if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); } 
+            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; } 
+            else if (element && element.type === 'file') data[key] = value.name || null;
+            else data[key] = value;
+        });
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data)); alert('Form data saved locally!');
+    }
+    function loadLocally() { 
+        console.log("loadLocally: Attempting to load data.");
+        const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                const form = document.getElementById('coshhFullForm');
+                if (!form) { console.error("loadLocally: coshhFullForm not found!"); return; }
+
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const formElementOrGroup = form.elements[key];
+                        if (formElementOrGroup) {
+                            if (formElementOrGroup instanceof RadioNodeList) {
+                                const elements = Array.from(formElementOrGroup);
+                                if (elements.length > 0 && elements[0].type === 'radio') {
+                                    elements.forEach(radio => { radio.checked = (radio.value === data[key]); });
+                                } else if (elements.length > 0 && elements[0].type === 'checkbox' && Array.isArray(data[key])) {
+                                    const groupValues = data[key];
+                                    elements.forEach(checkbox => { checkbox.checked = groupValues.includes(checkbox.value); });
+                                }
+                            }
+                            else if (formElementOrGroup instanceof HTMLInputElement) {
+                                if (formElementOrGroup.type === 'checkbox') {
+                                    formElementOrGroup.checked = (data[key] === formElementOrGroup.value || data[key] === true || String(data[key]).toLowerCase() === "on");
+                                } else if (formElementOrGroup.type === 'file') { /* Skip */ }
+                                else { formElementOrGroup.value = data[key]; }
+                            }
+                            else if (formElementOrGroup instanceof HTMLSelectElement) { formElementOrGroup.value = data[key]; }
+                            else if (formElementOrGroup instanceof HTMLTextAreaElement) { formElementOrGroup.value = data[key]; }
+                        }
+                    }
+                }
+                alert('Form data loaded from local storage!');
+                runFullRiskAssessmentLogic();
+            } catch (e) {
+                console.error("Error during loadLocally execution:", e);
+                alert("Error loading saved data. Data might be corrupted or incompatible. See console for details.");
+            }
+        } else {
+            console.log("loadLocally: No saved data found.");
+        }
+    }
+    function exportToJson() {
+        console.log("exportToJson called");
+        const form = document.getElementById('coshhFullForm'); const data = {};
+        new FormData(form).forEach((value, key) => {
+             const element = form.elements[key];
+            if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); } 
+            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; } 
+            else { data[key] = value; }
+        });
+        const jsonString = JSON.stringify(data, null, 2); const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob); const a = document.createElement('a');
+        a.href = url; a.download = `cabi_coshh_dynamic_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+    // Place this function within your main <script> tag, alongside other helper functions
+
+function importFromJsonFile() {
+    console.log("importFromJsonFile called");
+    const fileInput = document.getElementById('importFile');
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        alert("Please select a JSON file to import.");
+        return;
+    }
+    const file = fileInput.files[0];
+
+    if (file.type !== "application/json") {
+        alert("Invalid file type. Please select a .json file.");
+        fileInput.value = ''; // Clear the file input
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        try {
+            const importedDataString = event.target.result;
+            const importedData = JSON.parse(importedDataString);
+            
+            // Now, populate the form using a similar logic to loadLocally()
+            // It's good to have a dedicated function for populating the form from a data object
+            populateFormWithData(importedData);
+
+            alert("COSHH Assessment data imported successfully!");
+            // Optionally, trigger calculations or navigate to a specific tab
+            runFullRiskAssessmentLogic(); // Re-run calculations based on imported data
+            openTab(null, 'personnelTab'); // Go to the first main data tab
+
+        } catch (e) {
+            console.error("Error parsing JSON file or populating form:", e);
+            alert("Error importing file. Ensure it's a valid COSHH JSON export from this tool. " + e.message);
+        } finally {
+            fileInput.value = ''; // Clear the file input after processing
+        }
+    };
+
+    reader.onerror = function() {
+        alert("Error reading the file.");
+        fileInput.value = ''; // Clear the file input
+    };
+
+    reader.readAsText(file);
+}
+
+// Helper function to populate the form (extracted from loadLocally and enhanced)
+function populateFormWithData(data) {
+    console.log("populateFormWithData called with data:", data);
+    const form = document.getElementById('coshhFullForm');
+    if (!form) {
+        console.error("populateFormWithData: coshhFullForm not found!");
+        return;
+    }
+
+    // Reset the form first to clear previous values (optional, but often good practice)
+    // form.reset(); // Be careful with form.reset() as it might not clear everything or trigger change events.
+    // Manual reset is safer:
+    Array.from(form.elements).forEach(element => {
+        if (element.type === 'checkbox' || element.type === 'radio') {
+            element.checked = false;
+        } else if (element.type !== 'file' && element.type !== 'button' && element.type !== 'submit' && element.type !== 'reset') {
+            element.value = '';
+        }
+    });
+
+
+    for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+            const formElementOrGroup = form.elements[key];
+
+            if (formElementOrGroup) {
+                if (formElementOrGroup instanceof RadioNodeList) { // Radio buttons or named checkbox groups
+                    const elements = Array.from(formElementOrGroup);
+                    if (elements.length > 0 && elements[0].type === 'radio') {
+                        elements.forEach(radio => {
+                            radio.checked = (radio.value === data[key]);
+                        });
+                    } else if (elements.length > 0 && elements[0].type === 'checkbox') { // Checkbox group
+                        const groupValues = Array.isArray(data[key]) ? data[key] : (data[key] ? [data[key]] : []);
+                        elements.forEach(checkbox => {
+                            checkbox.checked = groupValues.includes(checkbox.value);
+                        });
+                    }
+                }
+                else if (formElementOrGroup instanceof HTMLInputElement) {
+                    if (formElementOrGroup.type === 'checkbox') { // Single checkbox
+                        formElementOrGroup.checked = (data[key] === formElementOrGroup.value || data[key] === true || String(data[key]).toLowerCase() === "on");
+                    } else if (formElementOrGroup.type === 'file') {
+                        // Cannot set file input value programmatically for security reasons
+                    } else {
+                        formElementOrGroup.value = data[key] || ''; // Ensure empty string if data[key] is null/undefined
+                    }
+                }
+                else if (formElementOrGroup instanceof HTMLSelectElement) {
+                    formElementOrGroup.value = data[key] || '';
+                }
+                else if (formElementOrGroup instanceof HTMLTextAreaElement) {
+                    formElementOrGroup.value = data[key] || '';
+                }
+            } else {
+                // console.warn(`populateFormWithData: Form element with name '${key}' not found.`);
+            }
+        }
+    }
+     // Special handling for parsedRawPictograms as it's a hidden field driving visible checkboxes
+    if (data.parsedRawPictograms) {
+        const pictogramCodes = String(data.parsedRawPictograms).split(',').map(s => s.trim().toUpperCase());
+        document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => {
+            cb.checked = pictogramCodes.includes(cb.value.split('_')[0].toUpperCase());
+        });
+        const parsedRawPictogramsEl = document.getElementById('parsedRawPictograms');
+        if (parsedRawPictogramsEl) parsedRawPictogramsEl.value = data.parsedRawPictograms;
+    }
+    console.log("Form population complete.");
+}
+
+    console.log("Script execution finished initial setup.");
+</script>
+</body>
+</html>
