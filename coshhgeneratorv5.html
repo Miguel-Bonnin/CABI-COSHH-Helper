@@ -1126,8 +1126,16 @@
                 if (guidance && guidance.ppeText.toLowerCase().includes("respiratory") && ppeSpecifyEl && ppeSpecifyEl.value.includes(guidance.ppeText)) {
                      ppeSpecifyEl.value += "\n(RPE likely not required based on hazard/exposure assessment; confirm if high aerosol/dust generation.)";
                 }
-            } else { 
+            } else {
                 respLabel.classList.remove('greyed-out');
+            }
+        }
+
+        // Auto-populate action for specialist controls (Group 4 or S)
+        if (controlGroupVal === "4" || controlGroupVal === "S") {
+            const action1MeasureEl = document.querySelector('input[name="action_1_measure"]');
+            if (action1MeasureEl && !action1MeasureEl.value) {
+                action1MeasureEl.value = "Print off physical copy of COSHH assessment to store in the lab folder";
             }
         }
     }
