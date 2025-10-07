@@ -4,7 +4,8 @@
       "Bash(curl:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nUpdate attribution and disclaimer text\n\nChanges:\n- Update footer attribution to credit J. Miguel Bonnin as developer\n- Acknowledge AI assistance from Gemini and Claude\n- Clarify tool''s purpose: automates PDF parsing and initial risk matrix\n- Emphasize intentionally cautious risk assessments\n- Update both main footer and generated report footer\n\nThis ensures proper credit and sets clear expectations about the\ntool''s role as an aid requiring professional review.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
