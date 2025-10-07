@@ -1259,8 +1259,18 @@
         const form = document.getElementById('coshhFullForm'); const data = {};
         new FormData(form).forEach((value, key) => {
             const element = form.elements[key];
-            if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); } 
-            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; } 
+            // Handle RadioNodeList (multiple elements with same name)
+            if (element instanceof RadioNodeList) {
+                const firstElement = element[0];
+                if (firstElement && firstElement.type === 'checkbox') {
+                    if(!data[key]) data[key] = [];
+                    data[key].push(value);
+                } else if (firstElement && firstElement.type === 'radio') {
+                    data[key] = value; // Radio buttons - only store checked value
+                }
+            }
+            else if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); }
+            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; }
             else if (element && element.type === 'file') data[key] = value.name || null;
             else data[key] = value;
         });
@@ -1314,8 +1324,18 @@
         const form = document.getElementById('coshhFullForm'); const data = {};
         new FormData(form).forEach((value, key) => {
              const element = form.elements[key];
-            if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); } 
-            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; } 
+            // Handle RadioNodeList (multiple elements with same name)
+            if (element instanceof RadioNodeList) {
+                const firstElement = element[0];
+                if (firstElement && firstElement.type === 'checkbox') {
+                    if(!data[key]) data[key] = [];
+                    data[key].push(value);
+                } else if (firstElement && firstElement.type === 'radio') {
+                    data[key] = value; // Radio buttons - only store checked value
+                }
+            }
+            else if (element && element.type === 'checkbox') { if(!data[key]) data[key] = []; data[key].push(value); }
+            else if (element && element.type === 'radio') { if (element.checked) data[key] = value; }
             else { data[key] = value; }
         });
         const jsonString = JSON.stringify(data, null, 2); const blob = new Blob([jsonString], { type: 'application/json' });
