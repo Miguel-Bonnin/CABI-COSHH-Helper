@@ -156,6 +156,7 @@
                 <label class="label-header">Workplace Exposure Levels (WEL) (if assigned)</label>
                 <p style="font-size: 0.9em; margin: 5px 0;">
                     Reference: <a href="https://www.hse.gov.uk/pubns/priced/eh40.pdf" target="_blank" rel="noopener">HSE EH40 Workplace Exposure Limits</a>
+                    <button type="button" onclick="autoFillWELValues()" style="margin-left: 10px; font-size: 0.85em; padding: 3px 8px;">🔍 Lookup WEL</button>
                     <span id="welMatchStatus" style="margin-left: 10px; font-style: italic;"></span>
                 </p>
                 <div class="column-layout">
@@ -947,7 +948,10 @@
         }
         
         // Trigger WEL auto-fill with parsed chemical name and CAS
-        autoFillWELValues();
+        // Use setTimeout to ensure DOM has updated before auto-fill
+        setTimeout(() => {
+            autoFillWELValues();
+        }, 100);
 
         alert("Parsed MSDS data applied. Please review and complete the form.");
         openTab(null, 'personnelTab');

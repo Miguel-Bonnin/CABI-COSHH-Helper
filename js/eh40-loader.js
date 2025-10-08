@@ -143,6 +143,8 @@ function autoFillWELValues() {
     const chemicalName = document.getElementById('chemicalName')?.value || '';
     const casNumber = document.getElementById('casNumber')?.value || '';
 
+    console.log('autoFillWELValues called with:', { chemicalName, casNumber, dataLoaded: eh40Data.length });
+
     if (!chemicalName && !casNumber) {
         console.log('No chemical name or CAS number to search');
         return;
