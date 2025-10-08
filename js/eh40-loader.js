@@ -8,6 +8,7 @@
 
 // Global variable to store EH40 data
 let eh40Data = [];
+let eh40DataLoaded = false;
 
 /**
  * Load and parse the EH40 CSV data
@@ -41,9 +42,19 @@ async function loadEH40Data() {
         }
 
         console.log(`Loaded ${eh40Data.length} substances from EH40 database`);
+        eh40DataLoaded = true;
+
+        // Update status message to show data is ready
+        const statusEl = document.getElementById('welMatchStatus');
+        if (statusEl) {
+            statusEl.textContent = `(${eh40Data.length} substances loaded)`;
+            statusEl.style.color = '#28a745';
+        }
+
         return true;
     } catch (error) {
         console.error('Error loading EH40 data:', error);
+        eh40DataLoaded = false;
         return false;
     }
 }
@@ -140,6 +151,20 @@ function searchEH40(substanceName, casNumber) {
  * Auto-fill WEL values from EH40 data
  */
 function autoFillWELValues() {
+    const statusEl = document.getElementById('welMatchStatus');
+
+    // Check if data is loaded
+    if (!eh40DataLoaded || eh40Data.length === 0) {
+        console.warn('EH40 data not yet loaded');
+        if (statusEl) {
+            statusEl.textContent = '⏳ Loading EH40 data...';
+            statusEl.style.color = '#ffc107';
+        }
+        // Wait a bit and try again
+        setTimeout(autoFillWELValues, 500);
+        return;
+    }
+
     const chemicalName = document.getElementById('chemicalName')?.value || '';
     const casNumber = document.getElementById('casNumber')?.value || '';
 
@@ -147,11 +172,14 @@ function autoFillWELValues() {
 
     if (!chemicalName && !casNumber) {
         console.log('No chemical name or CAS number to search');
+        if (statusEl) {
+            statusEl.textContent = 'Enter chemical name or CAS number';
+            statusEl.style.color = '#6c757d';
+        }
         return;
     }
 
     const result = searchEH40(chemicalName, casNumber);
-    const statusEl = document.getElementById('welMatchStatus');
 
     if (result && result.match) {
         const { match, matchType } = result;
