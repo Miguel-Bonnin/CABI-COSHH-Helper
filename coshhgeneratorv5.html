@@ -16,6 +16,8 @@
     <script src="js/config/procedures.js"></script>
     <script src="js/config/hazards.js"></script>
     <script src="js/config/controls.js"></script>
+    <!-- EH40 Workplace Exposure Limits -->
+    <script src="js/eh40-loader.js"></script>
 </head>
 <body>
 
@@ -152,6 +154,10 @@
             </div>
             <div class="form-section">
                 <label class="label-header">Workplace Exposure Levels (WEL) (if assigned)</label>
+                <p style="font-size: 0.9em; margin: 5px 0;">
+                    Reference: <a href="https://www.hse.gov.uk/pubns/priced/eh40.pdf" target="_blank" rel="noopener">HSE EH40 Workplace Exposure Limits</a>
+                    <span id="welMatchStatus" style="margin-left: 10px; font-style: italic;"></span>
+                </p>
                 <div class="column-layout">
                     <div class="column"><label for="stelPPM">STEL (ppm):</label><input type="text" id="stelPPM" name="stelPPM"></div>
                     <div class="column"><label for="stelMgM3">STEL (mg/m³):</label><input type="text" id="stelMgM3" name="stelMgM3"></div>
@@ -395,6 +401,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOMContentLoaded event fired.");
 
+        // Load EH40 workplace exposure limits data
+        loadEH40Data().then(success => {
+            if (success) {
+                console.log("EH40 data loaded successfully");
+            }
+        });
+
         if (typeof pdfjsLib !== 'undefined') {
             try {
                 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
@@ -406,7 +419,7 @@
             console.error("pdfjsLib is not defined when trying to set workerSrc.");
         }
 
-        openTab(null, 'msdsInputTab'); 
+        openTab(null, 'msdsInputTab');
         console.log("Initial tab 'msdsInputTab' opened.");
 
         const today = new Date().toISOString().split('T')[0];
@@ -459,6 +472,16 @@
             if(el) el.addEventListener('change', runFullRiskAssessmentLogic);
             else console.warn(`Element with ID '${id}' for dynamic logic not found.`);
         });
+
+        // Add event listeners for WEL auto-fill when chemical name or CAS changes
+        const chemicalNameEl = document.getElementById('chemicalName');
+        const casNumberEl = document.getElementById('casNumber');
+        if (chemicalNameEl) {
+            chemicalNameEl.addEventListener('blur', autoFillWELValues);
+        }
+        if (casNumberEl) {
+            casNumberEl.addEventListener('blur', autoFillWELValues);
+        }
         document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => cb.addEventListener('change', runFullRiskAssessmentLogic));
         document.querySelectorAll('#riskEvalTab input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', updateControlSuggestions);
@@ -923,8 +946,11 @@
             // Optionally add a confidence marker here if you create one in the HTML
         }
         
+        // Trigger WEL auto-fill with parsed chemical name and CAS
+        autoFillWELValues();
+
         alert("Parsed MSDS data applied. Please review and complete the form.");
-        openTab(null, 'personnelTab'); 
+        openTab(null, 'personnelTab');
         runFullRiskAssessmentLogic(); // Trigger calculation based on newly populated data
     }
     function updateConfidenceMarker(elementId, confidence) {
