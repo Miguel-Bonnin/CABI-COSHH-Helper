@@ -48,6 +48,12 @@ if (!API_TOKEN) {
     process.exit(1);
 }
 
+// Debug: Show token info (first/last chars only for security)
+if (process.argv.includes('--debug')) {
+    console.log(`🔍 Debug: Token length: ${API_TOKEN.length} characters`);
+    console.log(`🔍 Debug: Token preview: ${API_TOKEN.substring(0, 5)}...${API_TOKEN.substring(API_TOKEN.length - 5)}`);
+}
+
 /**
  * Make API request to ChemInventory
  */
@@ -68,10 +74,25 @@ function makeRequest(endpoint, data) {
             }
         };
 
+        if (process.argv.includes('--debug')) {
+            console.log(`🔍 Debug: Request to https://${options.hostname}${options.path}`);
+            console.log(`🔍 Debug: Method: ${options.method}`);
+            console.log(`🔍 Debug: Headers:`, options.headers);
+        }
+
         const req = https.request(options, (res) => {
+            if (process.argv.includes('--debug')) {
+                console.log(`🔍 Debug: Response status: ${res.statusCode}`);
+                console.log(`🔍 Debug: Response headers:`, res.headers);
+            }
+
             let body = '';
             res.on('data', (chunk) => body += chunk);
             res.on('end', () => {
+                if (process.argv.includes('--debug')) {
+                    console.log(`🔍 Debug: Response body: ${body.substring(0, 200)}...`);
+                }
+
                 try {
                     const response = JSON.parse(body);
                     if (response.status === 'success') {
@@ -99,34 +120,68 @@ async function fetchInventory() {
 
     try {
         // Get inventory export
-        const containers = await makeRequest('/inventorymanagement/export', {
+        const response = await makeRequest('/inventorymanagement/export', {
             includeEmptyContainers: false,
             includeSublocations: true
         });
 
+        // Debug: Check what we actually received
+        if (process.argv.includes('--debug')) {
+            console.log('🔍 Debug: Response type:', typeof response);
+            console.log('🔍 Debug: Response keys:', Object.keys(response || {}));
+            console.log('🔍 Debug: Response sample:', JSON.stringify(response).substring(0, 500));
+        }
+
+        // ChemInventory returns data in columns/rows format
+        // Convert from {columns: [...], rows: [[...]]} to array of objects
+        let containers = [];
+
+        if (response.columns && response.rows) {
+            // Map rows to objects using column keys
+            const columnKeys = response.columns.map(col => col.key);
+
+            if (process.argv.includes('--debug')) {
+                console.log('🔍 Debug: Column keys:', columnKeys);
+                console.log('🔍 Debug: Number of rows:', response.rows.length);
+            }
+
+            containers = response.rows.map(row => {
+                const obj = {};
+                columnKeys.forEach((key, index) => {
+                    obj[key] = row[index];
+                });
+                return obj;
+            });
+        } else if (Array.isArray(response)) {
+            containers = response;
+        } else {
+            throw new Error(`Unexpected response format. Type: ${typeof response}, Keys: ${Object.keys(response || {}).join(', ')}`);
+        }
+
         console.log(`✅ Fetched ${containers.length} containers`);
 
         // Transform to simplified format for COSHH tool
-        const inventory = containers.map(container => ({
-            id: container.containerid,
+        // Note: Field names from API are lowercase (name, cas, size, etc.)
+        const inventory = containers.map((container, index) => ({
+            id: container.barcode || `container-${index}`, // Use barcode as ID, fallback to index
             name: container.name || 'Unknown',
             casNumber: container.cas || null,
             supplier: container.supplier || null,
             location: container.location || null,
-            sublocation: container.sublocation || null,
+            sublocation: null, // Not in export columns
             barcode: container.barcode || null,
             size: container.size || null,
-            units: container.units || null,
-            acquisitionDate: container.acquisitiondate || null,
-            // GHS hazards if available
+            units: container.unit || null, // Note: 'unit' not 'units'
+            acquisitionDate: container.dateacquired || null,
+            // GHS hazards - may not be in export, but include placeholders
             hazards: container.ghspictograms || [],
             hazardStatements: container.hazardstatements || [],
             // Additional useful fields
             molecularFormula: container.molecularformula || null,
             molecularWeight: container.molecularweight || null,
-            structure: container.structure || null, // SMILES notation
+            structure: container.smiles || null, // SMILES notation
             comments: container.comments || null,
-            customFields: container.customfields || {}
+            customFields: {} // Custom fields not in basic export
         }));
 
         return {
