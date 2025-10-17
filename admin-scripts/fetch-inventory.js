@@ -166,6 +166,7 @@ async function fetchInventory() {
 
             return {
                 id: container.id || container.barcode || `container-${index}`,
+                substanceId: container.substanceid || null, // For fetching linked files
                 name: container.name || 'Unknown',
                 casNumber: container.cas || null,
                 supplier: container.supplier || null,

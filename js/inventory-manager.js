@@ -209,8 +209,13 @@ function renderActionButtons(item) {
         buttons.push(`<button type="button" class="secondary-button small" onclick="loadAssessmentFromInventory('${item.assessmentStatus.assessmentFile}')">View Assessment</button>`);
     }
 
+    // MSDS Download button (if substance has ID)
+    if (item.substanceId) {
+        buttons.push(`<button type="button" class="secondary-button small">📄 MSDS</button>`);
+    }
+
     // View Details button
-    buttons.push(`<button type="button" class="secondary-button small" onclick="showChemicalDetails('${item.id}')">Details</button>`);
+    buttons.push(`<button type="button" class="secondary-button small">Details</button>`);
 
     return buttons.join(' ');
 }
@@ -389,6 +394,8 @@ function setupInventoryEventListeners() {
                     if (chemical && chemical.assessmentStatus.assessmentFile) {
                         loadAssessmentFromInventory(chemical.assessmentStatus.assessmentFile);
                     }
+                } else if (target.textContent.includes('MSDS') || target.textContent.includes('📄')) {
+                    showMSDSFiles(id);
                 } else if (target.textContent.includes('Details')) {
                     showChemicalDetails(id);
                 }
@@ -429,6 +436,131 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
+
+/**
+ * MSDS File Management
+ */
+
+// Configuration for MSDS proxy server
+const MSDS_PROXY_URL = 'http://localhost:3000';
+
+/**
+ * Show available MSDS files for a chemical
+ */
+async function showMSDSFiles(chemicalId) {
+    const chemical = inventoryData.inventory.find(c => c.id == chemicalId);
+    if (!chemical || !chemical.substanceId) {
+        alert('No substance ID found for this chemical. Cannot fetch MSDS files.');
+        return;
+    }
+
+    try {
+        // Show loading message
+        const loadingMsg = `Fetching MSDS files for ${chemical.name}...\n\nNote: Make sure the MSDS proxy server is running:\nnode admin-scripts/msds-proxy.js`;
+        console.log(loadingMsg);
+
+        // Fetch linked files from proxy
+        const response = await fetch(`${MSDS_PROXY_URL}/files?substanceId=${chemical.substanceId}`);
+
+        if (!response.ok) {
+            throw new Error(`Proxy server returned ${response.status}. Make sure it's running!`);
+        }
+
+        const files = await response.json();
+
+        if (!files || files.length === 0) {
+            alert(`No MSDS files found for ${chemical.name}\n\nThis chemical may not have any uploaded documents in ChemInventory.`);
+            return;
+        }
+
+        // Show file selection dialog
+        showMSDSFileDialog(chemical, files);
+
+    } catch (error) {
+        console.error('Error fetching MSDS files:', error);
+        alert(`Failed to fetch MSDS files.\n\nError: ${error.message}\n\nMake sure the MSDS proxy server is running:\n  cd admin-scripts\n  node msds-proxy.js`);
+    }
+}
+
+/**
+ * Show MSDS file selection dialog
+ */
+function showMSDSFileDialog(chemical, files) {
+    // Create modal backdrop
+    const backdrop = document.createElement('div');
+    backdrop.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+
+    // Create dialog
+    const dialog = document.createElement('div');
+    dialog.style.cssText = 'background: white; padding: 30px; border-radius: 8px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);';
+
+    // Build file list
+    const fileListHTML = files.map(file => `
+        <div style="padding: 12px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>${escapeHtml(file.name)}</strong><br>
+                <small style="color: #666;">
+                    Size: ${(file.size / 1024).toFixed(1)} KB |
+                    Uploaded: ${file.dateuploaded}
+                </small>
+            </div>
+            <button class="action-button small" onclick="downloadMSDSFile(${file.id}, '${escapeHtml(file.name).replace(/'/g, "\\'")}')">
+                Download
+            </button>
+        </div>
+    `).join('');
+
+    dialog.innerHTML = `
+        <h2 style="margin-top: 0;">MSDS Files for ${escapeHtml(chemical.name)}</h2>
+        <p style="color: #666;">Found ${files.length} file(s) linked to this chemical:</p>
+        <div style="margin: 20px 0;">
+            ${fileListHTML}
+        </div>
+        <button class="secondary-button" onclick="this.closest('.msds-dialog-backdrop').remove()" style="margin-top: 20px;">
+            Close
+        </button>
+    `;
+
+    backdrop.className = 'msds-dialog-backdrop';
+    backdrop.appendChild(dialog);
+    backdrop.onclick = (e) => {
+        if (e.target === backdrop) backdrop.remove();
+    };
+
+    document.body.appendChild(backdrop);
+}
+
+/**
+ * Download MSDS file
+ */
+async function downloadMSDSFile(fileId, fileName) {
+    try {
+        console.log(`Downloading file ${fileId}: ${fileName}`);
+
+        // Get download URL from proxy
+        const response = await fetch(`${MSDS_PROXY_URL}/download?fileId=${fileId}`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to get download URL`);
+        }
+
+        const data = await response.json();
+        const downloadUrl = data.url;
+
+        // Open in new tab
+        window.open(downloadUrl, '_blank');
+
+        alert(`MSDS file opened in new tab!\n\nFile: ${fileName}\n\nNote: The download link expires after 30 minutes.`);
+
+    } catch (error) {
+        console.error('Error downloading MSDS:', error);
+        alert(`Failed to download MSDS file.\n\nError: ${error.message}`);
+    }
+}
+
+// Make functions globally accessible for onclick handlers
+window.downloadMSDSFile = downloadMSDSFile;
+window.showMSDSFiles = showMSDSFiles;
 
 // Initialize when inventory tab is first opened
 document.addEventListener('DOMContentLoaded', function() {
