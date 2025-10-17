@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/forms.css">
     <link rel="stylesheet" href="css/tables.css">
     <link rel="stylesheet" href="css/print.css">
+    <link rel="stylesheet" href="css/inventory.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <!-- pdf.js worker script is set inside DOMContentLoaded -->
     <!-- Configuration Modules (Phase 2: Modularization) -->
@@ -18,6 +19,8 @@
     <script src="js/config/controls.js"></script>
     <!-- EH40 Workplace Exposure Limits -->
     <script src="js/eh40-loader.js"></script>
+    <!-- Inventory Management -->
+    <script src="js/inventory-manager.js"></script>
 </head>
 <body>
 
@@ -28,6 +31,7 @@
 
 <div class="app-container">
     <div class="tab-header">
+        <button class="tab-button" onclick="openTab(event, 'inventoryTab')">Inventory</button>
         <button class="tab-button active" onclick="openTab(event, 'msdsInputTab')">MSDS</button>
         <button class="tab-button" onclick="openTab(event, 'personnelTab')">1. Personnel</button>
         <button class="tab-button" onclick="openTab(event, 'substanceTabInternal')">2. Substance & Task</button>
@@ -41,6 +45,72 @@
     </div>
 
     <form id="coshhFullForm">
+        <!-- Chemical Inventory & Assessment Tracking -->
+        <div id="inventoryTab" class="tab-pane">
+            <h2>Chemical Inventory & Assessment Tracker</h2>
+            <p>View your chemical inventory and track COSHH assessment status.</p>
+
+            <div id="inventoryStats" class="inventory-stats">
+                <div class="stat-card">
+                    <h3>Total Chemicals</h3>
+                    <span id="statTotal">-</span>
+                </div>
+                <div class="stat-card complete">
+                    <h3>Assessments Complete</h3>
+                    <span id="statComplete">-</span>
+                </div>
+                <div class="stat-card in-progress">
+                    <h3>In Progress</h3>
+                    <span id="statInProgress">-</span>
+                </div>
+                <div class="stat-card needs-attention">
+                    <h3>Needs Assessment</h3>
+                    <span id="statNeedsAssessment">-</span>
+                </div>
+                <div class="stat-card review-due">
+                    <h3>Review Due</h3>
+                    <span id="statReviewDue">-</span>
+                </div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <label for="inventorySearch">Search Chemicals:</label>
+                <input type="text" id="inventorySearch" placeholder="Search by name, CAS number, location..." style="width: 300px;">
+
+                <label for="inventoryFilter" style="margin-left: 20px;">Filter by Status:</label>
+                <select id="inventoryFilter">
+                    <option value="all">All Chemicals</option>
+                    <option value="needs_assessment">Needs Assessment</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="complete">Complete</option>
+                    <option value="review_due">Review Due</option>
+                    <option value="not_required">Not Required</option>
+                </select>
+
+                <button type="button" class="secondary-button" onclick="refreshInventoryData()" style="margin-left: 20px;">🔄 Refresh Data</button>
+            </div>
+
+            <div id="inventoryTableContainer">
+                <table id="inventoryTable">
+                    <thead>
+                        <tr>
+                            <th>Chemical Name</th>
+                            <th>CAS Number</th>
+                            <th>Location</th>
+                            <th>Hazards</th>
+                            <th>Assessment Status</th>
+                            <th>Assessed By</th>
+                            <th>Review Due</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr><td colspan="8" style="text-align:center; padding: 40px;">Loading inventory...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- MSDS Input & Preview (Tab 0) -->
         <div id="msdsInputTab" class="tab-pane active">
             <h2>MSDS Input & Parsing</h2>

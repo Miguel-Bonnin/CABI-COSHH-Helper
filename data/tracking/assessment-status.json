@@ -1,0 +1,35 @@
+{
+  "lastUpdated": "2025-01-17T12:00:00.000Z",
+  "assessments": [
+    {
+      "chemicalId": "example-001",
+      "chemicalName": "Formamide",
+      "status": "complete",
+      "assessmentFile": "data/assessments/assessment-formamide-2024.json",
+      "assessedBy": "J. Bonnin",
+      "assessmentDate": "2024-10-07",
+      "reviewDueDate": "2025-10-07",
+      "notes": "Complete assessment with all controls documented"
+    },
+    {
+      "chemicalId": "example-002",
+      "chemicalName": "Acetone",
+      "status": "in_progress",
+      "assessmentFile": null,
+      "assessedBy": "Lab Team",
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "Assessment started, awaiting final review"
+    },
+    {
+      "chemicalId": "example-003",
+      "chemicalName": "Sodium Chloride",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "Non-hazardous substance - no COSHH assessment required"
+    }
+  ]
+}

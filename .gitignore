@@ -1,2 +1,14 @@
 # Claude Code local settings (user-specific preferences)
 .claude/settings.local.json
+
+# ChemInventory API credentials (NEVER commit these!)
+*.env
+.env.local
+api-token.txt
+cheminventory-token.txt
+**/secrets/
+**/credentials/
+
+# Temporary admin files
+admin-scripts/temp/
+admin-scripts/*.log

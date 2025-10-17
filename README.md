@@ -11,6 +11,18 @@ A web-based tool to streamline the creation of COSHH (Control of Substances Haza
 - **Data Management**: Save, load, and export assessment data in JSON format
 - **Lab Procedure Templates**: Pre-configured common laboratory procedures with exposure factors
 
+Your Admin Role:
+Run a script that pulls from ChemInventory API → generates chemical-inventory.json
+Collect completed COSHH assessments from team → store as individual JSON files
+Push updates to GitHub → everyone sees latest data
+Team Members:
+Open tool on GitHub Pages (no API tokens needed!)
+See up-to-date inventory with assessment status
+Click "Create Assessment" → auto-fills chemical data
+Complete assessment → download JSON → send to you
+View what needs attention
+
+
 ## Quick Start
 
 ### Try the Live Demo

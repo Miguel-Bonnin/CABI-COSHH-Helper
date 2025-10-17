@@ -1,0 +1,63 @@
+{
+  "lastUpdated": "2025-01-17T12:00:00.000Z",
+  "totalChemicals": 3,
+  "inventory": [
+    {
+      "id": "example-001",
+      "name": "Formamide",
+      "casNumber": "75-12-7",
+      "supplier": "Sigma-Aldrich",
+      "location": "Main Lab",
+      "sublocation": "Cabinet A3",
+      "barcode": "CABI-FORM-001",
+      "size": 500,
+      "units": "mL",
+      "acquisitionDate": "2024-06-15",
+      "hazards": ["GHS07", "GHS08"],
+      "hazardStatements": ["H360D", "H302"],
+      "molecularFormula": "CH3NO",
+      "molecularWeight": 45.04,
+      "structure": "C(=O)N",
+      "comments": "Store at room temperature",
+      "customFields": {}
+    },
+    {
+      "id": "example-002",
+      "name": "Acetone",
+      "casNumber": "67-64-1",
+      "supplier": "Fisher Scientific",
+      "location": "Main Lab",
+      "sublocation": "Solvent Cabinet",
+      "barcode": "CABI-ACE-002",
+      "size": 1,
+      "units": "L",
+      "acquisitionDate": "2024-08-20",
+      "hazards": ["GHS02", "GHS07"],
+      "hazardStatements": ["H225", "H319", "H336"],
+      "molecularFormula": "C3H6O",
+      "molecularWeight": 58.08,
+      "structure": "CC(C)=O",
+      "comments": "Highly flammable",
+      "customFields": {}
+    },
+    {
+      "id": "example-003",
+      "name": "Sodium Chloride",
+      "casNumber": "7647-14-5",
+      "supplier": "VWR",
+      "location": "Storage Room B",
+      "sublocation": "Shelf 2",
+      "barcode": "CABI-NACL-003",
+      "size": 1000,
+      "units": "g",
+      "acquisitionDate": "2024-09-10",
+      "hazards": [],
+      "hazardStatements": [],
+      "molecularFormula": "NaCl",
+      "molecularWeight": 58.44,
+      "structure": "[Na+].[Cl-]",
+      "comments": "Non-hazardous",
+      "customFields": {}
+    }
+  ]
+}
