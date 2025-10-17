@@ -1,35 +1,5415 @@
 {
-  "lastUpdated": "2025-01-17T12:00:00.000Z",
+  "lastUpdated": "2025-10-17T12:20:35.418Z",
   "assessments": [
     {
-      "chemicalId": "example-001",
-      "chemicalName": "Formamide",
-      "status": "complete",
-      "assessmentFile": "data/assessments/assessment-formamide-2024.json",
-      "assessedBy": "J. Bonnin",
-      "assessmentDate": "2024-10-07",
-      "reviewDueDate": "2025-10-07",
-      "notes": "Complete assessment with all controls documented"
-    },
-    {
-      "chemicalId": "example-002",
-      "chemicalName": "Acetone",
-      "status": "in_progress",
+      "chemicalId": 10739739,
+      "chemicalName": "(±)-α-Lipoic acid",
+      "status": "needs_assessment",
       "assessmentFile": null,
-      "assessedBy": "Lab Team",
+      "assessedBy": null,
       "assessmentDate": null,
       "reviewDueDate": null,
-      "notes": "Assessment started, awaiting final review"
+      "notes": "COSHH assessment required (from ChemInventory)"
     },
     {
-      "chemicalId": "example-003",
-      "chemicalName": "Sodium Chloride",
+      "chemicalId": 11004389,
+      "chemicalName": "1,2-Propanediol (poly ethylene glycol)",
       "status": "not_required",
       "assessmentFile": null,
       "assessedBy": null,
       "assessmentDate": null,
       "reviewDueDate": null,
-      "notes": "Non-hazardous substance - no COSHH assessment required"
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750385,
+      "chemicalName": "10% dimethylsulfoxide",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750380,
+      "chemicalName": "10% glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750800,
+      "chemicalName": "10% glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750616,
+      "chemicalName": "10X TBE",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12234405,
+      "chemicalName": "2-Mercaptoethanol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740055,
+      "chemicalName": "2-Propanol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739998,
+      "chemicalName": "3-Hydroxy-5-methylisoxazole",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739946,
+      "chemicalName": "4-Aminobenzoic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659349,
+      "chemicalName": "5% Formaldehyde",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750757,
+      "chemicalName": "60 Seconds Super Shine 740 Clear Nail Polish",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811486,
+      "chemicalName": "Absolute Ethanol (200 proof)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740058,
+      "chemicalName": "Absolute Ethanol (200 proof)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750766,
+      "chemicalName": "Acetic Acid Glacial A.R",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750771,
+      "chemicalName": "Acetonitrile",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740061,
+      "chemicalName": "Acetonitrile",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740060,
+      "chemicalName": "Acetonitrile 50%, Water 47.5 % and Trifluoroacetic acid 2.5%",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750773,
+      "chemicalName": "Acetonitrile 50%, Water 47.5 % and Trifluoroacetic acid 2.5%",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11004396,
+      "chemicalName": "Acid Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740064,
+      "chemicalName": "Acid Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750372,
+      "chemicalName": "Acid Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659365,
+      "chemicalName": "ADINOL OT72-PW-(RB)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657575,
+      "chemicalName": "Agar technical (agar no. 3)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739512,
+      "chemicalName": "Agar technical (agar no. 3)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10733019,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740071,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740076,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740081,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740085,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740089,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740093,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740097,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740101,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740105,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740109,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740113,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740117,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740121,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740125,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740129,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740133,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740137,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740141,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740145,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740149,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740153,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740157,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750562,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750566,
+      "chemicalName": "AGMA 70% Isopropanol",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811419,
+      "chemicalName": "AGMA alcohol 70% v/v",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739858,
+      "chemicalName": "Alginic acid sodium salt, from brown algae",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739517,
+      "chemicalName": "AMMONIUM CHLORIDE",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739514,
+      "chemicalName": "Ammonium dihydrogen orthophosphate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739515,
+      "chemicalName": "Ammonium nitrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739516,
+      "chemicalName": "Ammonium sulfate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739518,
+      "chemicalName": "Ammonium tartrate dibasic",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740009,
+      "chemicalName": "Ampicillin Sodium Salt",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750759,
+      "chemicalName": "Aniline Blue in H20 - Handwritten label",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750765,
+      "chemicalName": "Aniline Blue, sodium salt, pure, water soluble, certified",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11344814,
+      "chemicalName": "Aquatic virkon",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659359,
+      "chemicalName": "ATLOX BS-50-PW-(BR)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659364,
+      "chemicalName": "ATLOX Metasperse 550S-PW-(WD)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740082,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740086,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740090,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740094,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740098,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740102,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740106,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740110,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740114,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740118,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740122,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740126,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740130,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740134,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740138,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740142,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740146,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740150,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740154,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740158,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750559,
+      "chemicalName": "Azo wipes",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739878,
+      "chemicalName": "Bacteriological peptone",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739879,
+      "chemicalName": "Bacto agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659351,
+      "chemicalName": "Bentone SD-3",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750670,
+      "chemicalName": "Binding buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750684,
+      "chemicalName": "Binding buffer B",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750685,
+      "chemicalName": "Binding Buffer I",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750686,
+      "chemicalName": "Binding buffer NT1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750674,
+      "chemicalName": "Binding buffer/magnetic bead mix",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750649,
+      "chemicalName": "Biofluid & solid tissue buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739979,
+      "chemicalName": "Biotin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11206419,
+      "chemicalName": "Blagdon Water Quality PH adjuster for alkaline ponds",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750764,
+      "chemicalName": "Bleach",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811448,
+      "chemicalName": "Bleach",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657270,
+      "chemicalName": "Bleach",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11686562,
+      "chemicalName": "Bleach",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739519,
+      "chemicalName": "Boric acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750687,
+      "chemicalName": "Buffer AE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750688,
+      "chemicalName": "Buffer AL",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750689,
+      "chemicalName": "Buffer AP1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750690,
+      "chemicalName": "Buffer APP",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750692,
+      "chemicalName": "Buffer ATE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750693,
+      "chemicalName": "Buffer ATL",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750694,
+      "chemicalName": "Buffer AW1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750695,
+      "chemicalName": "Buffer AW2",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750696,
+      "chemicalName": "Buffer EB",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750699,
+      "chemicalName": "Buffer MB",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750652,
+      "chemicalName": "Buffer MEM",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750700,
+      "chemicalName": "Buffer P3",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750634,
+      "chemicalName": "Buffer PB1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750701,
+      "chemicalName": "Buffer PE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750633,
+      "chemicalName": "Buffer QG",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750650,
+      "chemicalName": "Buffer RDN",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750669,
+      "chemicalName": "Buffer RLC",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750655,
+      "chemicalName": "Buffer RLS",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750667,
+      "chemicalName": "Buffer RLT",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750656,
+      "chemicalName": "Buffer RLY",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750668,
+      "chemicalName": "Buffer RPE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750653,
+      "chemicalName": "Buffer RW1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750654,
+      "chemicalName": "Buffer RW2",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750679,
+      "chemicalName": "buffer S1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750680,
+      "chemicalName": "buffer S3",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750681,
+      "chemicalName": "buffer S4",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750682,
+      "chemicalName": "buffer S5",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750683,
+      "chemicalName": "buffer S6",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811429,
+      "chemicalName": "Bug Clear Ultra",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11689235,
+      "chemicalName": "Bug Clear Ultra Vine Weevil Killer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750781,
+      "chemicalName": "Butane",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739520,
+      "chemicalName": "Calcium carbonate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739522,
+      "chemicalName": "Calcium chloride",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739523,
+      "chemicalName": "Calcium chloride dihydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750763,
+      "chemicalName": "Calcium chloride dihydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750768,
+      "chemicalName": "CALCIUM CHLORIDE HEXAHYDRATE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739876,
+      "chemicalName": "CALCIUM CHLORIDE HEXAHYDRATE",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739524,
+      "chemicalName": "Calcium Nitrate Tetrahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739526,
+      "chemicalName": "Calcium sulfate dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750777,
+      "chemicalName": "Capillary Electrophoresis Running Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750792,
+      "chemicalName": "Capillary Electrophoresis Running Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659355,
+      "chemicalName": "Carboxymethylcellulose sodium",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750702,
+      "chemicalName": "Carrier RNA",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750678,
+      "chemicalName": "Carrier RNA buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659346,
+      "chemicalName": "Cedarwood Oil",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750661,
+      "chemicalName": "CF",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750752,
+      "chemicalName": "Chameleon Silica gel C 1 - 3 mm",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234408,
+      "chemicalName": "Chloral hydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740012,
+      "chemicalName": "Chloramphenicol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224211,
+      "chemicalName": "cHTR Reagent",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739851,
+      "chemicalName": "Citric acid monohydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740059,
+      "chemicalName": "Cleansinald concentrate",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739410,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740073,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740078,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740083,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740087,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740091,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740095,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740099,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740103,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740107,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740111,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740115,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740119,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740123,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740127,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740131,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740135,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740139,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740143,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740147,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740151,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740155,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740159,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750561,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750568,
+      "chemicalName": "Cleansinald RTU",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739527,
+      "chemicalName": "Cobalt (II) chloride hexahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12306680,
+      "chemicalName": "Cobalt(II) chloride hexahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750749,
+      "chemicalName": "CoCl2.6H20 (100x)? Solution",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659325,
+      "chemicalName": "Codacide",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11740635,
+      "chemicalName": "Constance Carol - Diamond Gloss - 1 Diamond Clear",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739529,
+      "chemicalName": "Copper (II) chloride dihydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739530,
+      "chemicalName": "Copper sulphate pentahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12306705,
+      "chemicalName": "Copper(II) sulfate pentahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739880,
+      "chemicalName": "Corn meal agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740065,
+      "chemicalName": "Cotton Blue / Aniline Blue",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750755,
+      "chemicalName": "Cotton Blue in Lactic Acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750753,
+      "chemicalName": "Cotton blue-lactophenol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657707,
+      "chemicalName": "Cotton blue-lactophenol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750662,
+      "chemicalName": "CQW",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811437,
+      "chemicalName": "D-(+)-Trehalose dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739856,
+      "chemicalName": "D-(+)-Trehalose dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739900,
+      "chemicalName": "D-Glucose anhydrous",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739531,
+      "chemicalName": "D-Mannitol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739689,
+      "chemicalName": "D-Pantothenic acid hemicalcium salt",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750744,
+      "chemicalName": "DAPI",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750797,
+      "chemicalName": "Diethyl pyrocarbonate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739864,
+      "chemicalName": "Dimethyl sulfoxide",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750783,
+      "chemicalName": "DirecTorr Premium Oil",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750644,
+      "chemicalName": "DNA Binding Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750641,
+      "chemicalName": "DNA Digestion Buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750648,
+      "chemicalName": "DNA pre-wash buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224245,
+      "chemicalName": "DNA Wash Buffer (omega biotek)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750638,
+      "chemicalName": "DNA/RNA Lysis Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750639,
+      "chemicalName": "DNA/RNA Prep Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750643,
+      "chemicalName": "DNA/RNA shield",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750636,
+      "chemicalName": "DNA/RNA Wash Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750642,
+      "chemicalName": "DNase I",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224249,
+      "chemicalName": "DS Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224254,
+      "chemicalName": "Elution Buffer (omega biotek)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234402,
+      "chemicalName": "Eosin Y",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811422,
+      "chemicalName": "Eradicoat Max",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750703,
+      "chemicalName": "Ethanol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750791,
+      "chemicalName": "Ethanol Molecular Biology Grade",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740053,
+      "chemicalName": "Ethanol Molecular Biology Grade",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11698408,
+      "chemicalName": "Ethanol Molecular Biology Grade",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11664861,
+      "chemicalName": "Ethyl acetate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740068,
+      "chemicalName": "Ethyl acetate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739862,
+      "chemicalName": "Ethylenediaminetetraacetic acid disodium salt dihydrate",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12234407,
+      "chemicalName": "Ethylenediaminetetraacetic acid disodium salt solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750704,
+      "chemicalName": "FB solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739532,
+      "chemicalName": "Ferric citrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739845,
+      "chemicalName": "Fibrous cellulose powder",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659343,
+      "chemicalName": "Flipper",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659339,
+      "chemicalName": "Foggo formulation",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11740021,
+      "chemicalName": "Folic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739709,
+      "chemicalName": "Folic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750774,
+      "chemicalName": "Formic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11206013,
+      "chemicalName": "Fungus Clear Ultra 2",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750645,
+      "chemicalName": "g-DNA Wash Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739646,
+      "chemicalName": "Gelatin hydrolysate Enzymatic",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739859,
+      "chemicalName": "Gelatine",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739657,
+      "chemicalName": "Glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740067,
+      "chemicalName": "Glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657531,
+      "chemicalName": "Glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11740317,
+      "chemicalName": "Glycerol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11004441,
+      "chemicalName": "GT85",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659345,
+      "chemicalName": "Gum Arabic",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224259,
+      "chemicalName": "HBC Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750790,
+      "chemicalName": "Hi-Di Formamide",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750784,
+      "chemicalName": "High vacuum grease",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659347,
+      "chemicalName": "Histoclear",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11664883,
+      "chemicalName": "Histoclear",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811463,
+      "chemicalName": "Hoagland’s No. 2 Basal Salt Mixture",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750761,
+      "chemicalName": "Humbrol Spray Gun Kit - Propane 55 %, Iso Butane 15%, N.Butane 30%",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740015,
+      "chemicalName": "Hydrochloric acid, 1N standard solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750751,
+      "chemicalName": "Hydrogen Peroxide Solution 30% (w/w) in H20, contains stabilizer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750793,
+      "chemicalName": "Illumina DNA prep (M) general (4 out of 7 are hazardous)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750794,
+      "chemicalName": "Illumina Sequencing General (1 out of 17 are hazardous)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750760,
+      "chemicalName": "Immersionsoel 518C",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811408,
+      "chemicalName": "Industrial denatured alcohol (IDA) Ethanol (eythl Alcohol)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657711,
+      "chemicalName": "Industrial denatured alcohol (IDA) Ethanol (eythl Alcohol)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657714,
+      "chemicalName": "Industrial denatured alcohol (IDA) Ethanol (eythl Alcohol)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750705,
+      "chemicalName": "Inhibitex Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11699944,
+      "chemicalName": "Instant ocean",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739534,
+      "chemicalName": "Iron (II) sulfate heptahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739535,
+      "chemicalName": "Iron(II) chloride tetrahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739533,
+      "chemicalName": "Iron(III) Chloride hexahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12306735,
+      "chemicalName": "Iron(III) chloride hexahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750778,
+      "chemicalName": "IVD Bacterial Test Standard",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10780171,
+      "chemicalName": "Jet Activator",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780303,
+      "chemicalName": "Jet Activator",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780306,
+      "chemicalName": "Jet Activator",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780309,
+      "chemicalName": "Jet Activator",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750407,
+      "chemicalName": "Jet Activator",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750409,
+      "chemicalName": "Jet base",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780172,
+      "chemicalName": "Jet base",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780304,
+      "chemicalName": "Jet base",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780307,
+      "chemicalName": "Jet base",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780310,
+      "chemicalName": "Jet base",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780173,
+      "chemicalName": "Jet working solution",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780305,
+      "chemicalName": "Jet working solution",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780308,
+      "chemicalName": "Jet working solution",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10780311,
+      "chemicalName": "Jet working solution",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750393,
+      "chemicalName": "Jet working solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659352,
+      "chemicalName": "Kaolin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739873,
+      "chemicalName": "L-Ascorbic acid",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12306721,
+      "chemicalName": "L-Glutamic acid monosodium salt hydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739857,
+      "chemicalName": "L-Proline",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740014,
+      "chemicalName": "Lactic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657524,
+      "chemicalName": "Lactic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10842540,
+      "chemicalName": "Lactic acid cotton blue",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11004405,
+      "chemicalName": "Lactic acid cotton blue",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11004413,
+      "chemicalName": "Lactic acid cotton blue",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740066,
+      "chemicalName": "Lactic Acid Solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750756,
+      "chemicalName": "Lacto Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11024934,
+      "chemicalName": "Lacto Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11024943,
+      "chemicalName": "Lacto Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657527,
+      "chemicalName": "Lacto Fuchsin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739881,
+      "chemicalName": "Legionella CYE agar base",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750426,
+      "chemicalName": "Liquid nitrogen",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750801,
+      "chemicalName": "Liquid nitrogen",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811459,
+      "chemicalName": "Liquid parafin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750467,
+      "chemicalName": "Liquid parafin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750563,
+      "chemicalName": "Liquid parafin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750635,
+      "chemicalName": "Loading Dye",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750706,
+      "chemicalName": "Lysis Additive A",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750672,
+      "chemicalName": "lysis buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750707,
+      "chemicalName": "Lysis Buffer G (D?)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750708,
+      "chemicalName": "lysis buffer QP",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750709,
+      "chemicalName": "Magaattract suspension G",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750647,
+      "chemicalName": "MagBinding Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739536,
+      "chemicalName": "Magnesium chloride hexahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739537,
+      "chemicalName": "Magnesium sulfate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750748,
+      "chemicalName": "Magnesium Sulphate heptahydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750673,
+      "chemicalName": "Magnetic beads",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739882,
+      "chemicalName": "Malt extract",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739883,
+      "chemicalName": "Malt extract agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739884,
+      "chemicalName": "Malt extract broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739538,
+      "chemicalName": "Manganese (II) chloride tetrahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739539,
+      "chemicalName": "Manganese (II) sulfate tetrahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12306674,
+      "chemicalName": "Manganese chloride tetrahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739540,
+      "chemicalName": "MES hydrate 99.5%",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740054,
+      "chemicalName": "Methanol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750789,
+      "chemicalName": "MicroCLEAN",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750767,
+      "chemicalName": "microLYSIS Plus",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224504,
+      "chemicalName": "Monarch gDNA binding buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224494,
+      "chemicalName": "Monarch gDNA blood lysis buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224497,
+      "chemicalName": "Monarch gDNA cell lysis buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224515,
+      "chemicalName": "Monarch gDNA elution buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224487,
+      "chemicalName": "Monarch gDNA Tissue Lysis Buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224510,
+      "chemicalName": "Monarch gDNA wash buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739898,
+      "chemicalName": "MRS Agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739899,
+      "chemicalName": "MRS Broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739885,
+      "chemicalName": "Mycological peptone",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750787,
+      "chemicalName": "Mycological peptone",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739541,
+      "chemicalName": "MYO-INOSITOL",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11004390,
+      "chemicalName": "n-Hexane",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659348,
+      "chemicalName": "Nail Varnish",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740001,
+      "chemicalName": "Natamycin",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659341,
+      "chemicalName": "Naturalis-L",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659344,
+      "chemicalName": "NeemAzal-T/S",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11686767,
+      "chemicalName": "neodisher LaboClean FLA",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11686772,
+      "chemicalName": "neodisher N",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750762,
+      "chemicalName": "Newport Extra Purified Butane Lighter Gas",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739742,
+      "chemicalName": "Nicotinic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750758,
+      "chemicalName": "Non-drying immersion oil for microscopy - Type A 120cc",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657534,
+      "chemicalName": "Non-drying immersion oil for microscopy - Type A 120cc",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750657,
+      "chemicalName": "NT1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750658,
+      "chemicalName": "NT3",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750659,
+      "chemicalName": "Nucleospin C4",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750660,
+      "chemicalName": "Nucleospin C5",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739886,
+      "chemicalName": "Nutrient agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739887,
+      "chemicalName": "Nutrient broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659326,
+      "chemicalName": "Ondina RM001",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811426,
+      "chemicalName": "Organic pest control",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750710,
+      "chemicalName": "OSR Solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224283,
+      "chemicalName": "P2 Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11323838,
+      "chemicalName": "P3 oil",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11739816,
+      "chemicalName": "Palmolive Naturals Hand Wash",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739870,
+      "chemicalName": "PEG 6000, molecular biology grade",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740011,
+      "chemicalName": "Penicillin G sodium salt",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740008,
+      "chemicalName": "Pentachloronitrobenzine",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12366595,
+      "chemicalName": "Peptone (vegetable), No. 1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234403,
+      "chemicalName": "Phenol",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750795,
+      "chemicalName": "Phenol chloroform",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739872,
+      "chemicalName": "Phosphate buffered saline",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740006,
+      "chemicalName": "Pimaricin, powder",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739808,
+      "chemicalName": "Poly R-478",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739871,
+      "chemicalName": "Poly(ethylene glycol)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659342,
+      "chemicalName": "Polyethylene glycol 600",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739542,
+      "chemicalName": "Potassium chloride",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739543,
+      "chemicalName": "Potassium dihydrogen phosphate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739548,
+      "chemicalName": "Potassium nitrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739545,
+      "chemicalName": "Potassium phosphate dibasic",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739546,
+      "chemicalName": "Potassium phosphate monobasic",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739549,
+      "chemicalName": "Potassium sulfate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739890,
+      "chemicalName": "Potato Carrot Agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657576,
+      "chemicalName": "Potato Carrot Agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657582,
+      "chemicalName": "Potato dextrose agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739888,
+      "chemicalName": "Potato dextrose agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739889,
+      "chemicalName": "Potato dextrose broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657592,
+      "chemicalName": "Potato dextrose broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750711,
+      "chemicalName": "Power bead solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234404,
+      "chemicalName": "Precipitated silica",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750712,
+      "chemicalName": "prep solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750780,
+      "chemicalName": "Propane/Butane mix",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750663,
+      "chemicalName": "Proteinase Buffer PB",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11224519,
+      "chemicalName": "Proteinase K",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750713,
+      "chemicalName": "Proteinase K solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739550,
+      "chemicalName": "PROTEOSE PEPTONE",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811427,
+      "chemicalName": "Provado Ultimate Bug Killer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11024946,
+      "chemicalName": "Provado Ultimate Bug Killer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750646,
+      "chemicalName": "Quick DNA MagBinding Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739897,
+      "chemicalName": "R2A agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739849,
+      "chemicalName": "Resazurin sodium salt",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739786,
+      "chemicalName": "Riboflavin",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740007,
+      "chemicalName": "Rifampicin",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739618,
+      "chemicalName": "Ringers solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750715,
+      "chemicalName": "RNA binding buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750716,
+      "chemicalName": "RNA prep buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750717,
+      "chemicalName": "RNA wash buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750718,
+      "chemicalName": "Rnase A solution (MP)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750724,
+      "chemicalName": "RNase A solution (Qiagen)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750725,
+      "chemicalName": "Rnase/DNase free water",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811423,
+      "chemicalName": "Round Up Pro Biactive",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811424,
+      "chemicalName": "Round UP Pro Bio",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750726,
+      "chemicalName": "S/F RNA lysis buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657593,
+      "chemicalName": "Sabouraud dextrose agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739891,
+      "chemicalName": "Sabouraud dextrose agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659356,
+      "chemicalName": "Sabouraud Maltose Agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750798,
+      "chemicalName": "Safeview",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750675,
+      "chemicalName": "Sample prep solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659363,
+      "chemicalName": "Sand, acid washed",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811425,
+      "chemicalName": "SB Plant invigorator",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659340,
+      "chemicalName": "Secover",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657542,
+      "chemicalName": "Shellsol T",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659350,
+      "chemicalName": "Silica gel beads",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659353,
+      "chemicalName": "Silicone Oil AR 20",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659354,
+      "chemicalName": "Silwet L-77",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659357,
+      "chemicalName": "Sipernat 22 S",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659361,
+      "chemicalName": "Sipernat D 17",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750786,
+      "chemicalName": "Skimmed milk and Insitol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739551,
+      "chemicalName": "Skimmed milk and Insitol",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739892,
+      "chemicalName": "SKIMMED MILK POWDER",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224288,
+      "chemicalName": "SLX-MIus Buffer",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11344917,
+      "chemicalName": "Smidge insect repellent",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234406,
+      "chemicalName": "Sodium acetate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739867,
+      "chemicalName": "Sodium Alginate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750769,
+      "chemicalName": "Sodium Alginate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739552,
+      "chemicalName": "Sodium Bicarbonate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739563,
+      "chemicalName": "Sodium chloride",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739580,
+      "chemicalName": "Sodium citrate tribasic dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657522,
+      "chemicalName": "Sodium citrate tribasic dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659360,
+      "chemicalName": "Sodium Dodecyl Sulphate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739584,
+      "chemicalName": "Sodium Dodecyl Sulphate Solution",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739854,
+      "chemicalName": "Sodium hexametaphosphate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739601,
+      "chemicalName": "Sodium hydroxide - pellets",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750750,
+      "chemicalName": "Sodium Hypochlorite",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811478,
+      "chemicalName": "Sodium Hypochlorite",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739607,
+      "chemicalName": "Sodium molybdate dihydrate",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739609,
+      "chemicalName": "Sodium Nitrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739611,
+      "chemicalName": "Sodium Phosphate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739613,
+      "chemicalName": "Sodium phosphate dibasic",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739616,
+      "chemicalName": "Sodium phosphate monobasic",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739853,
+      "chemicalName": "Sodium pyrophosphate dibasic",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739877,
+      "chemicalName": "Sodium sulfite",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750627,
+      "chemicalName": "Solution C1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750628,
+      "chemicalName": "Solution C2",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750629,
+      "chemicalName": "Solution C3",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750630,
+      "chemicalName": "Solution C4",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750631,
+      "chemicalName": "Solution C5",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750632,
+      "chemicalName": "Solution C6",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750727,
+      "chemicalName": "Solution CD1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750728,
+      "chemicalName": "Solution CD2",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750666,
+      "chemicalName": "Solution CD3",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750664,
+      "chemicalName": "Solution EA",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750729,
+      "chemicalName": "Solution IRS",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750730,
+      "chemicalName": "Solution MBL",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750731,
+      "chemicalName": "solution MR",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750735,
+      "chemicalName": "Solution PS",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750736,
+      "chemicalName": "Solution PW",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750738,
+      "chemicalName": "solution PW1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750739,
+      "chemicalName": "solution PW3",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750740,
+      "chemicalName": "solution PW4",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11206300,
+      "chemicalName": "Solution SR1",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750743,
+      "chemicalName": "Solution SR3",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11206307,
+      "chemicalName": "Solution SR4",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11206309,
+      "chemicalName": "Solution SR5",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11206310,
+      "chemicalName": "Solution SR6",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750620,
+      "chemicalName": "Solution SR7",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750621,
+      "chemicalName": "Solution SR8",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11740262,
+      "chemicalName": "Spirigel Complete",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811431,
+      "chemicalName": "Sputnik",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750622,
+      "chemicalName": "ST1A Solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750623,
+      "chemicalName": "ST1B Solution",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659358,
+      "chemicalName": "Starch soluble (potato)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739769,
+      "chemicalName": "Starch, ACS reagent, soluble",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11659362,
+      "chemicalName": "Starch, rice",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 12234400,
+      "chemicalName": "Stock marker spray",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11740633,
+      "chemicalName": "Stocking Repair from Key to Care",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739847,
+      "chemicalName": "Storage solution for pH and ORP electrodes",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740010,
+      "chemicalName": "Streptomycin sulfate salt",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11689352,
+      "chemicalName": "Strike 2",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739901,
+      "chemicalName": "Sucrose",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750770,
+      "chemicalName": "Sucrose",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750788,
+      "chemicalName": "Sucrose",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657577,
+      "chemicalName": "Sucrose",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657578,
+      "chemicalName": "Sucrose",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11206384,
+      "chemicalName": "Talc, Powder fine",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657605,
+      "chemicalName": "Talc, Power fine",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739639,
+      "chemicalName": "Thiamine hydrochloride",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740069,
+      "chemicalName": "Toluene",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12234401,
+      "chemicalName": "Tris borate EDTA",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739630,
+      "chemicalName": "Tris hydrochloride",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659328,
+      "chemicalName": "Triton X-100",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11698854,
+      "chemicalName": "Tryptic Soy Broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739894,
+      "chemicalName": "Tryptone soya agar",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739895,
+      "chemicalName": "Tryptone soya broth",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739403,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740080,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740084,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740088,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740092,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740096,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740100,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740104,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740108,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740112,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740116,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740120,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740124,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740128,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740132,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740136,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740140,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740144,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740148,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740152,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740156,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10740160,
+      "chemicalName": "TSDA (DEB) 1",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11130257,
+      "chemicalName": "Tubosan",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739855,
+      "chemicalName": "Tween 20",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739752,
+      "chemicalName": "Tween 80",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10811472,
+      "chemicalName": "Tween 80",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11657701,
+      "chemicalName": "Tween 80",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11739589,
+      "chemicalName": "Tween 80",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11739586,
+      "chemicalName": "Tween 80",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11996048,
+      "chemicalName": "Virkon Aquatic",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739929,
+      "chemicalName": "Vitamin B12 (cobalamin)",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750746,
+      "chemicalName": "Vitamin Mix (50 x) 11/03/20",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11004456,
+      "chemicalName": "Vitax summerhouse greenhouse cleaner",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750671,
+      "chemicalName": "Wash buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750676,
+      "chemicalName": "Wash buffer 1",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750677,
+      "chemicalName": "Wash buffer 2",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750624,
+      "chemicalName": "Wash buffer NT3",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750626,
+      "chemicalName": "Wash Solution A",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10750745,
+      "chemicalName": "Washing up Liquid (Fairy Liquid)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10811481,
+      "chemicalName": "Washing up Liquid (Fairy Liquid)",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11659367,
+      "chemicalName": "Waste Shellsol T",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11224295,
+      "chemicalName": "XP1 Buffer",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 11657580,
+      "chemicalName": "Yeast extract",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10739896,
+      "chemicalName": "Yeast extract",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 11739681,
+      "chemicalName": "Zeiss Immersionol 518 N",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10739644,
+      "chemicalName": "Zinc sulfate heptahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 12306663,
+      "chemicalName": "Zinc sulphate heptahydrate",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750747,
+      "chemicalName": "ZnS04 7H20(100x) 11/03/20",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750637,
+      "chemicalName": "ZymoBIOMICS HRC",
+      "status": "not_required",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": ""
+    },
+    {
+      "chemicalId": 10740013,
+      "chemicalName": "α-Cyano-4-hydroxycinnamic acid",
+      "status": "needs_assessment",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
+    },
+    {
+      "chemicalId": 10750776,
+      "chemicalName": "α-Cyano-4-hydroxycinnamic acid",
+      "status": "complete",
+      "assessmentFile": null,
+      "assessedBy": null,
+      "assessmentDate": null,
+      "reviewDueDate": null,
+      "notes": "COSHH assessment required (from ChemInventory)"
     }
   ]
 }
