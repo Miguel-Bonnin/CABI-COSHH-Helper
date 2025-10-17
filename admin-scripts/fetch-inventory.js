@@ -22,15 +22,29 @@ const API_BASE_URL = 'app.cheminventory.net';
 const OUTPUT_DIR = path.join(__dirname, '..', 'data', 'inventory');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'chemical-inventory.json');
 
-// Get API token from command line or environment
+// Get API token from command line, file, or environment
 const args = process.argv.slice(2);
 const tokenIndex = args.indexOf('--token');
-const API_TOKEN = tokenIndex >= 0 ? args[tokenIndex + 1] : process.env.CHEMINVENTORY_TOKEN;
+let API_TOKEN = tokenIndex >= 0 ? args[tokenIndex + 1] : process.env.CHEMINVENTORY_TOKEN;
+
+// If token looks like a file path, try to read from file
+if (API_TOKEN && (API_TOKEN.endsWith('.txt') || API_TOKEN.includes('/'))) {
+    try {
+        const tokenPath = path.isAbsolute(API_TOKEN) ? API_TOKEN : path.join(__dirname, API_TOKEN);
+        API_TOKEN = fs.readFileSync(tokenPath, 'utf8').trim();
+        console.log(`📄 Token read from file: ${path.basename(tokenPath)}`);
+    } catch (error) {
+        console.error(`❌ Error reading token file: ${error.message}`);
+        process.exit(1);
+    }
+}
 
 if (!API_TOKEN) {
     console.error('❌ Error: API token required');
-    console.error('Usage: node fetch-inventory.js --token YOUR_API_TOKEN');
-    console.error('   Or: CHEMINVENTORY_TOKEN=your_token node fetch-inventory.js');
+    console.error('Usage:');
+    console.error('  node fetch-inventory.js --token YOUR_API_TOKEN');
+    console.error('  node fetch-inventory.js --token path/to/token-file.txt');
+    console.error('  CHEMINVENTORY_TOKEN=your_token node fetch-inventory.js');
     process.exit(1);
 }
 

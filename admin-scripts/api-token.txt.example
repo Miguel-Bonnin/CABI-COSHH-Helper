@@ -1,0 +1,12 @@
+your-cheminventory-api-token-here
+
+# Instructions:
+# 1. Copy this file and rename to: api-token.txt
+# 2. Replace the first line with your actual ChemInventory API token
+# 3. Keep this file secure and NEVER commit to Git (already in .gitignore)
+#
+# To get your API token:
+# 1. Log into ChemInventory with Group Administrator account
+# 2. Go to: Inventory Management → API Tokens
+# 3. Generate a new token
+# 4. Copy the token string and paste it in api-token.txt (first line only)
