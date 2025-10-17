@@ -163,15 +163,16 @@ function renderInventoryTable() {
  * Render hazard badges
  */
 function renderHazardBadges(hazards, statements) {
-    if (!hazards || hazards.length === 0) {
+    // Show hazard statements (H-codes) if available
+    if (!statements || statements.length === 0) {
         return '<span style="color: #999;">Non-hazardous</span>';
     }
 
-    const badges = hazards.map(h => `<span class="hazard-badge">${h}</span>`).join(' ');
-    const stmts = statements && statements.length > 0 ?
-        `<br><small>${statements.slice(0, 3).join(', ')}${statements.length > 3 ? '...' : ''}</small>` : '';
+    // Display hazard statements as badges
+    const badges = statements.slice(0, 5).map(h => `<span class="hazard-badge">${h}</span>`).join(' ');
+    const more = statements.length > 5 ? `<br><small>+${statements.length - 5} more</small>` : '';
 
-    return badges + stmts;
+    return badges + more;
 }
 
 /**
@@ -357,6 +358,36 @@ function setupInventoryEventListeners() {
 
     if (filterSelect) {
         filterSelect.addEventListener('change', renderInventoryTable);
+    }
+
+    // Set up event delegation for dynamically created buttons
+    const tableBody = document.getElementById('inventoryTableBody');
+    if (tableBody) {
+        tableBody.addEventListener('click', function(e) {
+            const target = e.target;
+
+            // Handle button clicks
+            if (target.tagName === 'BUTTON') {
+                const row = target.closest('tr');
+                const chemicalId = row ? row.getAttribute('data-chemical-id') : null;
+
+                if (!chemicalId) return;
+
+                // Convert string ID to number if needed
+                const id = isNaN(chemicalId) ? chemicalId : parseInt(chemicalId);
+
+                if (target.textContent.includes('Create Assessment')) {
+                    createAssessmentFromInventory(id);
+                } else if (target.textContent.includes('View Assessment')) {
+                    const chemical = filteredInventory.find(c => c.id == id);
+                    if (chemical && chemical.assessmentStatus.assessmentFile) {
+                        loadAssessmentFromInventory(chemical.assessmentStatus.assessmentFile);
+                    }
+                } else if (target.textContent.includes('Details')) {
+                    showChemicalDetails(id);
+                }
+            }
+        });
     }
 }
 
