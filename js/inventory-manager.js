@@ -219,47 +219,53 @@ function renderActionButtons(item) {
  * Create new assessment pre-filled with chemical data
  */
 function createAssessmentFromInventory(chemicalId) {
-    const chemical = inventoryData.inventory.find(c => c.id === chemicalId);
-    if (!chemical) return;
-
-    // Pre-fill substance information
-    document.getElementById('substanceName').value = chemical.name;
-    document.getElementById('casNumber').value = chemical.casNumber || '';
-    document.getElementById('supplier').value = chemical.supplier || '';
-
-    if (chemical.molecularFormula) {
-        document.getElementById('chemicalFormula').value = chemical.molecularFormula;
+    const chemical = inventoryData.inventory.find(c => c.id == chemicalId);
+    if (!chemical) {
+        console.error('Chemical not found:', chemicalId);
+        return;
     }
 
-    // Add note about inventory source
-    const locationNote = chemical.location ? ` (Inventory location: ${chemical.location}${chemical.sublocation ? ' - ' + chemical.sublocation : ''})` : '';
-    const currentTask = document.getElementById('taskDescription').value;
-    if (!currentTask.includes('Inventory location:')) {
-        document.getElementById('taskDescription').value =
-            (currentTask ? currentTask + '\n\n' : '') +
-            `Chemical from inventory: ${chemical.name}${locationNote}`;
-    }
+    console.log('Creating assessment for:', chemical.name);
 
-    // If hazard data is available, suggest pre-filling hazards
-    if (chemical.hazardStatements && chemical.hazardStatements.length > 0) {
-        alert(`This chemical has ${chemical.hazardStatements.length} hazard statement(s) from inventory. These will be available in the Hazards tab.`);
-
-        // Store for use in hazards tab
-        window.inventoryHazardData = {
-            chemicalId: chemicalId,
-            hazardStatements: chemical.hazardStatements,
-            ghsPictograms: chemical.hazards
-        };
-    }
-
-    // Switch to Personnel tab to start assessment
+    // Switch to Substance & Task tab first
     const tabs = document.querySelectorAll('.tab-button');
-    const personnelTab = Array.from(tabs).find(t => t.textContent.includes('Personnel'));
-    if (personnelTab) {
-        personnelTab.click();
+    const substanceTab = Array.from(tabs).find(t => t.textContent.includes('Substance'));
+    if (substanceTab) {
+        substanceTab.click();
     }
 
-    alert(`Assessment started for ${chemical.name}. The substance information has been pre-filled from inventory.`);
+    // Wait a tiny bit for tab to load, then pre-fill
+    setTimeout(() => {
+        // Pre-fill substance information
+        const chemicalNameField = document.getElementById('chemicalName');
+        const casNumberField = document.getElementById('casNumber');
+        const supplierField = document.getElementById('supplier');
+        const taskField = document.getElementById('taskDescriptionTextarea');
+
+        if (chemicalNameField) chemicalNameField.value = chemical.name;
+        if (casNumberField) casNumberField.value = chemical.casNumber || '';
+        if (supplierField) supplierField.value = chemical.supplier || '';
+
+        // Add location info to task description
+        if (taskField) {
+            const locationNote = chemical.location ? `\n\nInventory Location: ${chemical.location}` : '';
+            const currentTask = taskField.value;
+            if (!currentTask.includes('Inventory Location:')) {
+                taskField.value = (currentTask ? currentTask : `Using chemical: ${chemical.name}`) + locationNote;
+            }
+        }
+
+        // Store hazard data for later use
+        if (chemical.hazardStatements && chemical.hazardStatements.length > 0) {
+            window.inventoryHazardData = {
+                chemicalId: chemicalId,
+                hazardStatements: chemical.hazardStatements,
+                ghsPictograms: chemical.hazards || []
+            };
+        }
+
+        alert(`Assessment started for ${chemical.name}\n\nPre-filled:\n- Chemical Name\n- CAS Number: ${chemical.casNumber || 'N/A'}\n- Supplier: ${chemical.supplier || 'N/A'}\n${chemical.hazardStatements && chemical.hazardStatements.length > 0 ? '\n' + chemical.hazardStatements.length + ' hazard codes available' : ''}`);
+    }, 100);
 }
 
 /**
