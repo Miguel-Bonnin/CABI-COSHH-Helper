@@ -133,25 +133,17 @@ async function fetchInventory() {
         }
 
         // ChemInventory returns data in columns/rows format
-        // Convert from {columns: [...], rows: [[...]]} to array of objects
+        // The rows are already objects (not arrays), so we can use them directly!
         let containers = [];
 
         if (response.columns && response.rows) {
-            // Map rows to objects using column keys
-            const columnKeys = response.columns.map(col => col.key);
-
             if (process.argv.includes('--debug')) {
-                console.log('🔍 Debug: Column keys:', columnKeys);
                 console.log('🔍 Debug: Number of rows:', response.rows.length);
+                console.log('🔍 Debug: First row type:', Array.isArray(response.rows[0]) ? 'Array' : 'Object');
             }
 
-            containers = response.rows.map(row => {
-                const obj = {};
-                columnKeys.forEach((key, index) => {
-                    obj[key] = row[index];
-                });
-                return obj;
-            });
+            // Rows are already objects with the data - use them directly
+            containers = response.rows;
         } else if (Array.isArray(response)) {
             containers = response;
         } else {
@@ -161,28 +153,47 @@ async function fetchInventory() {
         console.log(`✅ Fetched ${containers.length} containers`);
 
         // Transform to simplified format for COSHH tool
-        // Note: Field names from API are lowercase (name, cas, size, etc.)
-        const inventory = containers.map((container, index) => ({
-            id: container.barcode || `container-${index}`, // Use barcode as ID, fallback to index
-            name: container.name || 'Unknown',
-            casNumber: container.cas || null,
-            supplier: container.supplier || null,
-            location: container.location || null,
-            sublocation: null, // Not in export columns
-            barcode: container.barcode || null,
-            size: container.size || null,
-            units: container.unit || null, // Note: 'unit' not 'units'
-            acquisitionDate: container.dateacquired || null,
-            // GHS hazards - may not be in export, but include placeholders
-            hazards: container.ghspictograms || [],
-            hazardStatements: container.hazardstatements || [],
-            // Additional useful fields
-            molecularFormula: container.molecularformula || null,
-            molecularWeight: container.molecularweight || null,
-            structure: container.smiles || null, // SMILES notation
-            comments: container.comments || null,
-            customFields: {} // Custom fields not in basic export
-        }));
+        const inventory = containers.map((container, index) => {
+            // Parse hazard codes from hcodes field (if available)
+            let hazardStatements = [];
+            if (container.hcodes) {
+                // Extract H-codes like H302, H315, etc.
+                const hcodeMatches = container.hcodes.match(/H\d{3}/g);
+                if (hcodeMatches) {
+                    hazardStatements = [...new Set(hcodeMatches)]; // Remove duplicates
+                }
+            }
+
+            return {
+                id: container.id || container.barcode || `container-${index}`,
+                name: container.name || 'Unknown',
+                casNumber: container.cas || null,
+                supplier: container.supplier || null,
+                location: container.location || null,
+                sublocation: null, // Parse from location hierarchy if needed
+                barcode: container.barcode || null,
+                size: container.size || null,
+                units: container.unit || null,
+                acquisitionDate: container.dateacquired || null,
+                // Hazard information
+                hazards: [], // GHS pictograms not in export
+                hazardStatements: hazardStatements,
+                // Chemical properties
+                molecularFormula: container.molecularformula || null,
+                molecularWeight: container.molecularweight || null,
+                structure: container.smiles || null,
+                comments: container.comments || null,
+                // COSHH-specific custom fields
+                customFields: {
+                    coshhRequired: container['cf-8660'] || null,
+                    coshhCompleted: container['cf-8661'] || null,
+                    additionalCAS: container['cf-8665'] || null,
+                    productCode: container['cf-8662'] || null,
+                    unNumber: container['sf-1928'] || null,
+                    mappNumber: container['cf-9014'] || null
+                }
+            };
+        });
 
         return {
             lastUpdated: new Date().toISOString(),
