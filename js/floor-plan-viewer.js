@@ -146,6 +146,12 @@ async function openFloorPlan(floor = 1, highlightRoom = null) {
     // Process inventory data and map to rooms
     await processRoomData();
 
+    // Make rooms interactive (after roomData is populated)
+    const svg = document.querySelector('#floorPlanSvgContainer svg');
+    if (svg) {
+        makeRoomsInteractive(svg);
+    }
+
     // Highlight specific room if requested
     if (highlightRoom) {
         selectRoom(highlightRoom);
@@ -177,6 +183,12 @@ async function switchFloor(floor) {
     // Load new floor
     await loadFloorPlanSVG(floor);
     await processRoomData();
+
+    // Make rooms interactive (after roomData is populated)
+    const svg = document.querySelector('#floorPlanSvgContainer svg');
+    if (svg) {
+        makeRoomsInteractive(svg);
+    }
 }
 
 /**
@@ -195,11 +207,10 @@ async function loadFloorPlanSVG(floor) {
 
         const svg = container.querySelector('svg');
         if (svg) {
-            // Make SVG interactive
-            makeRoomsInteractive(svg);
-
-            // Enable pan functionality
+            // Enable pan functionality (do this first)
             enablePanning(svg);
+
+            // Note: makeRoomsInteractive() will be called after processRoomData() completes
         }
     } catch (error) {
         console.error('Error loading floor plan:', error);
