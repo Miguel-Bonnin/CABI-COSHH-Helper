@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/tables.css">
     <link rel="stylesheet" href="css/print.css">
     <link rel="stylesheet" href="css/inventory.css">
+    <link rel="stylesheet" href="css/floor-plan.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <!-- pdf.js worker script is set inside DOMContentLoaded -->
     <!-- Configuration Modules (Phase 2: Modularization) -->
@@ -21,6 +22,8 @@
     <script src="js/eh40-loader.js"></script>
     <!-- Inventory Management -->
     <script src="js/inventory-manager.js"></script>
+    <!-- Floor Plan Viewer -->
+    <script src="js/floor-plan-viewer.js"></script>
 </head>
 <body>
 
@@ -88,6 +91,7 @@
                 </select>
 
                 <button type="button" class="secondary-button" onclick="refreshInventoryData()" style="margin-left: 20px;">🔄 Refresh Data</button>
+                <button type="button" class="action-button" onclick="openFloorPlan(1)" style="margin-left: 10px;">🗺️ View Floor Plan</button>
             </div>
 
             <div id="inventoryTableContainer">

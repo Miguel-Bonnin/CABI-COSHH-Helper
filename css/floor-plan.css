@@ -1,0 +1,371 @@
+/**
+ * Interactive Floor Plan Viewer Styles
+ */
+
+/* Modal Backdrop */
+.floor-plan-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal Container */
+.floor-plan-container {
+    background: white;
+    width: 95vw;
+    height: 95vh;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Header */
+.floor-plan-header {
+    background: #2c3e50;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #34495e;
+}
+
+.floor-plan-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.floor-plan-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.floor-selector {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background: #34495e;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+
+.floor-selector:hover {
+    background: #415868;
+}
+
+.floor-selector.active {
+    background: #3498db;
+}
+
+.close-floor-plan {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2em;
+    cursor: pointer;
+    padding: 0 10px;
+    line-height: 1;
+    transition: transform 0.2s;
+}
+
+.close-floor-plan:hover {
+    transform: scale(1.2);
+}
+
+/* Viewer Area */
+.floor-plan-viewer {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #ecf0f1;
+}
+
+.floor-plan-svg-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.floor-plan-svg-container svg {
+    max-width: 100%;
+    max-height: 100%;
+    cursor: grab;
+}
+
+.floor-plan-svg-container svg:active {
+    cursor: grabbing;
+}
+
+/* Room Highlighting */
+.room-highlight {
+    fill: rgba(52, 152, 219, 0.3);
+    stroke: #3498db;
+    stroke-width: 3;
+    pointer-events: none;
+    transition: fill 0.2s, stroke-width 0.2s;
+}
+
+.room-highlight.hover {
+    fill: rgba(52, 152, 219, 0.5);
+    stroke-width: 4;
+}
+
+.room-highlight.selected {
+    fill: rgba(231, 76, 60, 0.4);
+    stroke: #e74c3c;
+    stroke-width: 5;
+}
+
+/* Status color coding */
+.room-highlight.status-complete {
+    fill: rgba(46, 204, 113, 0.3);
+    stroke: #2ecc71;
+}
+
+.room-highlight.status-in-progress {
+    fill: rgba(241, 196, 15, 0.3);
+    stroke: #f1c40f;
+}
+
+.room-highlight.status-needs-assessment {
+    fill: rgba(231, 76, 60, 0.3);
+    stroke: #e74c3c;
+}
+
+.room-highlight.status-not-required {
+    fill: rgba(149, 165, 166, 0.2);
+    stroke: #95a5a6;
+}
+
+/* Room Clickable Area (invisible overlay) */
+.room-clickable {
+    cursor: pointer;
+    fill: transparent;
+    stroke: none;
+}
+
+.room-clickable:hover + .room-highlight {
+    fill: rgba(52, 152, 219, 0.5);
+}
+
+/* Tooltip */
+.floor-plan-tooltip {
+    position: absolute;
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 10001;
+    font-size: 0.9em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 250px;
+}
+
+.floor-plan-tooltip h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 5px;
+}
+
+.floor-plan-tooltip p {
+    margin: 5px 0;
+}
+
+.floor-plan-tooltip .status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.floor-plan-tooltip .status-complete { background: #2ecc71; }
+.floor-plan-tooltip .status-in-progress { background: #f1c40f; }
+.floor-plan-tooltip .status-needs-assessment { background: #e74c3c; }
+.floor-plan-tooltip .status-not-required { background: #95a5a6; }
+
+/* Sidebar for chemical list */
+.floor-plan-sidebar {
+    width: 350px;
+    background: white;
+    border-left: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.floor-plan-sidebar.hidden {
+    display: none;
+}
+
+.sidebar-header {
+    padding: 15px;
+    background: #34495e;
+    color: white;
+    border-bottom: 2px solid #2c3e50;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.chemical-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.chemical-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chemical-item strong {
+    display: block;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.chemical-item small {
+    color: #7f8c8d;
+    display: block;
+}
+
+.chemical-item .hazard-codes {
+    margin-top: 5px;
+}
+
+.chemical-item .hazard-badge {
+    font-size: 0.75em;
+    padding: 2px 6px;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 100;
+}
+
+.zoom-btn {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 2px solid #2c3e50;
+    border-radius: 50%;
+    font-size: 1.5em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
+
+.zoom-btn:hover {
+    background: #3498db;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Legend */
+.floor-plan-legend {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.floor-plan-legend h4 {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    color: #2c3e50;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+    font-size: 0.85em;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Loading State */
+.floor-plan-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 1.2em;
+    color: #7f8c8d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .floor-plan-container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .floor-plan-sidebar {
+        width: 100%;
+        height: 40%;
+        border-left: none;
+        border-top: 2px solid #ddd;
+    }
+
+    .floor-plan-legend {
+        font-size: 0.8em;
+        padding: 10px;
+    }
+}
