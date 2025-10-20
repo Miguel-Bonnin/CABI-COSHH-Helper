@@ -164,7 +164,6 @@ async function openFloorPlan(floor = 1, highlightRoom = null) {
 function closeFloorPlan() {
     floorPlanModal.style.display = 'none';
     selectedRoom = null;
-    document.getElementById('floorPlanSidebar').classList.add('hidden');
 }
 
 /**
@@ -454,7 +453,7 @@ function showRoomTooltip(event, roomCode) {
         ${stats.complete > 0 ? `<p><span class="status-indicator status-complete"></span>${stats.complete} Complete</p>` : ''}
         ${stats.in_progress > 0 ? `<p><span class="status-indicator status-in-progress"></span>${stats.in_progress} In Progress</p>` : ''}
         ${stats.needs_assessment > 0 ? `<p><span class="status-indicator status-needs-assessment"></span>${stats.needs_assessment} Needs Assessment</p>` : ''}
-        <p style="margin-top: 8px; font-size: 0.85em; color: #bdc3c7;">Click to view details</p>
+        <p style="margin-top: 8px; font-size: 0.85em; color: #bdc3c7;">Click to filter inventory table</p>
     `;
 
     tooltip.style.display = 'block';
@@ -479,41 +478,34 @@ function hideRoomTooltip() {
 }
 
 /**
- * Select a room and show chemicals
+ * Select a room and filter inventory table
  */
 function selectRoom(roomCode) {
     selectedRoom = roomCode;
     const room = roomData[roomCode];
     if (!room) return;
 
-    // Update sidebar
-    const sidebar = document.getElementById('floorPlanSidebar');
-    const sidebarName = document.getElementById('sidebarRoomName');
-    const sidebarContent = document.getElementById('sidebarContent');
+    console.log(`Room ${roomCode} clicked, filtering inventory...`);
 
-    sidebarName.textContent = `${roomCode} - ${room.stats.total} Chemicals`;
+    // Close the floor plan modal
+    closeFloorPlan();
 
-    // Build chemical list
-    const chemicalListHTML = room.chemicals.map(chem => `
-        <div class="chemical-item">
-            <strong>${escapeHtml(chem.name)}</strong>
-            <small>CAS: ${chem.casNumber || 'N/A'}</small>
-            ${chem.hazardStatements && chem.hazardStatements.length > 0 ? `
-                <div class="hazard-codes">
-                    ${chem.hazardStatements.slice(0, 3).map(h => `<span class="hazard-badge">${h}</span>`).join(' ')}
-                </div>
-            ` : ''}
-            <small style="margin-top: 5px;">Status: ${getStatusBadge(chem.assessmentStatus.status)}</small>
-        </div>
-    `).join('');
+    // Switch to Inventory tab
+    const tabs = document.querySelectorAll('.tab-button');
+    const inventoryTab = Array.from(tabs).find(t => t.textContent.includes('Inventory'));
+    if (inventoryTab) {
+        inventoryTab.click();
+    }
 
-    sidebarContent.innerHTML = chemicalListHTML || '<p>No chemicals found in this room.</p>';
-    sidebar.classList.remove('hidden');
-
-    // Highlight selected room
-    document.querySelectorAll('.room-highlight').forEach(el => {
-        el.classList.toggle('selected', el.dataset.roomCode === roomCode);
-    });
+    // Wait for tab to load, then filter by room code
+    setTimeout(() => {
+        const searchInput = document.getElementById('inventorySearch');
+        if (searchInput) {
+            searchInput.value = roomCode;
+            // Trigger the input event to apply the filter
+            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }, 100);
 }
 
 /**
