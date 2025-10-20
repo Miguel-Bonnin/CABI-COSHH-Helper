@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-10-17T15:12:42.970Z",
-  "totalChemicals": 541,
+  "lastUpdated": "2025-10-20T11:22:31.818Z",
+  "totalChemicals": 539,
   "inventory": [
     {
       "id": 10739739,
@@ -4443,37 +4443,6 @@
       }
     },
     {
-      "id": 10750792,
-      "substanceId": 1422828,
-      "name": "Capillary Electrophoresis Running Buffer",
-      "casNumber": "N/A",
-      "supplier": "N/A",
-      "location": "CABI UK Laboratory > CABI UK Laboratory > E2.10 Molecular",
-      "sublocation": null,
-      "barcode": null,
-      "size": "100",
-      "units": "mL",
-      "acquisitionDate": null,
-      "hazards": [],
-      "hazardStatements": [
-        "H290",
-        "H314",
-        "H318"
-      ],
-      "molecularFormula": null,
-      "molecularWeight": null,
-      "structure": "Unknown",
-      "comments": null,
-      "customFields": {
-        "coshhRequired": "Yes",
-        "coshhCompleted": "No",
-        "additionalCAS": null,
-        "productCode": null,
-        "unNumber": null,
-        "mappNumber": null
-      }
-    },
-    {
       "id": 11659355,
       "substanceId": 532124,
       "name": "Carboxymethylcellulose sodium",
@@ -7071,47 +7040,6 @@
       }
     },
     {
-      "id": 10740053,
-      "substanceId": 836136,
-      "name": "Ethanol Molecular Biology Grade",
-      "casNumber": "64-17-5",
-      "supplier": "N/A",
-      "location": "CABI UK Laboratory > CABI UK Laboratory > E1.8 Chemical store",
-      "sublocation": null,
-      "barcode": null,
-      "size": "4",
-      "units": "L",
-      "acquisitionDate": null,
-      "hazards": [],
-      "hazardStatements": [
-        "H225",
-        "H319",
-        "H301",
-        "H302",
-        "H311",
-        "H331",
-        "H370",
-        "H371",
-        "H226",
-        "H315",
-        "H318",
-        "H336",
-        "H412"
-      ],
-      "molecularFormula": "C2H6O",
-      "molecularWeight": 46.07,
-      "structure": "CCO",
-      "comments": null,
-      "customFields": {
-        "coshhRequired": "Yes",
-        "coshhCompleted": "No",
-        "additionalCAS": null,
-        "productCode": null,
-        "unNumber": "1170",
-        "mappNumber": null
-      }
-    },
-    {
       "id": 11698408,
       "substanceId": 836136,
       "name": "Ethanol Molecular Biology Grade",
@@ -7153,34 +7081,44 @@
       }
     },
     {
-      "id": 11664861,
-      "substanceId": 4529,
-      "name": "Ethyl acetate",
-      "casNumber": "141-78-6",
-      "supplier": "Watkins and Doncaster",
-      "location": "CABI UK Laboratory > CABI UK Laboratory > H209 Hamilton lab",
+      "id": 10740053,
+      "substanceId": 836136,
+      "name": "Ethanol Molecular Biology Grade",
+      "casNumber": "64-17-5",
+      "supplier": "N/A",
+      "location": "CABI UK Laboratory > CABI UK Laboratory > E1.8 Chemical store",
       "sublocation": null,
       "barcode": null,
-      "size": "100",
-      "units": "mL",
-      "acquisitionDate": "2025-05-30",
+      "size": "4",
+      "units": "L",
+      "acquisitionDate": null,
       "hazards": [],
       "hazardStatements": [
         "H225",
+        "H319",
+        "H301",
+        "H302",
+        "H311",
+        "H331",
+        "H370",
+        "H371",
+        "H226",
+        "H315",
+        "H318",
         "H336",
-        "H319"
+        "H412"
       ],
-      "molecularFormula": "C4H8O2",
-      "molecularWeight": 88.11,
-      "structure": "CCOC(=O)C",
+      "molecularFormula": "C2H6O",
+      "molecularWeight": 46.07,
+      "structure": "CCO",
       "comments": null,
       "customFields": {
-        "coshhRequired": null,
-        "coshhCompleted": null,
-        "additionalCAS": "N/A",
-        "productCode": "N/A",
-        "unNumber": "1173",
-        "mappNumber": "N/A"
+        "coshhRequired": "Yes",
+        "coshhCompleted": "No",
+        "additionalCAS": null,
+        "productCode": null,
+        "unNumber": "1170",
+        "mappNumber": null
       }
     },
     {
@@ -7212,6 +7150,37 @@
         "productCode": null,
         "unNumber": "1173",
         "mappNumber": null
+      }
+    },
+    {
+      "id": 11664861,
+      "substanceId": 4529,
+      "name": "Ethyl acetate",
+      "casNumber": "141-78-6",
+      "supplier": "Watkins and Doncaster",
+      "location": "CABI UK Laboratory > CABI UK Laboratory > H209 Hamilton lab",
+      "sublocation": null,
+      "barcode": null,
+      "size": "100",
+      "units": "mL",
+      "acquisitionDate": "2025-05-30",
+      "hazards": [],
+      "hazardStatements": [
+        "H225",
+        "H336",
+        "H319"
+      ],
+      "molecularFormula": "C4H8O2",
+      "molecularWeight": 88.11,
+      "structure": "CCOC(=O)C",
+      "comments": null,
+      "customFields": {
+        "coshhRequired": null,
+        "coshhCompleted": null,
+        "additionalCAS": "N/A",
+        "productCode": "N/A",
+        "unNumber": "1173",
+        "mappNumber": "N/A"
       }
     },
     {
@@ -7850,37 +7819,6 @@
         "productCode": "N/A",
         "unNumber": "N/A",
         "mappNumber": "N/A"
-      }
-    },
-    {
-      "id": 10750790,
-      "substanceId": 4051,
-      "name": "Hi-Di Formamide",
-      "casNumber": "75-12-7",
-      "supplier": "N/A",
-      "location": "CABI UK Laboratory > CABI UK Laboratory > E2.10 Molecular",
-      "sublocation": null,
-      "barcode": null,
-      "size": "N/A",
-      "units": null,
-      "acquisitionDate": null,
-      "hazards": [],
-      "hazardStatements": [
-        "H373",
-        "H360",
-        "H351"
-      ],
-      "molecularFormula": "CH3NO",
-      "molecularWeight": 45.04,
-      "structure": "C(=O)N",
-      "comments": null,
-      "customFields": {
-        "coshhRequired": "Yes",
-        "coshhCompleted": "No",
-        "additionalCAS": null,
-        "productCode": null,
-        "unNumber": "N/A",
-        "mappNumber": null
       }
     },
     {
