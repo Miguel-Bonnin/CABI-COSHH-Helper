@@ -271,56 +271,97 @@ function extractRoomCode(location) {
  * Make rooms interactive in SVG
  */
 function makeRoomsInteractive(svg) {
-    // Look for rectangles with id="room-*" pattern
-    const roomRects = svg.querySelectorAll('rect[id^="room-"], rect[id*="room"]');
+    // Look for all rectangles
+    const allRects = svg.querySelectorAll('rect');
+    console.log(`Found ${allRects.length} total rectangles in SVG`);
 
-    console.log(`Found ${roomRects.length} room rectangles in SVG`);
+    let roomRectsFound = 0;
 
-    roomRects.forEach(rect => {
-        const rectId = rect.getAttribute('id');
-        console.log('Processing room rectangle:', rectId);
+    allRects.forEach(rect => {
+        // Check for room code in multiple places:
+        // 1. <title> element (Inkscape Label)
+        // 2. id attribute
+        // 3. inkscape:label attribute
 
-        // Extract room code from ID
-        // Supports formats like: "room-E1.6", "E1.6", "room_E1.6", etc.
+        let label = null;
         let roomCode = null;
 
-        // Try various patterns
+        // 1. Check <title> element (Inkscape Label)
+        const titleEl = rect.querySelector('title');
+        if (titleEl) {
+            label = titleEl.textContent.trim();
+        }
+
+        // 2. Check inkscape:label attribute
+        if (!label) {
+            label = rect.getAttribute('inkscape:label');
+        }
+
+        // 3. Check id attribute
+        if (!label) {
+            label = rect.getAttribute('id');
+        }
+
+        // 4. Check aria-label
+        if (!label) {
+            label = rect.getAttribute('aria-label');
+        }
+
+        if (!label) return;
+
+        console.log('Found rect with label:', label);
+
+        // Extract room code from label
+        // Supports formats like: "Room_E1.07", "E1.6", "room-E2.2", etc.
         const patterns = [
-            /room[-_]?([EH]\d+\.?\d*)/i,  // room-E1.6, room_E1.6
-            /^([EH]\d+\.?\d*)$/i,          // E1.6
-            /([EH]\d+\.?\d*)/i             // Any E1.6 in the string
+            /room[-_\s]?([EH]\d+\.?\d*)/i,  // Room_E1.07, room-E1.6
+            /^([EH]\d+\.?\d*)$/i,            // E1.6
+            /([EH]\d+\.?\d*)/i               // Any E1.6 in the string
         ];
 
         for (const pattern of patterns) {
-            const match = rectId.match(pattern);
+            const match = label.match(pattern);
             if (match) {
                 roomCode = match[1].toUpperCase();
+                // Normalize: E1.07 → E1.7, E2.2 stays E2.2
+                roomCode = roomCode.replace(/\.0(\d)$/, '.$1');
                 break;
             }
         }
 
-        console.log(`  Extracted room code: ${roomCode}`);
+        if (roomCode) {
+            console.log(`  Extracted room code: ${roomCode}`);
+            roomRectsFound++;
 
-        if (roomCode && roomData[roomCode]) {
-            console.log(`  ✓ Found matching room data for ${roomCode}`);
-            // Add highlighting and interactivity
-            makeRoomInteractive(svg, rect, roomCode);
-        } else if (roomCode) {
-            console.log(`  ✗ No room data found for ${roomCode}`);
+            if (roomData[roomCode]) {
+                console.log(`  ✓ Found matching room data for ${roomCode}`);
+                makeRoomInteractive(svg, rect, roomCode);
+            } else {
+                console.log(`  ✗ No room data found for ${roomCode} (no chemicals in inventory for this room)`);
+            }
         }
     });
 
-    // If no rectangles found, show helpful message
-    if (roomRects.length === 0) {
-        console.warn('No room rectangles found. Looking for elements with id containing "room"');
-        const allRects = svg.querySelectorAll('rect');
-        console.log(`Total rectangles in SVG: ${allRects.length}`);
+    console.log(`Total room rectangles with valid labels: ${roomRectsFound}`);
 
-        // Show first few rect IDs for debugging
-        Array.from(allRects).slice(0, 10).forEach(r => {
+    // If no rooms found, show debugging info
+    if (roomRectsFound === 0) {
+        console.warn('⚠ No room rectangles detected!');
+        console.log('Showing first 10 rectangles for debugging:');
+
+        Array.from(allRects).slice(0, 10).forEach((r, i) => {
+            const titleEl = r.querySelector('title');
             const id = r.getAttribute('id');
-            if (id) console.log('  Sample rect id:', id);
+            const inkscapeLabel = r.getAttribute('inkscape:label');
+
+            console.log(`  Rect ${i + 1}:`);
+            if (titleEl) console.log(`    <title>: "${titleEl.textContent}"`);
+            if (id) console.log(`    id: "${id}"`);
+            if (inkscapeLabel) console.log(`    inkscape:label: "${inkscapeLabel}"`);
         });
+
+        console.log('\nAvailable room codes in inventory:');
+        console.log(Object.keys(roomData).join(', '));
     }
 }
 
