@@ -19,11 +19,13 @@ async function loadInventoryData() {
         const invResponse = await fetch('data/inventory/chemical-inventory.json');
         if (!invResponse.ok) throw new Error('Failed to load inventory');
         inventoryData = await invResponse.json();
+        window.inventoryData = inventoryData; // Make globally accessible for floor-plan-viewer.js
 
         // Load assessment status
         const statusResponse = await fetch('data/tracking/assessment-status.json');
         if (!statusResponse.ok) throw new Error('Failed to load assessment status');
         assessmentStatus = await statusResponse.json();
+        window.assessmentStatus = assessmentStatus; // Make globally accessible for floor-plan-viewer.js
 
         return true;
     } catch (error) {

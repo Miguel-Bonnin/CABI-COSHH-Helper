@@ -211,6 +211,10 @@ async function loadFloorPlanSVG(floor) {
  * Process inventory data and map to rooms
  */
 async function processRoomData() {
+    // Access global variables from inventory-manager.js
+    const inventoryData = window.inventoryData;
+    const assessmentStatus = window.assessmentStatus;
+
     if (!inventoryData || !assessmentStatus) {
         console.warn('Inventory data not loaded');
         return;
