@@ -65,8 +65,8 @@ function createFloorPlanModal() {
 
                 <div class="zoom-controls">
                     <button class="zoom-btn" id="zoomIn" title="Zoom In">+</button>
-                    <button class="zoom-btn" id="zoomReset" title="Reset Zoom">⊙</button>
-                    <button class="zoom-btn" id="zoomOut" title="Zoom Out">−</button>
+                    <button class="zoom-btn" id="zoomReset" title="Reset Zoom">↺</button>
+                    <button class="zoom-btn" id="zoomOut" title="Zoom Out">-</button>
                 </div>
             </div>
 
