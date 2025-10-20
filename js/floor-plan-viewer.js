@@ -271,46 +271,63 @@ function extractRoomCode(location) {
  * Make rooms interactive in SVG
  */
 function makeRoomsInteractive(svg) {
-    // Find all text elements that look like room labels
-    const textElements = svg.querySelectorAll('text');
+    // Look for rectangles with id="room-*" pattern
+    const roomRects = svg.querySelectorAll('rect[id^="room-"], rect[id*="room"]');
 
-    textElements.forEach(textEl => {
-        const textContent = textEl.textContent.trim();
-        const roomCode = extractRoomCode(textContent);
+    console.log(`Found ${roomRects.length} room rectangles in SVG`);
 
-        if (roomCode && roomData[roomCode]) {
-            // Find the parent group or nearby shapes
-            const roomShapes = findRoomShapes(textEl);
+    roomRects.forEach(rect => {
+        const rectId = rect.getAttribute('id');
+        console.log('Processing room rectangle:', rectId);
 
-            if (roomShapes.length > 0) {
-                // Add room highlighting and interactivity
-                highlightRoom(svg, roomShapes, roomCode, textEl);
+        // Extract room code from ID
+        // Supports formats like: "room-E1.6", "E1.6", "room_E1.6", etc.
+        let roomCode = null;
+
+        // Try various patterns
+        const patterns = [
+            /room[-_]?([EH]\d+\.?\d*)/i,  // room-E1.6, room_E1.6
+            /^([EH]\d+\.?\d*)$/i,          // E1.6
+            /([EH]\d+\.?\d*)/i             // Any E1.6 in the string
+        ];
+
+        for (const pattern of patterns) {
+            const match = rectId.match(pattern);
+            if (match) {
+                roomCode = match[1].toUpperCase();
+                break;
             }
         }
+
+        console.log(`  Extracted room code: ${roomCode}`);
+
+        if (roomCode && roomData[roomCode]) {
+            console.log(`  ✓ Found matching room data for ${roomCode}`);
+            // Add highlighting and interactivity
+            makeRoomInteractive(svg, rect, roomCode);
+        } else if (roomCode) {
+            console.log(`  ✗ No room data found for ${roomCode}`);
+        }
     });
-}
 
-/**
- * Find shapes associated with a room label
- */
-function findRoomShapes(textElement) {
-    // Look for rectangles, paths, or polygons near the text
-    const shapes = [];
-    const parent = textElement.parentElement;
+    // If no rectangles found, show helpful message
+    if (roomRects.length === 0) {
+        console.warn('No room rectangles found. Looking for elements with id containing "room"');
+        const allRects = svg.querySelectorAll('rect');
+        console.log(`Total rectangles in SVG: ${allRects.length}`);
 
-    if (parent) {
-        // Get all sibling shapes
-        const siblings = parent.querySelectorAll('rect, path, polygon');
-        siblings.forEach(shape => shapes.push(shape));
+        // Show first few rect IDs for debugging
+        Array.from(allRects).slice(0, 10).forEach(r => {
+            const id = r.getAttribute('id');
+            if (id) console.log('  Sample rect id:', id);
+        });
     }
-
-    return shapes;
 }
 
 /**
- * Add highlighting and interactivity to room
+ * Make a single room rectangle interactive
  */
-function highlightRoom(svg, shapes, roomCode, textEl) {
+function makeRoomInteractive(svg, rect, roomCode) {
     const room = roomData[roomCode];
     if (!room) return;
 
@@ -320,31 +337,43 @@ function highlightRoom(svg, shapes, roomCode, textEl) {
     else if (room.stats.in_progress > 0) status = 'in-progress';
     else if (room.stats.complete > 0) status = 'complete';
 
+    // Get rectangle dimensions
+    const bbox = rect.getBBox();
+
     // Create highlight overlay
-    shapes.forEach(shape => {
-        const bbox = shape.getBBox();
-        const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    highlight.setAttribute('x', bbox.x);
+    highlight.setAttribute('y', bbox.y);
+    highlight.setAttribute('width', bbox.width);
+    highlight.setAttribute('height', bbox.height);
+    highlight.classList.add('room-highlight', `status-${status}`);
+    highlight.dataset.roomCode = roomCode;
 
-        highlight.setAttribute('x', bbox.x);
-        highlight.setAttribute('y', bbox.y);
-        highlight.setAttribute('width', bbox.width);
-        highlight.setAttribute('height', bbox.height);
-        highlight.classList.add('room-highlight', `status-${status}`);
-        highlight.dataset.roomCode = roomCode;
+    // Insert highlight before the room rectangle
+    rect.parentNode.insertBefore(highlight, rect);
 
-        // Insert before the shape
-        shape.parentNode.insertBefore(highlight, shape);
+    // Make original rectangle clickable (keep it transparent but interactive)
+    rect.style.cursor = 'pointer';
+    rect.style.fill = 'transparent';
+    rect.style.stroke = 'none';
+    rect.dataset.roomCode = roomCode;
 
-        // Make shape clickable
-        shape.classList.add('room-clickable');
-        shape.dataset.roomCode = roomCode;
-
-        // Add event listeners
-        shape.addEventListener('mouseenter', (e) => showRoomTooltip(e, roomCode));
-        shape.addEventListener('mousemove', (e) => moveRoomTooltip(e));
-        shape.addEventListener('mouseleave', hideRoomTooltip);
-        shape.addEventListener('click', () => selectRoom(roomCode));
+    // Add event listeners to the rectangle
+    rect.addEventListener('mouseenter', (e) => {
+        showRoomTooltip(e, roomCode);
+        highlight.classList.add('hover');
     });
+
+    rect.addEventListener('mousemove', (e) => moveRoomTooltip(e));
+
+    rect.addEventListener('mouseleave', () => {
+        hideRoomTooltip();
+        highlight.classList.remove('hover');
+    });
+
+    rect.addEventListener('click', () => selectRoom(roomCode));
+
+    console.log(`  ✓ Added interactivity to ${roomCode}`);
 }
 
 /**
