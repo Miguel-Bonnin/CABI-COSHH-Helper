@@ -215,8 +215,14 @@ async function processRoomData() {
     const inventoryData = window.inventoryData;
     const assessmentStatus = window.assessmentStatus;
 
+    console.log('DEBUG: inventoryData exists?', !!inventoryData);
+    console.log('DEBUG: assessmentStatus exists?', !!assessmentStatus);
+    if (inventoryData) {
+        console.log('DEBUG: inventory has', inventoryData.inventory?.length, 'chemicals');
+    }
+
     if (!inventoryData || !assessmentStatus) {
-        console.warn('Inventory data not loaded');
+        console.warn('Inventory data not loaded - please visit the Inventory tab first!');
         return;
     }
 
