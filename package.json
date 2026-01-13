@@ -1,0 +1,30 @@
+{
+  "name": "cabi-coshh-helper",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A web-based tool to streamline the creation of COSHH (Control of Substances Hazardous to Health) assessments for laboratory environments.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miguel-Bonnin/CABI-COSHH-Helper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Miguel-Bonnin/CABI-COSHH-Helper/issues"
+  },
+  "homepage": "https://github.com/Miguel-Bonnin/CABI-COSHH-Helper#readme",
+  "devDependencies": {
+    "happy-dom": "^20.1.0",
+    "vitest": "^4.0.17"
+  }
+}
