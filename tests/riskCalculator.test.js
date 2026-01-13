@@ -185,3 +185,126 @@ describe('calculateOverallLikelihood', () => {
     expect(resultKG).toBe(resultG);
   });
 });
+
+describe('calculateOverallSeverity - Input Validation', () => {
+  it('should throw TypeError when hPhrases is null', () => {
+    expect(() => calculateOverallSeverity(null, 'Danger'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity(null, 'Danger'))
+      .toThrow(/hPhrases must be an array/i);
+  });
+
+  it('should throw TypeError when hPhrases is undefined', () => {
+    expect(() => calculateOverallSeverity(undefined, 'Danger'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity(undefined, 'Danger'))
+      .toThrow(/hPhrases must be an array/i);
+  });
+
+  it('should throw TypeError when hPhrases is not an array', () => {
+    expect(() => calculateOverallSeverity('H350', 'Danger'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity('H350', 'Danger'))
+      .toThrow(/hPhrases must be an array/i);
+  });
+
+  it('should throw TypeError when signalWord is null', () => {
+    expect(() => calculateOverallSeverity(['H350'], null))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity(['H350'], null))
+      .toThrow(/signalWord must be a string/i);
+  });
+
+  it('should throw TypeError when signalWord is undefined', () => {
+    expect(() => calculateOverallSeverity(['H350'], undefined))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity(['H350'], undefined))
+      .toThrow(/signalWord must be a string/i);
+  });
+
+  it('should throw TypeError when signalWord is not a string', () => {
+    expect(() => calculateOverallSeverity(['H350'], 123))
+      .toThrow(TypeError);
+    expect(() => calculateOverallSeverity(['H350'], 123))
+      .toThrow(/signalWord must be a string/i);
+  });
+});
+
+describe('calculateOverallLikelihood - Input Validation', () => {
+  it('should throw TypeError when quantity is null', () => {
+    expect(() => calculateOverallLikelihood(null, null, 'mL', 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, null, 'mL', 'daily', 'medium'))
+      .toThrow(/quantity must be a number/i);
+  });
+
+  it('should throw TypeError when quantity is undefined', () => {
+    expect(() => calculateOverallLikelihood(null, undefined, 'mL', 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, undefined, 'mL', 'daily', 'medium'))
+      .toThrow(/quantity must be a number/i);
+  });
+
+  it('should throw RangeError when quantity is negative', () => {
+    expect(() => calculateOverallLikelihood(null, -10, 'mL', 'daily', 'medium'))
+      .toThrow(RangeError);
+    expect(() => calculateOverallLikelihood(null, -10, 'mL', 'daily', 'medium'))
+      .toThrow(/quantity must be non-negative/i);
+  });
+
+  it('should throw TypeError when quantity is not a number', () => {
+    expect(() => calculateOverallLikelihood(null, '100', 'mL', 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, '100', 'mL', 'daily', 'medium'))
+      .toThrow(/quantity must be a number/i);
+  });
+
+  it('should throw TypeError when unit is null', () => {
+    expect(() => calculateOverallLikelihood(null, 100, null, 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, null, 'daily', 'medium'))
+      .toThrow(/unit must be a string/i);
+  });
+
+  it('should throw TypeError when unit is undefined', () => {
+    expect(() => calculateOverallLikelihood(null, 100, undefined, 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, undefined, 'daily', 'medium'))
+      .toThrow(/unit must be a string/i);
+  });
+
+  it('should throw TypeError when unit is invalid (not in allowed list)', () => {
+    expect(() => calculateOverallLikelihood(null, 100, 'gallons', 'daily', 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, 'gallons', 'daily', 'medium'))
+      .toThrow(/unit must be one of/i);
+  });
+
+  it('should throw TypeError when frequency is null', () => {
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', null, 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', null, 'medium'))
+      .toThrow(/frequency must be a string/i);
+  });
+
+  it('should throw TypeError when frequency is undefined', () => {
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', undefined, 'medium'))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', undefined, 'medium'))
+      .toThrow(/frequency must be a string/i);
+  });
+
+  it('should throw TypeError when duration is null', () => {
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', 'daily', null))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', 'daily', null))
+      .toThrow(/duration must be a string/i);
+  });
+
+  it('should throw TypeError when duration is undefined', () => {
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', 'daily', undefined))
+      .toThrow(TypeError);
+    expect(() => calculateOverallLikelihood(null, 100, 'mL', 'daily', undefined))
+      .toThrow(/duration must be a string/i);
+  });
+});
