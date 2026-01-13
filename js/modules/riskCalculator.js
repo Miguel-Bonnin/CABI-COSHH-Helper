@@ -122,6 +122,48 @@ function normalizeQuantity(quantity, unit) {
 }
 
 /**
+ * Get quantity score based on normalized quantity thresholds
+ *
+ * @param {number} normalizedQuantity - Quantity in base units (mg or mL)
+ * @returns {number} Score from 0-3
+ * @private
+ */
+function getQuantityScore(normalizedQuantity) {
+  if (normalizedQuantity > 500) return 3;
+  if (normalizedQuantity > 50) return 2;
+  if (normalizedQuantity > 1) return 1;
+  return 0;
+}
+
+/**
+ * Get frequency score based on task frequency
+ *
+ * @param {string} frequency - Task frequency (multiple_daily, daily, weekly, etc.)
+ * @returns {number} Score from 0-3
+ * @private
+ */
+function getFrequencyScore(frequency) {
+  if (frequency === 'multiple_daily') return 3;
+  if (frequency === 'daily') return 2;
+  if (frequency === 'weekly') return 1;
+  return 0;
+}
+
+/**
+ * Get duration score based on task duration
+ *
+ * @param {string} duration - Task duration (very_long, long, medium, etc.)
+ * @returns {number} Score from 0-3
+ * @private
+ */
+function getDurationScore(duration) {
+  if (duration === 'very_long') return 3;
+  if (duration === 'long') return 2;
+  if (duration === 'medium') return 1;
+  return 0;
+}
+
+/**
  * Calculate overall likelihood score based on procedure, quantity, frequency, and duration
  *
  * @param {Object|null} procedureData - Procedure characteristics with exposureFactor and aerosol
@@ -152,37 +194,15 @@ export function calculateOverallLikelihood(procedureData, quantity, unit, freque
     likelihoodScore += 1.5;
   }
 
-  // Step 3: Normalize quantity and add quantity factor
+  // Step 3: Add quantity factor based on normalized quantity
   const normalizedQuantity = normalizeQuantity(quantity, unit);
-
-  if (normalizedQuantity > 500) {
-    likelihoodScore += 3;
-  } else if (normalizedQuantity > 50) {
-    likelihoodScore += 2;
-  } else if (normalizedQuantity > 1) {
-    likelihoodScore += 1;
-  }
-  // Note: quantities <= 1 add 0 to score
+  likelihoodScore += getQuantityScore(normalizedQuantity);
 
   // Step 5: Add frequency multiplier
-  if (frequency === 'multiple_daily') {
-    likelihoodScore += 3;
-  } else if (frequency === 'daily') {
-    likelihoodScore += 2;
-  } else if (frequency === 'weekly') {
-    likelihoodScore += 1;
-  }
-  // Other frequencies (occasionally, monthly, etc.) add 0
+  likelihoodScore += getFrequencyScore(frequency);
 
   // Step 6: Add duration multiplier
-  if (duration === 'very_long') {
-    likelihoodScore += 3;
-  } else if (duration === 'long') {
-    likelihoodScore += 2;
-  } else if (duration === 'medium') {
-    likelihoodScore += 1;
-  }
-  // Other durations (short, rare, etc.) add 0
+  likelihoodScore += getDurationScore(duration);
 
   // Step 7: Cap at 10
   return Math.min(10, likelihoodScore);
