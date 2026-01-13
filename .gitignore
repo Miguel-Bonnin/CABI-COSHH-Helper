@@ -1,5 +1,6 @@
 # Claude Code local settings (user-specific preferences)
-.claude/settings.local.json
+.claude/
+tmpclaude-*
 
 # ChemInventory API credentials (NEVER commit these!)
 *.env
