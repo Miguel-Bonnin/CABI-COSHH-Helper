@@ -116,3 +116,6 @@ const hPhraseToHazardGroup = {
     "default_low_sev": "B",       // For low severity H-phrases
     "default_no_sig_haz": "A"     // For no significant hazards
 };
+
+// Export for ES6 modules
+export { hPhraseSeverityMap, hPhraseToHazardGroup };
