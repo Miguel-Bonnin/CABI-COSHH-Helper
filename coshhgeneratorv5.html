@@ -461,8 +461,12 @@
     <p><strong>Disclaimer:</strong> This tool is designed to automate the parsing of PDF files and the initial setup of the risk matrix. The tool is intentionally cautious in its risk assessments to allow users to apply their own professional judgment and adjust controls accordingly. All generated assessments and suggestions <strong>must be thoroughly reviewed, verified, and approved by the responsible Lab Manager, COSHH Assessor, and/or other qualified safety personnel</strong> before any work commences. Users are responsible for ensuring compliance with all relevant safety regulations and local procedures.</p>
 </div>
 
-<script>
+<script type="module">
     console.log("Script execution started.");
+
+    // --- Module Imports (Phase 1: Testing Foundation) ---
+    import { calculateOverallSeverity, calculateOverallLikelihood } from './js/modules/riskCalculator.js';
+
     // --- Global variable for parsed MSDS data ---
     let masterParsedMSDSData = {};
 
@@ -1064,49 +1068,39 @@
         return (hPhrasesFormEl?.value || masterParsedMSDSData.hPhrases?.value || "").toUpperCase().split(/[,;\s]+/).filter(Boolean);
     }
     function getSignalWord() { return masterParsedMSDSData.signalWord?.value || "None"; }
-    function calculateOverallSeverity() { /* ... (Full function from previous correct version) ... */
-        const hPhrases = getHphrases(); let maxSeverity = 0;
-        if (hPhrases.length === 0) maxSeverity = 1;
-        hPhrases.forEach(phrase => {
-            for (const pattern in hPhraseSeverityMap) {
-                if (phrase.startsWith(pattern)) { if (hPhraseSeverityMap[pattern] > maxSeverity) maxSeverity = hPhraseSeverityMap[pattern]; }
-            }
-        });
-        if (maxSeverity === 0 && hPhrases.length > 0) maxSeverity = hPhraseSeverityMap["default"];
+
+    /**
+     * Wrapper function for calculateOverallSeverity module function
+     * Reads H-phrases and signal word from DOM, then calls the pure module function
+     * @returns {number} Severity score from 1-5
+     */
+    function calculateOverallSeverityFromDOM() {
+        const hPhrases = getHphrases();
         const signalWord = getSignalWord();
-        if (signalWord === "Danger" && maxSeverity < 4) maxSeverity = Math.max(maxSeverity, 3);
-        if (signalWord === "Warning" && maxSeverity < 2) maxSeverity = Math.max(maxSeverity, 2);
-        return maxSeverity;
+        return calculateOverallSeverity(hPhrases, signalWord);
     }
-    function calculateOverallLikelihood() { /* ... (Full function from previous correct version) ... */
-        let likelihoodScore = 0;
+    /**
+     * Wrapper function for calculateOverallLikelihood module function
+     * Reads procedure, quantity, frequency, and duration from DOM, then calls the pure module function
+     * @returns {number} Likelihood score from 0-10
+     */
+    function calculateOverallLikelihoodFromDOM() {
         const procedureKey = document.getElementById('labProcedure')?.value;
         const procDetails = procedureData[procedureKey];
-        if (procDetails) { likelihoodScore += (procDetails.exposureFactor || 0.5) * 3; likelihoodScore += (procDetails.aerosol || 0) * 2; } 
-        else { likelihoodScore += 1.5; }
 
         const quantityValueEl = document.getElementById('quantityValue');
         const quantityValue = quantityValueEl ? parseFloat(quantityValueEl.value) || 0 : 0;
+
         const quantityUnitEl = document.getElementById('quantityUnit');
         const quantityUnit = quantityUnitEl ? quantityUnitEl.value : 'mL';
 
-        let normalizedQuantity = quantityValue;
-        if (['µL', 'µg'].includes(quantityUnit)) normalizedQuantity /= 1000;
-        if (['L', 'kg'].includes(quantityUnit)) normalizedQuantity *= 1000;
-        if (normalizedQuantity > 500) likelihoodScore += 3; else if (normalizedQuantity > 50) likelihoodScore += 2; else if (normalizedQuantity > 1) likelihoodScore += 1;
-
-        const materialTypeEl = document.getElementById('materialTypeForm');
-        const materialType = materialTypeEl ? materialTypeEl.value : "";
-        if (materialType && (materialType.includes("volatile") || materialType.includes("dusty") || materialType.includes("gas") || materialType.includes("aerosol"))) likelihoodScore += 2;
-        
         const frequencyEl = document.getElementById('taskFrequency');
         const frequency = frequencyEl ? frequencyEl.value : "weekly";
-        if (frequency === "multiple_daily") likelihoodScore += 3; else if (frequency === "daily") likelihoodScore += 2; else if (frequency === "weekly") likelihoodScore += 1;
 
         const durationEl = document.getElementById('taskDuration');
         const duration = durationEl ? durationEl.value : "medium";
-        if (duration === "very_long") likelihoodScore += 3; else if (duration === "long") likelihoodScore += 2; else if (duration === "medium") likelihoodScore += 1;
-        return Math.min(10, likelihoodScore);
+
+        return calculateOverallLikelihood(procDetails, quantityValue, quantityUnit, frequency, duration);
     }
     function determineRiskEvaluationParameters() { /* ... (Full function from previous correct version) ... */
         const hPhrases = getHphrases(); let determinedHazardGroup = "A"; let maxHGSeverity = 0;
@@ -1142,7 +1136,7 @@
         else physCharCat = "Medium"; 
         setRadio("physCharGroup", physCharCat);
 
-        const severityScore = calculateOverallSeverity(); const likelihoodScore = calculateOverallLikelihood(); let controlBand = "1";
+        const severityScore = calculateOverallSeverityFromDOM(); const likelihoodScore = calculateOverallLikelihoodFromDOM(); let controlBand = "1";
         const totalRiskScore = severityScore * (likelihoodScore / 2); 
         
         const sevScoreEl = document.getElementById('calculatedSeverityScore'); if(sevScoreEl) sevScoreEl.textContent = severityScore.toFixed(1);
