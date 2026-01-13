@@ -101,7 +101,7 @@ async function loadEH40Data() {
         // Update status message to show data is ready
         const statusEl = document.getElementById('welMatchStatus');
         if (statusEl) {
-            statusEl.textContent = `(${eh40Data.length} substances loaded)`;
+            statusEl.textContent = `✓ ${eh40Data.length} substances loaded`;
             statusEl.style.color = '#28a745';
         }
 
@@ -109,6 +109,7 @@ async function loadEH40Data() {
     } catch (error) {
         console.error('Error loading EH40 data:', error);
         eh40DataLoaded = false;
+        showEH40Error('Could not load EH40 workplace exposure limits data. The data file may be missing or inaccessible.');
         return false;
     }
 }
@@ -202,6 +203,33 @@ function searchEH40(substanceName, casNumber) {
 }
 
 /**
+ * Show error message for EH40 data loading failure
+ */
+function showEH40Error(message) {
+    const statusEl = document.getElementById('welMatchStatus');
+    if (statusEl) {
+        statusEl.innerHTML = `
+            <div style="color: #d32f2f; margin-bottom: 10px;">${message}</div>
+            <button type="button" class="secondary-button small" onclick="retryLoadEH40Data()" style="font-size: 12px;">
+                Retry Loading EH40 Data
+            </button>
+        `;
+    }
+}
+
+/**
+ * Retry loading EH40 data (called from error UI)
+ */
+async function retryLoadEH40Data() {
+    const statusEl = document.getElementById('welMatchStatus');
+    if (statusEl) {
+        statusEl.textContent = 'Loading EH40 data...';
+        statusEl.style.color = '#6c757d';
+    }
+    await loadEH40Data();
+}
+
+/**
  * Auto-fill WEL values from EH40 data
  */
 function autoFillWELValues() {
@@ -211,8 +239,8 @@ function autoFillWELValues() {
     if (!eh40DataLoaded || eh40Data.length === 0) {
         console.warn('EH40 data not yet loaded');
         if (statusEl) {
-            statusEl.textContent = '⏳ Loading EH40 data...';
-            statusEl.style.color = '#ffc107';
+            statusEl.textContent = 'Loading EH40 data...';
+            statusEl.style.color = '#6c757d';
         }
         // Wait a bit and try again
         setTimeout(autoFillWELValues, 500);

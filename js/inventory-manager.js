@@ -96,6 +96,7 @@ async function initializeInventory() {
         updateInventoryStats();
         renderInventoryTable();
         setupInventoryEventListeners();
+        showInventorySuccess();
     }
 }
 
@@ -459,12 +460,58 @@ function setupInventoryEventListeners() {
 }
 
 /**
- * Show error message in inventory table
+ * Show error message in inventory table with retry option
  */
 function showInventoryError(message) {
     const tbody = document.getElementById('inventoryTableBody');
     if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 40px; color: #d32f2f;">${escapeHtml(message)}</td></tr>`;
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center; padding: 40px;">
+                    <div style="color: #0056b3; font-size: 16px; margin-bottom: 15px;">
+                        <strong>Unable to Load Inventory Data</strong>
+                    </div>
+                    <div style="color: #666; margin-bottom: 20px;">
+                        ${escapeHtml(message)}
+                    </div>
+                    <button type="button" class="action-button" onclick="initializeInventory()" style="margin: 0 auto;">
+                        Retry Loading Data
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+}
+
+/**
+ * Show success message after successful data load
+ */
+function showInventorySuccess() {
+    const tbody = document.getElementById('inventoryTableBody');
+    if (tbody && inventoryData) {
+        // Create temporary success notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 10000;
+            font-size: 14px;
+        `;
+        notification.textContent = `✓ Loaded ${inventoryData.totalChemicals} chemicals successfully`;
+        document.body.appendChild(notification);
+
+        // Auto-dismiss after 2 seconds
+        setTimeout(() => {
+            notification.style.transition = 'opacity 0.3s';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
     }
 }
 
