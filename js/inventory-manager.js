@@ -11,19 +11,71 @@ let assessmentStatus = null;
 let filteredInventory = [];
 
 /**
+ * Fetch with automatic retry logic and exponential backoff
+ * @param {string} url - URL to fetch
+ * @param {number} maxRetries - Maximum number of retry attempts (default 3)
+ * @param {number} delay - Initial delay in ms before first retry (default 1000)
+ * @returns {Promise<Response>} - Fetch response
+ */
+async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
+    let lastError;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            console.log(`Fetching ${url} (attempt ${attempt + 1}/${maxRetries + 1})`);
+            const response = await fetch(url);
+
+            // Don't retry on 4xx errors (client errors - permanent)
+            if (response.status >= 400 && response.status < 500) {
+                throw new Error(`Client error ${response.status} for ${url}: ${response.statusText}`);
+            }
+
+            // Retry on 5xx errors (server errors - transient)
+            if (response.status >= 500) {
+                throw new Error(`Server error ${response.status} for ${url}: ${response.statusText}`);
+            }
+
+            // Success
+            if (response.ok) {
+                return response;
+            }
+
+            throw new Error(`HTTP ${response.status} for ${url}: ${response.statusText}`);
+
+        } catch (error) {
+            lastError = error;
+            console.error(`Fetch attempt ${attempt + 1} failed for ${url}:`, error.message);
+
+            // Don't retry on client errors (4xx)
+            if (error.message.includes('Client error')) {
+                throw error;
+            }
+
+            // If we haven't exhausted retries, wait and try again
+            if (attempt < maxRetries) {
+                const waitTime = delay * Math.pow(2, attempt); // Exponential backoff
+                console.log(`Waiting ${waitTime}ms before retry...`);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+            }
+        }
+    }
+
+    // All retries exhausted
+    throw new Error(`Failed to fetch ${url} after ${maxRetries + 1} attempts. Last error: ${lastError.message}`);
+}
+
+/**
  * Load inventory and assessment data from JSON files
  */
 async function loadInventoryData() {
     try {
-        // Load chemical inventory
-        const invResponse = await fetch('data/inventory/chemical-inventory.json');
-        if (!invResponse.ok) throw new Error('Failed to load inventory');
+        // Load chemical inventory with retry logic
+        const invResponse = await fetchWithRetry('data/inventory/chemical-inventory.json');
         inventoryData = await invResponse.json();
         window.inventoryData = inventoryData; // Make globally accessible for floor-plan-viewer.js
 
-        // Load assessment status
-        const statusResponse = await fetch('data/tracking/assessment-status.json');
-        if (!statusResponse.ok) throw new Error('Failed to load assessment status');
+        // Load assessment status with retry logic
+        const statusResponse = await fetchWithRetry('data/tracking/assessment-status.json');
         assessmentStatus = await statusResponse.json();
         window.assessmentStatus = assessmentStatus; // Make globally accessible for floor-plan-viewer.js
 
