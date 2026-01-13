@@ -8,6 +8,12 @@
 import { hPhraseSeverityMap } from '../config/hazards.js';
 
 /**
+ * Valid units for quantity measurement
+ * @constant {string[]}
+ */
+const VALID_UNITS = ['µg', 'mg', 'g', 'kg', 'µL', 'mL', 'L'];
+
+/**
  * Find the highest severity score from an array of H-phrases
  *
  * @param {string[]} hPhrases - Array of H-phrase codes
@@ -201,9 +207,8 @@ export function calculateOverallLikelihood(procedureData, quantity, unit, freque
   if (typeof unit !== 'string') {
     throw new TypeError(`calculateOverallLikelihood: unit must be a string, got ${typeof unit}`);
   }
-  const validUnits = ['µg', 'mg', 'g', 'kg', 'µL', 'mL', 'L'];
-  if (!validUnits.includes(unit)) {
-    throw new TypeError(`calculateOverallLikelihood: unit must be one of [${validUnits.join(', ')}], got '${unit}'`);
+  if (!VALID_UNITS.includes(unit)) {
+    throw new TypeError(`calculateOverallLikelihood: unit must be one of [${VALID_UNITS.join(', ')}], got '${unit}'`);
   }
   if (typeof frequency !== 'string') {
     throw new TypeError(`calculateOverallLikelihood: frequency must be a string, got ${typeof frequency}`);
