@@ -19,11 +19,11 @@
     <script src="js/config/hazards.js"></script>
     <script src="js/config/controls.js"></script>
     <!-- EH40 Workplace Exposure Limits -->
-    <script src="js/eh40-loader.js"></script>
+    <script type="module" src="js/eh40-loader.js"></script>
     <!-- Inventory Management -->
-    <script src="js/inventory-manager.js"></script>
+    <script type="module" src="js/inventory-manager.js"></script>
     <!-- Floor Plan Viewer -->
-    <script src="js/floor-plan-viewer.js"></script>
+    <script type="module" src="js/floor-plan-viewer.js"></script>
 </head>
 <body>
 
@@ -467,6 +467,9 @@
     // --- Module Imports (Phase 1: Testing Foundation) ---
     import { calculateOverallSeverity, calculateOverallLikelihood } from './js/modules/riskCalculator.js';
 
+    // --- Module Imports (Phase 2: Runtime Safety) ---
+    import { safeGetElementById, safeSetTextContent, safeSetInnerHTML, safeAddEventListener } from './js/modules/domHelpers.js';
+
     // --- Global variable for parsed MSDS data ---
     let masterParsedMSDSData = {};
 
@@ -503,58 +506,50 @@
 
         const today = new Date().toISOString().split('T')[0];
         ['dateCarriedOut', 'dateReviewedBy', 'approvalDate', 'finalDateSigned'].forEach(id => {
-            const el = document.getElementById(id); if (el) el.value = today;
+            const el = safeGetElementById(id); if (el) el.value = today;
         });
         const nextYear = new Date(); nextYear.setFullYear(nextYear.getFullYear() + 1);
-        const finalReviewDateEl = document.getElementById('finalReviewDate');
+        const finalReviewDateEl = safeGetElementById('finalReviewDate');
         if (finalReviewDateEl) finalReviewDateEl.value = nextYear.toISOString().split('T')[0];
         console.log("Default dates set.");
-        
-        document.getElementById('parsePdfButton')?.addEventListener('click', parseUploadedMSDS);
-        document.getElementById('parseTextButton')?.addEventListener('click', parsePastedMSDS);
-        document.getElementById('applyParsedDataButton')?.addEventListener('click', applyParsedDataToForm);
-        
-        const recalcControlsBtn = document.getElementById('recalculateControlsButtonInternal') || document.getElementById('recalculateControlsButton');
+
+        safeAddEventListener('parsePdfButton', 'click', parseUploadedMSDS);
+        safeAddEventListener('parseTextButton', 'click', parsePastedMSDS);
+        safeAddEventListener('applyParsedDataButton', 'click', applyParsedDataToForm);
+
+        const recalcControlsBtn = safeGetElementById('recalculateControlsButtonInternal', false) || safeGetElementById('recalculateControlsButton');
         if(recalcControlsBtn) recalcControlsBtn.addEventListener('click', updateControlSuggestions);
-        else console.warn("Recalculate controls button not found with expected IDs.");
 
-        const genReportBtn = document.getElementById('generateReportButtonInternal') || document.getElementById('generateReportButton');
+        const genReportBtn = safeGetElementById('generateReportButtonInternal', false) || safeGetElementById('generateReportButton');
         if(genReportBtn) genReportBtn.addEventListener('click', generateFullReport);
-        else console.warn("Generate report button not found with expected IDs.");
-        
-        const saveLocalBtn = document.getElementById('saveLocalButtonInternal') || document.getElementById('saveLocalButton');
+
+        const saveLocalBtn = safeGetElementById('saveLocalButtonInternal', false) || safeGetElementById('saveLocalButton');
         if(saveLocalBtn) saveLocalBtn.addEventListener('click', saveLocally);
-        else console.warn("Save local button not found with expected IDs.");
 
-        const loadLocalBtn = document.getElementById('loadLocalButtonInternal') || document.getElementById('loadLocalButton');
+        const loadLocalBtn = safeGetElementById('loadLocalButtonInternal', false) || safeGetElementById('loadLocalButton');
         if(loadLocalBtn) loadLocalBtn.addEventListener('click', loadLocally);
-        else console.warn("Load local button not found with expected IDs.");
-            // Inside your DOMContentLoaded event listener, add this:
-    document.getElementById('importJsonButton')?.addEventListener('click', importFromJsonFile);
-    console.log("Import JSON button listener attached."); // DEBUG
-        const exportJsonBtn = document.getElementById('exportJsonButtonInternal') || document.getElementById('exportJsonButton');
-        if(exportJsonBtn) exportJsonBtn.addEventListener('click', exportToJson);
-        else console.warn("Export JSON button not found with expected IDs.");
 
-        const printReportBtn = document.getElementById('printReportButtonInternal') || document.getElementById('printReportButton');
+        safeAddEventListener('importJsonButton', 'click', importFromJsonFile);
+        console.log("Import JSON button listener attached."); // DEBUG
+        const exportJsonBtn = safeGetElementById('exportJsonButtonInternal', false) || safeGetElementById('exportJsonButton');
+        if(exportJsonBtn) exportJsonBtn.addEventListener('click', exportToJson);
+
+        const printReportBtn = safeGetElementById('printReportButtonInternal', false) || safeGetElementById('printReportButton');
         if(printReportBtn) printReportBtn.addEventListener('click', printReport);
-        else console.warn("Print report button not found with expected IDs.");
-        
+
         console.log("Main button listeners attached.");
 
-        const labProcedureEl = document.getElementById('labProcedure');
+        const labProcedureEl = safeGetElementById('labProcedure');
         if (labProcedureEl) labProcedureEl.addEventListener('change', handleProcedureChange);
-        else console.error("Element with ID 'labProcedure' not found for event listener.");
-        
+
         ['quantityValue', 'quantityUnit', 'taskFrequency', 'taskDuration', 'materialTypeForm', 'hPhrasesForm'].forEach(id => {
-            const el = document.getElementById(id);
+            const el = safeGetElementById(id);
             if(el) el.addEventListener('change', runFullRiskAssessmentLogic);
-            else console.warn(`Element with ID '${id}' for dynamic logic not found.`);
         });
 
         // Add event listeners for WEL auto-fill when chemical name or CAS changes
-        const chemicalNameEl = document.getElementById('chemicalName');
-        const casNumberEl = document.getElementById('casNumber');
+        const chemicalNameEl = safeGetElementById('chemicalName');
+        const casNumberEl = safeGetElementById('casNumber');
         if (chemicalNameEl) {
             chemicalNameEl.addEventListener('blur', autoFillWELValues);
         }
@@ -598,9 +593,9 @@
     // The refined processMSDSText, displayParsePreview, applyParsedDataToForm from the previous response
     // are integrated here.
     async function parseUploadedMSDS() {
-        console.log("parseUploadedMSDS called"); 
-        const fileInput = document.getElementById('msdsFile');
-        const statusDiv = document.getElementById('parserStatus');
+        console.log("parseUploadedMSDS called");
+        const fileInput = safeGetElementById('msdsFile');
+        const statusDiv = safeGetElementById('parserStatus');
         if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
             if (statusDiv) statusDiv.textContent = "Please select an MSDS PDF file."; return;
         }
@@ -624,9 +619,9 @@
         }
     }
     function parsePastedMSDS() {
-        console.log("parsePastedMSDS called"); 
-        const textEl = document.getElementById('msdsTextPaste');
-        const statusDiv = document.getElementById('parserStatus');
+        console.log("parsePastedMSDS called");
+        const textEl = safeGetElementById('msdsTextPaste');
+        const statusDiv = safeGetElementById('parserStatus');
         if (!textEl || !textEl.value.trim()) { if (statusDiv) statusDiv.textContent = "Please paste text from MSDS."; return; }
         if (statusDiv) statusDiv.textContent = "Parsing pasted text...";
         processMSDSText(textEl.value);

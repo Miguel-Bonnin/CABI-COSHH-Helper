@@ -5,6 +5,9 @@
  * with interactive room highlighting and click-to-view functionality.
  */
 
+// Import safe DOM helpers (Phase 2: Runtime Safety)
+import { safeGetElementById, safeQuerySelector } from './modules/domHelpers.js';
+
 // Global state
 let floorPlanModal = null;
 let currentFloor = 1;
@@ -113,9 +116,12 @@ function setupFloorPlanEventListeners() {
     });
 
     // Zoom controls
-    document.getElementById('zoomIn').addEventListener('click', () => zoomFloorPlan(1.2));
-    document.getElementById('zoomOut').addEventListener('click', () => zoomFloorPlan(0.8));
-    document.getElementById('zoomReset').addEventListener('click', resetZoom);
+    const zoomInEl = safeGetElementById('zoomIn', false);
+    const zoomOutEl = safeGetElementById('zoomOut', false);
+    const zoomResetEl = safeGetElementById('zoomReset', false);
+    if (zoomInEl) zoomInEl.addEventListener('click', () => zoomFloorPlan(1.2));
+    if (zoomOutEl) zoomOutEl.addEventListener('click', () => zoomFloorPlan(0.8));
+    if (zoomResetEl) zoomResetEl.addEventListener('click', resetZoom);
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -194,7 +200,7 @@ async function switchFloor(floor) {
  * Load SVG floor plan
  */
 async function loadFloorPlanSVG(floor) {
-    const container = document.getElementById('floorPlanSvgContainer');
+    const container = safeGetElementById('floorPlanSvgContainer');
     container.innerHTML = '<div class="floor-plan-loading">Loading floor plan...</div>';
 
     try {
@@ -444,7 +450,7 @@ function showRoomTooltip(event, roomCode) {
     const room = roomData[roomCode];
     if (!room) return;
 
-    const tooltip = document.getElementById('floorPlanTooltip');
+    const tooltip = safeGetElementById('floorPlanTooltip', false);
     const stats = room.stats;
 
     tooltip.innerHTML = `
@@ -464,7 +470,7 @@ function showRoomTooltip(event, roomCode) {
  * Move tooltip with mouse
  */
 function moveRoomTooltip(event) {
-    const tooltip = document.getElementById('floorPlanTooltip');
+    const tooltip = safeGetElementById('floorPlanTooltip', false);
     tooltip.style.left = (event.clientX + 15) + 'px';
     tooltip.style.top = (event.clientY + 15) + 'px';
 }
@@ -473,7 +479,7 @@ function moveRoomTooltip(event) {
  * Hide tooltip
  */
 function hideRoomTooltip() {
-    const tooltip = document.getElementById('floorPlanTooltip');
+    const tooltip = safeGetElementById('floorPlanTooltip', false);
     tooltip.style.display = 'none';
 }
 
@@ -499,7 +505,7 @@ function selectRoom(roomCode) {
 
     // Wait for tab to load, then filter by room code
     setTimeout(() => {
-        const searchInput = document.getElementById('inventorySearch');
+        const searchInput = safeGetElementById('inventorySearch', false);
         if (searchInput) {
             searchInput.value = roomCode;
             // Trigger the input event to apply the filter

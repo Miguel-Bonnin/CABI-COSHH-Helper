@@ -5,6 +5,9 @@
  * and COSHH assessment status tracking.
  */
 
+// Import safe DOM helpers (Phase 2: Runtime Safety)
+import { safeGetElementById, safeSetTextContent } from './modules/domHelpers.js';
+
 // Global inventory data
 let inventoryData = null;
 let assessmentStatus = null;
@@ -134,11 +137,11 @@ function updateInventoryStats() {
     });
 
     // Update DOM
-    document.getElementById('statTotal').textContent = stats.total;
-    document.getElementById('statComplete').textContent = stats.complete;
-    document.getElementById('statInProgress').textContent = stats.inProgress;
-    document.getElementById('statNeedsAssessment').textContent = stats.needsAssessment;
-    document.getElementById('statReviewDue').textContent = stats.reviewDue;
+    safeSetTextContent('statTotal', stats.total);
+    safeSetTextContent('statComplete', stats.complete);
+    safeSetTextContent('statInProgress', stats.inProgress);
+    safeSetTextContent('statNeedsAssessment', stats.needsAssessment);
+    safeSetTextContent('statReviewDue', stats.reviewDue);
 }
 
 /**
@@ -147,9 +150,9 @@ function updateInventoryStats() {
 function renderInventoryTable() {
     if (!inventoryData || !assessmentStatus) return;
 
-    const tbody = document.getElementById('inventoryTableBody');
-    const searchTerm = document.getElementById('inventorySearch')?.value.toLowerCase() || '';
-    const filterStatus = document.getElementById('inventoryFilter')?.value || 'all';
+    const tbody = safeGetElementById('inventoryTableBody');
+    const searchTerm = safeGetElementById('inventorySearch', false)?.value.toLowerCase() || '';
+    const filterStatus = safeGetElementById('inventoryFilter', false)?.value || 'all';
 
     // Merge inventory with assessment status
     const mergedData = inventoryData.inventory.map(chemical => {
@@ -297,10 +300,10 @@ function createAssessmentFromInventory(chemicalId) {
     // Wait a tiny bit for tab to load, then pre-fill
     setTimeout(() => {
         // Pre-fill substance information
-        const chemicalNameField = document.getElementById('chemicalName');
-        const casNumberField = document.getElementById('casNumber');
-        const supplierField = document.getElementById('supplier');
-        const taskField = document.getElementById('taskDescriptionTextarea');
+        const chemicalNameField = safeGetElementById('chemicalName', false);
+        const casNumberField = safeGetElementById('casNumber', false);
+        const supplierField = safeGetElementById('supplier', false);
+        const taskField = safeGetElementById('taskDescriptionTextarea', false);
 
         if (chemicalNameField) chemicalNameField.value = chemical.name;
         if (casNumberField) casNumberField.value = chemical.casNumber || '';
@@ -415,8 +418,8 @@ async function refreshInventoryData() {
  * Setup event listeners for search and filter
  */
 function setupInventoryEventListeners() {
-    const searchInput = document.getElementById('inventorySearch');
-    const filterSelect = document.getElementById('inventoryFilter');
+    const searchInput = safeGetElementById('inventorySearch', false);
+    const filterSelect = safeGetElementById('inventoryFilter', false);
 
     if (searchInput) {
         searchInput.addEventListener('input', renderInventoryTable);
@@ -427,7 +430,7 @@ function setupInventoryEventListeners() {
     }
 
     // Set up event delegation for dynamically created buttons
-    const tableBody = document.getElementById('inventoryTableBody');
+    const tableBody = safeGetElementById('inventoryTableBody', false);
     if (tableBody) {
         tableBody.addEventListener('click', function(e) {
             const target = e.target;
@@ -463,7 +466,7 @@ function setupInventoryEventListeners() {
  * Show error message in inventory table with retry option
  */
 function showInventoryError(message) {
-    const tbody = document.getElementById('inventoryTableBody');
+    const tbody = safeGetElementById('inventoryTableBody', false);
     if (tbody) {
         tbody.innerHTML = `
             <tr>
@@ -487,7 +490,7 @@ function showInventoryError(message) {
  * Show success message after successful data load
  */
 function showInventorySuccess() {
-    const tbody = document.getElementById('inventoryTableBody');
+    const tbody = safeGetElementById('inventoryTableBody', false);
     if (tbody && inventoryData) {
         // Create temporary success notification
         const notification = document.createElement('div');

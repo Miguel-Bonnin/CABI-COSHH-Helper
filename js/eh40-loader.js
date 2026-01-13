@@ -6,6 +6,9 @@
  * automatically filling WEL (Workplace Exposure Limit) values.
  */
 
+// Import safe DOM helpers (Phase 2: Runtime Safety)
+import { safeGetElementById, safeSetTextContent } from './modules/domHelpers.js';
+
 // Global variable to store EH40 data
 let eh40Data = [];
 let eh40DataLoaded = false;
@@ -99,7 +102,7 @@ async function loadEH40Data() {
         eh40DataLoaded = true;
 
         // Update status message to show data is ready
-        const statusEl = document.getElementById('welMatchStatus');
+        const statusEl = safeGetElementById('welMatchStatus', false);
         if (statusEl) {
             statusEl.textContent = `✓ ${eh40Data.length} substances loaded`;
             statusEl.style.color = '#28a745';
@@ -206,7 +209,7 @@ function searchEH40(substanceName, casNumber) {
  * Show error message for EH40 data loading failure
  */
 function showEH40Error(message) {
-    const statusEl = document.getElementById('welMatchStatus');
+    const statusEl = safeGetElementById('welMatchStatus', false);
     if (statusEl) {
         statusEl.innerHTML = `
             <div style="color: #d32f2f; margin-bottom: 10px;">${message}</div>
@@ -221,7 +224,7 @@ function showEH40Error(message) {
  * Retry loading EH40 data (called from error UI)
  */
 async function retryLoadEH40Data() {
-    const statusEl = document.getElementById('welMatchStatus');
+    const statusEl = safeGetElementById('welMatchStatus', false);
     if (statusEl) {
         statusEl.textContent = 'Loading EH40 data...';
         statusEl.style.color = '#6c757d';
@@ -233,7 +236,7 @@ async function retryLoadEH40Data() {
  * Auto-fill WEL values from EH40 data
  */
 function autoFillWELValues() {
-    const statusEl = document.getElementById('welMatchStatus');
+    const statusEl = safeGetElementById('welMatchStatus', false);
 
     // Check if data is loaded
     if (!eh40DataLoaded || eh40Data.length === 0) {
@@ -247,8 +250,8 @@ function autoFillWELValues() {
         return;
     }
 
-    const chemicalName = document.getElementById('chemicalName')?.value || '';
-    const casNumber = document.getElementById('casNumber')?.value || '';
+    const chemicalName = safeGetElementById('chemicalName', false)?.value || '';
+    const casNumber = safeGetElementById('casNumber', false)?.value || '';
 
     console.log('autoFillWELValues called with:', { chemicalName, casNumber, dataLoaded: eh40Data.length });
 
@@ -267,8 +270,8 @@ function autoFillWELValues() {
         const { match, matchType } = result;
 
         // Fill TWA values (LTE in EH40)
-        const twaPPMEl = document.getElementById('twaPPM');
-        const twaMgM3El = document.getElementById('twaMgM3');
+        const twaPPMEl = safeGetElementById('twaPPM', false);
+        const twaMgM3El = safeGetElementById('twaMgM3', false);
         if (twaPPMEl && match.ltePPM && match.ltePPM !== '-') {
             twaPPMEl.value = match.ltePPM;
         }
@@ -277,8 +280,8 @@ function autoFillWELValues() {
         }
 
         // Fill STEL values (STE in EH40)
-        const stelPPMEl = document.getElementById('stelPPM');
-        const stelMgM3El = document.getElementById('stelMgM3');
+        const stelPPMEl = safeGetElementById('stelPPM', false);
+        const stelMgM3El = safeGetElementById('stelMgM3', false);
         if (stelPPMEl && match.stePPM && match.stePPM !== '-') {
             stelPPMEl.value = match.stePPM;
         }
