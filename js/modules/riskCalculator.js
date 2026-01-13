@@ -62,6 +62,14 @@ function getSignalWordSeverity(signalWord) {
  * 4. Return highest severity found
  */
 export function calculateOverallSeverity(hPhrases, signalWord) {
+  // Validate inputs
+  if (!Array.isArray(hPhrases)) {
+    throw new TypeError(`calculateOverallSeverity: hPhrases must be an array, got ${typeof hPhrases}`);
+  }
+  if (typeof signalWord !== 'string') {
+    throw new TypeError(`calculateOverallSeverity: signalWord must be a string, got ${typeof signalWord}`);
+  }
+
   // Handle empty H-phrases array
   if (hPhrases.length === 0) {
     return getSignalWordSeverity(signalWord);
@@ -183,6 +191,27 @@ function getDurationScore(duration) {
  * 7. Cap final score at 10
  */
 export function calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration) {
+  // Validate inputs
+  if (typeof quantity !== 'number' || isNaN(quantity)) {
+    throw new TypeError(`calculateOverallLikelihood: quantity must be a number, got ${typeof quantity}`);
+  }
+  if (quantity < 0) {
+    throw new RangeError(`calculateOverallLikelihood: quantity must be non-negative, got ${quantity}`);
+  }
+  if (typeof unit !== 'string') {
+    throw new TypeError(`calculateOverallLikelihood: unit must be a string, got ${typeof unit}`);
+  }
+  const validUnits = ['µg', 'mg', 'g', 'kg', 'µL', 'mL', 'L'];
+  if (!validUnits.includes(unit)) {
+    throw new TypeError(`calculateOverallLikelihood: unit must be one of [${validUnits.join(', ')}], got '${unit}'`);
+  }
+  if (typeof frequency !== 'string') {
+    throw new TypeError(`calculateOverallLikelihood: frequency must be a string, got ${typeof frequency}`);
+  }
+  if (typeof duration !== 'string') {
+    throw new TypeError(`calculateOverallLikelihood: duration must be a string, got ${typeof duration}`);
+  }
+
   let likelihoodScore = 0;
 
   // Step 1-2: Base score from procedure characteristics
