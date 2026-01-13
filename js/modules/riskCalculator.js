@@ -79,3 +79,111 @@ export function calculateOverallSeverity(hPhrases, signalWord) {
   const signalWordSeverity = getSignalWordSeverity(signalWord);
   return Math.max(maxSeverity, signalWordSeverity);
 }
+
+/**
+ * Normalize quantity to base unit (mL for liquids, or generic base for mass)
+ *
+ * @param {number} quantity - The quantity value
+ * @param {string} unit - The unit (µg, mg, g, kg, µL, mL, L)
+ * @returns {number} Normalized quantity in base unit
+ * @private
+ *
+ * The original code treats mL/mg/g as base units, with:
+ * - Micro units (µL, µg) divided by 1000
+ * - Large units (L, kg) multiplied by 1000
+ * This gives us a consistent scale where:
+ * - 1000µL = 1mL
+ * - 1000µg = 1mg
+ * - 1L = 1000mL
+ * - 1kg = 1000g
+ */
+function normalizeQuantity(quantity, unit) {
+  let normalized = quantity;
+
+  // Convert micro units (divide by 1000)
+  if (['µL', 'µg'].includes(unit)) {
+    normalized /= 1000;
+  }
+
+  // Convert large units (multiply by 1000)
+  if (['L', 'kg'].includes(unit)) {
+    normalized *= 1000;
+  }
+
+  // g needs to be converted to mg (multiply by 1000)
+  // This ensures 1000mg = 1g in normalized form
+  if (unit === 'g') {
+    normalized *= 1000;
+  }
+
+  // mg and mL are base units (no conversion)
+
+  return normalized;
+}
+
+/**
+ * Calculate overall likelihood score based on procedure, quantity, frequency, and duration
+ *
+ * @param {Object|null} procedureData - Procedure characteristics with exposureFactor and aerosol
+ * @param {number} quantity - Amount used
+ * @param {string} unit - Unit of measurement (µg, mg, g, kg, µL, mL, L)
+ * @param {string} frequency - Task frequency (multiple_daily, daily, weekly, etc.)
+ * @param {string} duration - Task duration (very_long, long, medium, etc.)
+ * @returns {number} Likelihood score from 0-10
+ *
+ * Algorithm (from coshhgeneratorv5.html line 1081-1109):
+ * 1. Base score from procedure exposureFactor * 3 + aerosol * 2
+ * 2. If no procedure data, use default base of 1.5
+ * 3. Add quantity factor based on normalized quantity thresholds
+ * 4. Add material type bonus (handled via aerosol in procedureData)
+ * 5. Add frequency multiplier (multiple_daily=3, daily=2, weekly=1)
+ * 6. Add duration multiplier (very_long=3, long=2, medium=1)
+ * 7. Cap final score at 10
+ */
+export function calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration) {
+  let likelihoodScore = 0;
+
+  // Step 1-2: Base score from procedure characteristics
+  if (procedureData && procedureData.exposureFactor !== undefined) {
+    likelihoodScore += (procedureData.exposureFactor || 0.5) * 3;
+    likelihoodScore += (procedureData.aerosol || 0) * 2;
+  } else {
+    // Default base score if no procedure data
+    likelihoodScore += 1.5;
+  }
+
+  // Step 3: Normalize quantity and add quantity factor
+  const normalizedQuantity = normalizeQuantity(quantity, unit);
+
+  if (normalizedQuantity > 500) {
+    likelihoodScore += 3;
+  } else if (normalizedQuantity > 50) {
+    likelihoodScore += 2;
+  } else if (normalizedQuantity > 1) {
+    likelihoodScore += 1;
+  }
+  // Note: quantities <= 1 add 0 to score
+
+  // Step 5: Add frequency multiplier
+  if (frequency === 'multiple_daily') {
+    likelihoodScore += 3;
+  } else if (frequency === 'daily') {
+    likelihoodScore += 2;
+  } else if (frequency === 'weekly') {
+    likelihoodScore += 1;
+  }
+  // Other frequencies (occasionally, monthly, etc.) add 0
+
+  // Step 6: Add duration multiplier
+  if (duration === 'very_long') {
+    likelihoodScore += 3;
+  } else if (duration === 'long') {
+    likelihoodScore += 2;
+  } else if (duration === 'medium') {
+    likelihoodScore += 1;
+  }
+  // Other durations (short, rare, etc.) add 0
+
+  // Step 7: Cap at 10
+  return Math.min(10, likelihoodScore);
+}
