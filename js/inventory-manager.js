@@ -1,5 +1,6 @@
 /**
- * Chemical Inventory & Assessment Tracking
+ * @fileoverview Chemical inventory table rendering and filtering functionality
+ * @module inventory-manager
  *
  * Manages display and interaction with chemical inventory data
  * and COSHH assessment status tracking.

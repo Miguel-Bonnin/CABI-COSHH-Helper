@@ -1,5 +1,6 @@
 /**
- * EH40 Workplace Exposure Limits Loader
+ * @fileoverview UK HSE Workplace Exposure Limits (EH40) data loading and auto-fill
+ * @module eh40-loader
  *
  * This module loads the HSE EH40 workplace exposure limits data from CSV
  * and provides functionality to match substances by name or CAS number,

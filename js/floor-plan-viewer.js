@@ -1,5 +1,6 @@
 /**
- * Interactive Floor Plan Viewer
+ * @fileoverview Interactive floor plan visualization with zoom and room search
+ * @module floor-plan-viewer
  *
  * Displays chemical locations on building floor plans
  * with interactive room highlighting and click-to-view functionality.
