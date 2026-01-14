@@ -10,6 +10,8 @@ A web-based tool to streamline the creation of COSHH (Control of Substances Haza
 - **Comprehensive Reporting**: Generate professional COSHH assessment reports ready for print or PDF export
 - **Data Management**: Save, load, and export assessment data in JSON format
 - **Lab Procedure Templates**: Pre-configured common laboratory procedures with exposure factors
+- **Automated Testing**: Comprehensive test suite with Vitest ensures reliability and prevents regressions (added Phase 1, Jan 2026)
+- **Runtime Safety**: Input validation and error handling provide graceful failure and helpful debugging (added Phase 2, Jan 2026)
 
 Your Admin Role:
 Run a script that pulls from ChemInventory API → generates chemical-inventory.json
