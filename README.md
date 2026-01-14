@@ -13,6 +13,19 @@ A web-based tool to streamline the creation of COSHH (Control of Substances Haza
 - **Automated Testing**: Comprehensive test suite with Vitest ensures reliability and prevents regressions (added Phase 1, Jan 2026)
 - **Runtime Safety**: Input validation and error handling provide graceful failure and helpful debugging (added Phase 2, Jan 2026)
 
+## Project Status
+
+This project is actively maintained and being enhanced with testing infrastructure, comprehensive documentation, and code quality improvements.
+
+**Progress**: 2 of 6 phases complete
+
+### Documentation
+
+- [TECHNICAL.md](TECHNICAL.md) - In-depth technical documentation including risk assessment methodology, code structure, and key functions reference
+- [ARCHITECTURE.md](ARCHITECTURE.md) - System design and architecture guide (new in Phase 3)
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines for developers (new in Phase 3)
+- [CHANGELOG.md](CHANGELOG.md) - Version history and release notes
+
 Your Admin Role:
 Run a script that pulls from ChemInventory API → generates chemical-inventory.json
 Collect completed COSHH assessments from team → store as individual JSON files
