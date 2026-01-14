@@ -1,5 +1,6 @@
 /**
- * Risk Calculator Module
+ * @fileoverview Risk assessment calculation functions extracted for testability and reuse
+ * @module riskCalculator
  *
  * Pure functions for calculating risk severity and likelihood scores
  * Extracted from coshhgeneratorv5.html for testability and reusability

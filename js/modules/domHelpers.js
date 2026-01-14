@@ -1,5 +1,8 @@
 /**
- * Safe DOM query helpers that prevent null reference errors
+ * @fileoverview Safe DOM query and manipulation helpers that prevent null reference errors
+ * @module domHelpers
+ *
+ * Provides safe alternatives to direct DOM access that warn when elements are missing
  */
 
 /**
