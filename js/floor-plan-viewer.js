@@ -15,7 +15,9 @@ let roomData = {};
 let selectedRoom = null;
 
 /**
- * Initialize floor plan viewer
+ * Initialize floor plan viewer by creating modal structure
+ * Sets up the floor plan modal DOM elements and stores reference globally
+ * @returns {void}
  */
 function initFloorPlanViewer() {
     // Create modal structure (hidden by default)
@@ -94,7 +96,9 @@ function createFloorPlanModal() {
 }
 
 /**
- * Setup event listeners for floor plan
+ * Setup event listeners for floor plan interactions
+ * Configures close button, floor selector buttons, zoom controls, and keyboard shortcuts
+ * @returns {void}
  */
 function setupFloorPlanEventListeners() {
     // Close button
@@ -484,7 +488,10 @@ function hideRoomTooltip() {
 }
 
 /**
- * Select a room and filter inventory table
+ * Select a room and filter inventory table by room code
+ * Closes floor plan modal, switches to Inventory tab, and applies room search filter
+ * @param {string} roomCode - The room code to filter by (e.g., "E1.6")
+ * @returns {void}
  */
 function selectRoom(roomCode) {
     selectedRoom = roomCode;

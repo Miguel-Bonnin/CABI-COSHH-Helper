@@ -104,7 +104,9 @@ async function initializeInventory() {
 }
 
 /**
- * Update statistics cards at top of inventory page
+ * Update statistics cards at top of inventory page with current assessment counts
+ * Updates the DOM to display totals for complete, in progress, needs assessment, and review due
+ * @returns {void}
  */
 function updateInventoryStats() {
     if (!assessmentStatus) return;
@@ -145,7 +147,9 @@ function updateInventoryStats() {
 }
 
 /**
- * Render the inventory table
+ * Render the inventory table with merged chemical and assessment data
+ * Applies search and filter criteria, updates the DOM with filtered results
+ * @returns {void}
  */
 function renderInventoryTable() {
     if (!inventoryData || !assessmentStatus) return;
@@ -279,7 +283,10 @@ function renderActionButtons(item) {
 }
 
 /**
- * Create new assessment pre-filled with chemical data
+ * Create new assessment pre-filled with chemical data from inventory
+ * Switches to Substance & Task tab and populates form fields with chemical information
+ * @param {string|number} chemicalId - The ID of the chemical from inventory
+ * @returns {void}
  */
 function createAssessmentFromInventory(chemicalId) {
     const chemical = inventoryData.inventory.find(c => c.id == chemicalId);

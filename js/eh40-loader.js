@@ -68,7 +68,9 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
 }
 
 /**
- * Load and parse the EH40 CSV data
+ * Load and parse the EH40 CSV data from UK HSE workplace exposure limits
+ * Fetches eh40_table.csv with retry logic and parses into substance records
+ * @returns {Promise<boolean>} True if data loaded successfully, false otherwise
  */
 async function loadEH40Data() {
     try {
@@ -233,7 +235,10 @@ async function retryLoadEH40Data() {
 }
 
 /**
- * Auto-fill WEL values from EH40 data
+ * Auto-fill WEL (Workplace Exposure Limit) values from EH40 data
+ * Searches EH40 database by chemical name or CAS number and populates TWA/STEL fields
+ * Updates status message to indicate match type or no match found
+ * @returns {void}
  */
 function autoFillWELValues() {
     const statusEl = safeGetElementById('welMatchStatus', false);
