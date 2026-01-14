@@ -44,6 +44,52 @@ These example files are also linked directly in the application's MSDS tab.
 4. **Complete the Form**: Follow the numbered tabs (1-8) to complete your assessment
 5. **Generate Report**: Create your final COSHH assessment report ready for review and printing
 
+## Development
+
+### Prerequisites
+
+- **Node.js 16+** (for running tests)
+- **Modern web browser** (Chrome, Firefox, Edge, Safari)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to the project directory
+cd CABI-COSHH-Helper
+
+# Install dependencies
+npm install
+```
+
+### Running the Application
+
+#### Option 1: Direct Browser Access
+
+- Open `coshhgeneratorv5.html` directly in your web browser
+
+#### Option 2: Local Server (recommended for development)
+
+```bash
+# Using Python's built-in server
+python -m http.server 8000
+# Then visit http://localhost:8000/coshhgeneratorv5.html
+```
+
+### Running Tests
+
+```bash
+# Run tests in console (default)
+npm test
+
+# Run tests with browser UI
+npm run test:ui
+```
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Usage
 
 ### MSDS Input (Tab 0)
