@@ -1410,23 +1410,34 @@ const hPhraseToGHS = {
 
 ## Future Modularization
 
+### Status: PARTIALLY COMPLETE
+
+**Progress Update (Jan 2026)**: Phases 1-2 have successfully extracted core calculation and safety modules. The codebase now has:
+
+- **✅ Phase 1 Complete (Jan 2026)**: Extracted calculation functions to `js/modules/riskCalculator.js` with full test coverage (43 tests passing)
+- **✅ Phase 2 Complete (Jan 2026)**: Created `domHelpers.js` and refactored ~70 DOM call sites for safety (27 tests passing)
+- **Total Test Coverage**: 69 tests (100% pass rate) across modules
+- **Files Modularized**: 5 JavaScript modules now follow ES6 module pattern
+
+**Remaining Work**: Extract MSDS parser, report generator, and consider form state manager (see roadmap below).
+
 ### Current Architecture Limitations
 
-The monolithic HTML file (~1400 lines) has several drawbacks:
+The monolithic HTML file (~1400 lines) still has some drawbacks:
 
-1. **Navigation**: Difficult to find specific logic quickly
+1. **Navigation**: Difficult to find specific logic quickly (improved with riskCalculator and domHelpers extraction)
 2. **Collaboration**: Merge conflicts when multiple developers edit
-3. **Testing**: Cannot unit test individual functions easily
-4. **Reusability**: Logic is tightly coupled to DOM
-5. **Maintenance**: Changes require scrolling through large file
+3. **Testing**: Cannot unit test individual functions easily (significantly improved - calculation logic now fully testable)
+4. **Reusability**: Logic is tightly coupled to DOM (partially resolved - calculation functions now pure)
+5. **Maintenance**: Changes require scrolling through large file (reduced by ~300 lines with extractions)
 
 ### Recommended Modular Structure
 
 ```
 cabi-coshh-helper/
-├── index.html                  # Main HTML structure (~200 lines)
+├── index.html / coshhgeneratorv5.html  # Main HTML (~1400 lines, down from ~1700)
 │
-├── css/
+├── css/                       # ❌ TODO: Not yet extracted
 │   ├── layout.css             # Page layout, typography
 │   ├── forms.css              # Form styles, inputs
 │   ├── tabs.css               # Tab navigation
@@ -1434,25 +1445,34 @@ cabi-coshh-helper/
 │   └── print.css              # Print-specific styles
 │
 ├── js/
-│   ├── config/
+│   ├── config/                # ✅ DONE: Configuration data extracted
 │   │   ├── procedures.js      # procedureData export
-│   │   ├── hazards.js         # hPhraseSeverityMap, hPhraseToHazardGroup
+│   │   ├── hazards.js         # ✅ hPhraseSeverityMap, hPhraseToHazardGroup
 │   │   └── controls.js        # controlBandData
 │   │
 │   ├── modules/
-│   │   ├── pdfParser.js       # PDF extraction & parsing
-│   │   ├── riskCalculator.js  # Severity & likelihood calculations
-│   │   ├── controlBanding.js  # Control group determination
-│   │   ├── controlLogic.js    # Auto-selection of controls & PPE
-│   │   ├── reportGenerator.js # Report HTML generation
-│   │   └── riskMatrix.js      # Risk matrix display
+│   │   ├── pdfParser.js       # ❌ TODO: PDF extraction & parsing (still in HTML)
+│   │   ├── riskCalculator.js  # ✅ DONE: Severity & likelihood calculations (Phase 1)
+│   │   ├── domHelpers.js      # ✅ DONE: Safe DOM query helpers (Phase 2)
+│   │   ├── controlBanding.js  # ❌ TODO: Control group determination
+│   │   ├── controlLogic.js    # ❌ TODO: Auto-selection of controls & PPE
+│   │   ├── reportGenerator.js # ❌ TODO: Report HTML generation
+│   │   └── riskMatrix.js      # ❌ TODO: Risk matrix display
 │   │
 │   ├── utils/
-│   │   ├── dataManager.js     # Import/export JSON functions
-│   │   ├── formHelpers.js     # Form manipulation utilities
-│   │   └── validation.js      # Input validation
+│   │   ├── dataManager.js     # ❌ TODO: Import/export JSON functions
+│   │   ├── formHelpers.js     # ❌ TODO: Form manipulation utilities
+│   │   └── validation.js      # ❌ TODO: Input validation
 │   │
-│   └── main.js                # App initialization, event listeners
+│   ├── eh40-loader.js         # ✅ DONE: Converted to ES6 module (Phase 2)
+│   ├── inventory-manager.js   # ✅ DONE: Converted to ES6 module (Phase 2)
+│   ├── floor-plan-viewer.js   # ✅ DONE: Converted to ES6 module (Phase 2)
+│   └── main.js                # ❌ TODO: App initialization, event listeners
+│
+├── tests/                     # ✅ DONE: Vitest test infrastructure
+│   ├── riskCalculator.test.js # ✅ DONE: 43 tests (Phase 1)
+│   ├── domHelpers.test.js     # ✅ DONE: 27 tests (Phase 2)
+│   └── setup.js               # ✅ DONE: Happy-dom test environment
 │
 ├── examples/
 │   ├── HiDi Formamide.pdf
@@ -1467,15 +1487,25 @@ cabi-coshh-helper/
 ├── .gitignore
 ├── README.md
 ├── TECHNICAL.md
-└── package.json               # (if using build tools)
+├── package.json               # ✅ DONE: Vitest testing infrastructure
+└── vitest.config.js           # ✅ DONE: Test configuration
 ```
+
+**Legend**:
+- ✅ DONE: Completed in Phase 1-2 (Jan 2026)
+- ❌ TODO: Planned for future phases
 
 ### Migration Roadmap
 
-#### Phase 1: Extract CSS (~2 hours)
+**Note**: Original roadmap phases are preserved below with completion status. Phases 1-2 (Testing Foundation and Runtime Safety) were completed Jan 2026 with different scope than originally planned.
+
+#### Original Phase 1: Extract CSS (~2 hours) - ❌ NOT YET STARTED
+
+**Status**: Deferred - prioritized testability and safety over CSS extraction
 
 **Benefits**: Immediate code reduction, easier styling updates
 
+**Planned Steps**:
 1. Create `css/` directory
 2. Split styles into logical files:
    - `layout.css`: Body, container, header, footer
@@ -1492,12 +1522,21 @@ cabi-coshh-helper/
    <link rel="stylesheet" href="css/print.css">
    ```
 
-#### Phase 2: Extract Configuration Data (~3 hours)
+#### Original Phase 2: Extract Configuration Data (~3 hours) - ✅ PARTIALLY COMPLETE
 
-**Benefits**: Easy to update procedures and hazard mappings
+**Status**: Hazards configuration extracted (Phase 1, Jan 2026), procedures and controls remain in HTML
 
-1. Create `js/config/` directory
-2. Extract to `procedures.js`:
+**Completed**:
+- ✅ Created `js/config/` directory
+- ✅ Extracted `hazards.js` with ES6 exports (hPhraseSeverityMap, hPhraseToHazardGroup)
+- ✅ Imported in riskCalculator.js module
+
+**Remaining**:
+- ❌ Extract `procedures.js` (procedureData still in HTML)
+- ❌ Extract `controls.js` (controlBandData still in HTML)
+
+**Next Steps** (when resumed):
+1. Extract to `procedures.js`:
    ```javascript
    // js/config/procedures.js
    export const procedureData = {
@@ -1506,73 +1545,72 @@ cabi-coshh-helper/
        // ...
    };
    ```
-3. Extract to `hazards.js`:
-   ```javascript
-   // js/config/hazards.js
-   export const hPhraseSeverityMap = { ... };
-   export const hPhraseToHazardGroup = { ... };
-   ```
-4. Extract to `controls.js`:
+2. Extract to `controls.js`:
    ```javascript
    // js/config/controls.js
    export const controlBandData = { ... };
    ```
-5. Import in main script:
-   ```javascript
-   import { procedureData } from './config/procedures.js';
-   import { hPhraseSeverityMap, hPhraseToHazardGroup } from './config/hazards.js';
-   import { controlBandData } from './config/controls.js';
-   ```
+3. Import in relevant modules
 
-#### Phase 3: Modularize JavaScript (~1 week)
+#### Original Phase 3: Modularize JavaScript (~1 week) - ✅ PARTIALLY COMPLETE (Jan 2026)
 
-**Benefits**: Testable, maintainable, reusable code
+**Status**: Core calculation and safety modules extracted with full test coverage. MSDS parser, report generator, and control banding logic remain in HTML.
 
-1. Create `js/modules/` directory
+**Benefits Realized**: Testable, maintainable, reusable calculation and DOM safety code
 
-2. **pdfParser.js**:
+**Completed Steps**:
+
+1. ✅ Created `js/modules/` directory
+2. ✅ **riskCalculator.js** (Phase 1, Jan 2026):
+   - Extracted `calculateOverallSeverity(hPhrases, signalWord)`
+   - Extracted `calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration)`
+   - Added input validation with TypeError and RangeError guards
+   - 43 tests covering all logic paths and error conditions
+3. ✅ **domHelpers.js** (Phase 2, Jan 2026):
+   - Created `safeGetElementById`, `safeQuerySelector` (query helpers)
+   - Created `safeSetTextContent`, `safeSetInnerHTML` (mutation helpers)
+   - Created `safeAddEventListener` (event helper)
+   - 27 tests covering null handling, warnings, and edge cases
+   - Deployed across ~70 call sites
+4. ✅ Converted existing modules to ES6:
+   - `eh40-loader.js` → ES6 module with safe DOM helpers
+   - `inventory-manager.js` → ES6 module with safe DOM helpers
+   - `floor-plan-viewer.js` → ES6 module with safe DOM helpers
+
+**Remaining Steps** (when resumed):
+
+1. ❌ **pdfParser.js** - Extract MSDS parsing logic:
    ```javascript
    export async function parseUploadedMSDS(file) { ... }
    export function processMSDSText(text) { ... }
    export function extractSection(text, keywords, stopKeywords) { ... }
    ```
-
-3. **riskCalculator.js**:
-   ```javascript
-   export function calculateOverallSeverity(hPhrases, signalWord) { ... }
-   export function calculateOverallLikelihood(procedure, quantity, frequency, duration) { ... }
-   ```
-
-4. **controlBanding.js**:
+2. ❌ **controlBanding.js** - Extract control group determination:
    ```javascript
    export function determineHazardGroup(hPhrases) { ... }
    export function determineQuantityCategory(quantity, unit) { ... }
    export function determinePhysicalCharacteristics(materialType) { ... }
    export function lookupControlGroup(hazardGroup, quantityCategory, physChar) { ... }
    ```
-
-5. **controlLogic.js**:
+3. ❌ **controlLogic.js** - Extract control/PPE auto-selection:
    ```javascript
    export function updateGeneralControls(controlGroup) { ... }
    export function updatePPEControls(exposureRoutes, hPhrases, pPhrases, controlGroup) { ... }
    export function generatePPEText(pPhrases) { ... }
    ```
-
-6. **reportGenerator.js**:
+4. ❌ **reportGenerator.js** - Extract report generation:
    ```javascript
    export function generateFullReport(formData) { ... }
    export function generateRiskMatrix(severity, likelihood) { ... }
    ```
-
-7. **dataManager.js**:
+5. ❌ **dataManager.js** - Extract data import/export:
    ```javascript
    export function exportToJson(formData) { ... }
    export function importFromJsonFile(file) { ... }
    export function saveLocally(formData) { ... }
    export function loadLocally() { ... }
    ```
-
-8. **main.js** (orchestration):
+6. ❌ **main.js** - Create orchestration module:
    ```javascript
    import * as pdfParser from './modules/pdfParser.js';
    import * as riskCalculator from './modules/riskCalculator.js';
@@ -1591,6 +1629,8 @@ cabi-coshh-helper/
    // Initialize app
    document.addEventListener('DOMContentLoaded', initializeApp);
    ```
+
+**Summary**: 2 of ~7 planned modules complete (riskCalculator, domHelpers). Remaining: MSDS parser, control banding, control logic, report generator, data manager.
 
 #### Phase 4: Add Build System (Optional, ~1 day)
 
