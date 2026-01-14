@@ -517,6 +517,303 @@ Draft → Submitted → Under Review → Approved → Published
 
 ---
 
+---
+
+## Appendix: Detailed Technical Context
+
+This appendix provides additional implementation details for developers working with the codebase.
+
+### A. Data Flow Deep Dive
+
+#### masterParsedMSDSData Object Structure
+
+When a PDF is parsed, the extracted data is stored in the global `masterParsedMSDSData` object:
+
+```javascript
+masterParsedMSDSData = {
+  productName: "Acetone",
+  casNumber: "67-64-1",
+  supplierInfo: "Supplier Name",
+  hPhrases: ["H225", "H319", "H336"],
+  pPhrases: ["P210", "P233", "P305+P351+P338"],
+  signalWord: "Danger",
+  pictograms: ["flame", "exclamation"],
+  physicalState: "liquid",
+  flashPoint: "-20°C",
+  autoIgnitionTemp: "465°C",
+  // ... additional extracted fields
+}
+```
+
+This object is accessed by form-filling functions to populate fields across multiple tabs.
+
+#### Form Field to Calculation Data Flow
+
+```
+Tab 2 (Substance) → Tab 3 (Hazards) → Tab 4 (Procedure) → Tab 5 (Risk Eval)
+     │                    │                  │                   │
+     ▼                    ▼                  ▼                   ▼
+[Chemical Name]      [H-phrases]        [Procedure]        [Severity]
+[CAS Number]         [Signal Word]      [Quantity]         [Likelihood]
+[Physical State]     [Pictograms]       [Frequency]        [Risk Score]
+                                        [Duration]
+                                             │
+                                             ▼
+                                    Tab 6 (Controls)
+                                             │
+                                             ▼
+                                    [Control Band]
+                                    [PPE Selection]
+                                    [Engineering Controls]
+```
+
+**Calculation Trigger Points:**
+- `calculateOverallSeverity()` called when H-phrases or signal word changes (Tab 3)
+- `calculateOverallLikelihood()` called when procedure, quantity, frequency, or duration changes (Tab 4)
+- Risk score recalculated whenever severity or likelihood changes
+- Control band determined whenever hazard group or quantity changes
+
+#### Example: Risk Calculation Chain
+
+**User Action:** Selects "Pipetting" procedure, 50mL quantity, daily frequency, long duration
+
+**Execution Flow:**
+1. `onchange` event on procedure dropdown calls `updateRiskEvaluation()`
+2. `updateRiskEvaluation()` reads all relevant form fields
+3. Looks up procedure data: `procedureData["pipetting"]`
+   ```javascript
+   {
+     name: "Pipetting",
+     exposureFactor: 0.3,
+     aerosol: 0,
+     description: "Manual pipetting operations"
+   }
+   ```
+4. Calls `calculateOverallLikelihood(procedureData, 50, "mL", "daily", "long")`
+5. Internal calculation:
+   - Base score: `0.3 * 3 + 0 * 2 = 0.9`
+   - Normalized quantity: `50 mL` (base unit)
+   - Quantity score: `2` (50 > 50 threshold)
+   - Frequency score: `2` (daily)
+   - Duration score: `2` (long)
+   - Total: `0.9 + 2 + 2 + 2 = 6.9` (capped at 10)
+6. Likelihood displayed in Tab 5: "6.9"
+7. Risk score updated: `Severity × 6.9`
+
+#### LocalStorage Persistence Flow
+
+**Auto-save trigger:** Form `onchange` event (debounced)
+
+**Save process:**
+1. Serialize form data using `FormData` API
+2. Convert to JSON string
+3. Store in LocalStorage: `localStorage.setItem("coshh_assessment_draft", jsonString)`
+
+**Load process:**
+1. Check for saved draft: `localStorage.getItem("coshh_assessment_draft")`
+2. Parse JSON string to object
+3. Populate form fields using `document.getElementById(fieldName).value = savedValue`
+4. Trigger recalculations to update dependent fields
+
+**Export process:**
+1. Serialize form data to JSON
+2. Create Blob: `new Blob([jsonString], { type: "application/json" })`
+3. Generate download link with `URL.createObjectURL(blob)`
+4. Trigger download via hidden `<a>` element click
+
+### B. Module Implementation Details
+
+#### Risk Calculator Module (js/modules/riskCalculator.js)
+
+**Key Functions:**
+
+**`calculateOverallSeverity(hPhrases, signalWord)`**
+- **Input validation:** Checks types and structure
+- **H-phrase matching:** Uses `startsWith()` for variant matching (e.g., H360F matches H360)
+- **Severity lookup:** Iterates through `hPhraseSeverityMap` to find highest severity
+- **Signal word fallback:** If no H-phrases match, uses signal word (Danger=3, Warning=2, else=1)
+- **Output range:** 1-5
+
+**`calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration)`**
+- **Input validation:** Type checks and unit validation
+- **Quantity normalization:** Converts all units to base units (mL for liquids, mg for solids)
+  - `µL, µg` → divide by 1000
+  - `L, kg` → multiply by 1000
+  - `g` → multiply by 1000 (to mg)
+  - `mL, mg` → no conversion (base units)
+- **Scoring components:**
+  - Procedure base: `exposureFactor × 3 + aerosol × 2`
+  - Quantity: 0-3 based on thresholds (>500=3, >50=2, >1=1, else=0)
+  - Frequency: multiple_daily=3, daily=2, weekly=1, else=0
+  - Duration: very_long=3, long=2, medium=1, else=0
+- **Output range:** 0-10 (capped with `Math.min(10, score)`)
+
+**Testing Coverage:**
+- 25 tests for severity calculation (edge cases, variants, defaults)
+- 18 tests for likelihood calculation (quantity conversions, scoring logic)
+- 18 tests for input validation (type errors, range errors)
+- **Total:** 69 tests, 100% pass rate
+
+#### DOM Helpers Module (js/modules/domHelpers.js)
+
+**Purpose:** Prevent null reference errors when querying DOM elements
+
+**Key Functions:**
+
+**`safeGetElementById(id, warnIfMissing = true)`**
+- Wraps `document.getElementById()`
+- Logs `[DOM]` prefixed warning if element not found
+- Returns `null` if missing (safe to check)
+- Used ~40 times throughout codebase
+
+**`safeSetTextContent(id, text)`**
+- Sets `textContent` if element exists
+- Returns boolean success indicator
+- Prevents "Cannot read property 'textContent' of null" errors
+
+**`safeAddEventListener(id, event, handler)`**
+- Adds event listener if element exists
+- Returns boolean success indicator
+- Prevents event handler registration failures
+
+**Pattern Usage:**
+```javascript
+// Before (unsafe):
+document.getElementById('riskScore').textContent = score; // May throw error
+
+// After (safe):
+safeSetTextContent('riskScore', score); // Returns false if element missing
+```
+
+#### Inventory Manager Module (js/inventory-manager.js)
+
+**Responsibilities:**
+- Fetch chemical inventory from `data/inventory/chemical-inventory.json`
+- Render inventory table with sortable columns
+- Implement search filtering (by name, CAS number, location)
+- Implement status filtering (needs_assessment, in_progress, complete, review_due)
+- Display statistics (total chemicals, assessments complete, in progress, needs assessment)
+- Handle "Create Assessment" button clicks (auto-fill form with inventory data)
+
+**Key Functions:**
+
+**`loadInventoryData()`**
+- Fetches JSON file using `fetch()` API
+- Parses response and stores in module-level variable
+- Calls `renderInventoryTable()` with full dataset
+
+**`renderInventoryTable(filteredData)`**
+- Builds HTML table rows from inventory data
+- Applies current search and filter criteria
+- Adds event listeners to "Create Assessment" buttons
+- Updates statistics based on filtered data
+
+**`filterInventory()`**
+- Applies search text filter (case-insensitive, matches name/CAS/location)
+- Applies status filter (matches assessment status)
+- Re-renders table with filtered results
+
+**`createAssessmentFromInventory(chemicalData)`**
+- Populates form fields with inventory data
+- Switches to MSDS tab to begin assessment
+- Pre-fills: chemical name, CAS number, hazards, supplier
+
+**Data Source:** `data/inventory/chemical-inventory.json` (generated by admin scripts)
+
+### C. Configuration Module Details
+
+#### Procedures Configuration (js/config/procedures.js)
+
+**Structure:**
+```javascript
+export const procedureData = {
+  "pipetting": {
+    name: "Pipetting",
+    exposureFactor: 0.3,
+    aerosol: 0,
+    description: "Manual pipetting operations"
+  },
+  "weighing_powder": {
+    name: "Weighing Powder",
+    exposureFactor: 0.4,
+    aerosol: 0.5,
+    description: "Weighing powdered materials"
+  },
+  // ... more procedures
+};
+```
+
+**Usage:** Imported by risk calculator to determine likelihood base score
+
+**Customization:** Add new procedures by adding entries to `procedureData` object
+
+#### Hazards Configuration (js/config/hazards.js)
+
+**hPhraseSeverityMap:**
+Maps H-phrase codes to severity scores (1-5)
+
+```javascript
+export const hPhraseSeverityMap = {
+  // Carcinogenicity (highest severity)
+  "H350": 5,  // May cause cancer
+  "H351": 4,  // Suspected of causing cancer
+
+  // Acute toxicity
+  "H300": 5,  // Fatal if swallowed
+  "H310": 5,  // Fatal in contact with skin
+  "H330": 5,  // Fatal if inhaled
+
+  // ... 100+ more H-phrases
+
+  "default": 2  // Fallback for unrecognized H-phrases
+};
+```
+
+**hPhraseToHazardGroup:**
+Maps H-phrases to hazard groups (A-E, S) for control band determination
+
+```javascript
+export const hPhraseToHazardGroup = {
+  "H350": "E",  // Carcinogen → Group E (highest controls)
+  "H314": "C",  // Corrosive → Group C
+  // ... mappings for all H-phrases
+};
+```
+
+#### Controls Configuration (js/config/controls.js)
+
+**controlBandData:**
+Matrix of control recommendations based on hazard group and quantity
+
+```javascript
+export const controlBandData = {
+  // Control Group 1 (Low hazard, small quantity)
+  "1": {
+    generalVentilation: true,
+    enclosure: false,
+    localExhaust: false,
+    containment: false
+  },
+  // Control Group 4 (High hazard or large quantity)
+  "4": {
+    generalVentilation: true,
+    enclosure: true,
+    localExhaust: true,
+    containment: true,
+    specializedControls: ["Glovebox", "Fume hood", "Dedicated ventilation"]
+  },
+  // ... Groups 2, 3, S (sensitizers)
+};
+```
+
+**PPE Recommendations:**
+- Gloves: Always recommended for hazardous substances
+- Lab coat: Standard for all lab work
+- Eye protection: Required for corrosives, irritants
+- Respiratory protection: Required for aerosols, volatile substances, high control groups
+
+---
+
 ## Summary
 
 The COSHH Helper architecture is designed for **progressive enhancement** - starting as a fully functional browser-based SPA and evolving toward a full-stack application with backend integration. The current focus is demonstrating frontend quality through automated testing, runtime safety, and comprehensive documentation to gain IT approval for the backend vision.
