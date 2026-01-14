@@ -507,6 +507,76 @@ const controlBandData = {
 
 ## Key Functions Reference
 
+### riskCalculator Module (Phase 1 Extraction)
+
+**Location**: `js/modules/riskCalculator.js`
+
+**Purpose**: Pure calculation functions extracted for testability and modularization. These functions compute risk severity and likelihood scores without DOM dependencies, enabling automated unit testing.
+
+**Extraction History**: Originally embedded inline in `coshhgeneratorv5.html` (lines 1067-1109). Extracted in Phase 1 (Jan 2026) using Test-Driven Development (TDD) approach to enable comprehensive test coverage.
+
+#### Functions
+
+##### `calculateOverallSeverity(hPhrases, signalWord)`
+
+**Purpose**: Calculate harm severity from H-phrases and GHS signal words
+
+**Parameters**:
+- `hPhrases` (string[]): Array of H-phrase codes (e.g., `['H350', 'H314']`)
+- `signalWord` (string): GHS signal word (`'Danger'`, `'Warning'`, or `''`)
+
+**Returns**: Integer 1-5 (1=minimal, 5=critical)
+
+**Algorithm**:
+1. Iterates through H-phrases to find highest severity in `hPhraseSeverityMap`
+2. Uses pattern matching (startsWith) to handle variants (e.g., H360F matches H360)
+3. If no H-phrases matched, uses signal word fallback: 'Danger'→3, 'Warning'→2, otherwise→1
+4. Returns maximum severity found
+
+**Example**:
+```javascript
+calculateOverallSeverity(['H350', 'H360F', 'H373'], 'Danger')
+// Returns: 5 (H360 reproductive toxin is severity 5)
+```
+
+##### `calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration)`
+
+**Purpose**: Calculate exposure probability from procedure characteristics and usage factors
+
+**Parameters**:
+- `procedureData` (Object|null): Procedure characteristics with `exposureFactor` (0.0-1.0) and `aerosol` (0-2)
+- `quantity` (number): Amount used
+- `unit` (string): Unit of measurement (`'µg'`, `'mg'`, `'g'`, `'kg'`, `'µL'`, `'mL'`, `'L'`)
+- `frequency` (string): Task frequency (`'multiple_daily'`, `'daily'`, `'weekly'`, etc.)
+- `duration` (string): Task duration (`'very_long'`, `'long'`, `'medium'`, `'short'`)
+
+**Returns**: Integer 0-10 (capped at 10)
+
+**Algorithm** (from original line 1081-1109):
+1. Base score = `exposureFactor × 3 + aerosol × 2` (or 1.5 if no procedure data)
+2. Add quantity factor: >500=+3, >50=+2, >1=+1 (after normalizing to mL/mg)
+3. Add frequency: multiple_daily=+3, daily=+2, weekly=+1
+4. Add duration: very_long=+3, long=+2, medium=+1
+5. Cap final score at 10
+
+**Example**:
+```javascript
+const procedure = { exposureFactor: 0.8, aerosol: 0.8 };
+calculateOverallLikelihood(procedure, 1000, 'mL', 'daily', 'long')
+// Returns: ~9 (high likelihood due to large quantity, high exposure procedure)
+```
+
+**Testing**: Full test coverage with 25 tests in `tests/riskCalculator.test.js`:
+- 11 tests for severity calculation (H-phrase mapping, signal word fallback, edge cases)
+- 14 tests for likelihood calculation (quantity normalization, frequency/duration scoring, boundary conditions)
+- 18 validation tests (input type checking, range validation)
+
+**Total tests**: 43 covering all code paths and error conditions
+
+**Note**: These functions were extracted in Phase 1 (Jan 2026) to enable automated testing. They maintain identical logic to the original inline implementation while providing better testability and reusability.
+
+---
+
 ### Risk Assessment Functions
 
 #### `calculateOverallSeverity()` (Lines 955-968)
