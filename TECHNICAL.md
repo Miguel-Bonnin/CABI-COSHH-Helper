@@ -577,6 +577,201 @@ calculateOverallLikelihood(procedure, 1000, 'mL', 'daily', 'long')
 
 ---
 
+### domHelpers Module (Phase 2 Safety)
+
+**Location**: `js/modules/domHelpers.js`
+
+**Purpose**: Safe DOM query and manipulation helpers that prevent null reference errors and provide graceful degradation. All helpers return null or boolean values instead of throwing exceptions, with optional `[DOM]` prefixed console warnings for debugging.
+
+**Extraction History**: Created in Phase 2 (Jan 2026) to eliminate null reference errors throughout the codebase. Deployed across ~70 call sites in main HTML and supporting modules (inventory-manager.js, eh40-loader.js, floor-plan-viewer.js).
+
+#### Functions
+
+##### `safeGetElementById(id, warnIfMissing = true)`
+
+**Purpose**: Safely get element by ID with optional warning
+
+**Parameters**:
+- `id` (string): Element ID to query
+- `warnIfMissing` (boolean): Log `[DOM]` warning if element not found (default: true)
+
+**Returns**: `HTMLElement | null` (null if element doesn't exist, no exception thrown)
+
+**Example**:
+```javascript
+const button = safeGetElementById('submit-btn');
+if (button) {
+  button.disabled = false; // Safe - no null reference error
+}
+
+// Suppress warning for optional elements
+const optionalDiv = safeGetElementById('optional-element', false);
+```
+
+##### `safeQuerySelector(selector, warnIfMissing = true)`
+
+**Purpose**: Safely query selector with optional warning
+
+**Parameters**:
+- `selector` (string): CSS selector to query
+- `warnIfMissing` (boolean): Log `[DOM]` warning if element not found (default: true)
+
+**Returns**: `Element | null`
+
+**Example**:
+```javascript
+const firstRadio = safeQuerySelector('input[name="riskLevel"]:checked');
+if (firstRadio) {
+  const value = firstRadio.value;
+}
+```
+
+##### `safeSetTextContent(id, text)`
+
+**Purpose**: Safely set text content if element exists
+
+**Parameters**:
+- `id` (string): Element ID
+- `text` (string): Text to set (HTML is automatically escaped)
+
+**Returns**: `boolean` (true if successful, false if element not found)
+
+**Example**:
+```javascript
+const success = safeSetTextContent('status-message', 'Assessment saved');
+if (!success) {
+  console.error('Failed to update status message');
+}
+```
+
+##### `safeSetInnerHTML(id, html)`
+
+**Purpose**: Safely set inner HTML if element exists
+
+**Parameters**:
+- `id` (string): Element ID
+- `html` (string): HTML to set
+
+**Returns**: `boolean` (true if successful, false if element not found)
+
+**Example**:
+```javascript
+safeSetInnerHTML('report-output', '<h2>Risk Assessment Report</h2>');
+```
+
+##### `safeAddEventListener(id, event, handler)`
+
+**Purpose**: Safely add event listener if element exists
+
+**Parameters**:
+- `id` (string): Element ID
+- `event` (string): Event name (e.g., 'click', 'change')
+- `handler` (Function): Event handler function
+
+**Returns**: `boolean` (true if successful, false if element not found)
+
+**Example**:
+```javascript
+safeAddEventListener('export-btn', 'click', () => exportToJson());
+```
+
+**Testing**: Full test coverage with 27 tests in `tests/domHelpers.test.js`:
+- Query helpers: Element existence, null handling, warning behavior (12 tests)
+- Mutation helpers: Text/HTML setting, success/failure indicators (8 tests)
+- Event helpers: Listener attachment, multiple handlers, different event types (7 tests)
+
+**Usage Pattern**: Applied throughout codebase (~70 call sites) for:
+- Form field queries and updates
+- Event listener attachment during initialization
+- Status message and error display
+- Dynamic UI updates based on calculations
+
+**Console Warning Format**: All warnings use `[DOM]` prefix for easy filtering:
+```
+[DOM] Element not found: #missing-button
+[DOM] Element not found: input[name="nonexistent"]
+```
+
+---
+
+### Validation Patterns (Phase 2)
+
+**Location**: Implemented in `js/modules/riskCalculator.js` and other calculation modules
+
+**Purpose**: Guard clauses at function entry to validate inputs before processing, preventing silent failures and providing clear error messages.
+
+#### Guard Clause Pattern
+
+Functions validate inputs at the top using early returns or exceptions:
+
+```javascript
+export function calculateOverallSeverity(hPhrases, signalWord) {
+  // Type validation
+  if (!Array.isArray(hPhrases)) {
+    throw new TypeError(`hPhrases must be an array, got ${typeof hPhrases}`);
+  }
+  if (typeof signalWord !== 'string') {
+    throw new TypeError(`signalWord must be a string, got ${typeof signalWord}`);
+  }
+
+  // Proceed with calculation...
+}
+```
+
+#### Error Types Used
+
+- **TypeError**: Wrong type provided (expected string, got number)
+- **RangeError**: Value out of acceptable bounds (negative quantity)
+
+#### Validation Tests
+
+18 validation tests in `tests/riskCalculator.test.js` covering:
+- Null/undefined parameter handling (6 tests)
+- Type mismatches: strings vs arrays, numbers vs strings (6 tests)
+- Range violations: negative quantities, invalid units (6 tests)
+
+**Example Test**:
+```javascript
+it('should throw TypeError when hPhrases is not an array', () => {
+  expect(() => calculateOverallSeverity('H350', 'Danger'))
+    .toThrow(TypeError);
+  expect(() => calculateOverallSeverity('H350', 'Danger'))
+    .toThrow(/hPhrases must be an array/i);
+});
+```
+
+#### Retry Logic with Exponential Backoff
+
+**Location**: Used in data loading functions (e.g., EH40 data loader)
+
+**Purpose**: Retry failed operations with increasing delays to handle transient network errors
+
+**Algorithm**:
+```javascript
+async function loadWithRetry(url, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return await response.json();
+    } catch (error) {
+      if (attempt === maxRetries - 1) throw error;
+
+      // Exponential backoff: delay * 2^attempt
+      const delay = 1000 * Math.pow(2, attempt); // 1s, 2s, 4s
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+```
+
+**Parameters**:
+- Initial delay: 1000ms
+- Max retries: 3 attempts
+- Backoff multiplier: 2x per attempt
+- Total max wait: 7 seconds (1s + 2s + 4s)
+
+---
+
 ### Risk Assessment Functions
 
 #### `calculateOverallSeverity()` (Lines 955-968)
