@@ -9,6 +9,7 @@
  */
 
 import { safeGetElementById } from './domHelpers.js';
+import { debug, info, warn, error } from './logger.js';
 
 /**
  * Stores the most recently parsed MSDS data
@@ -173,7 +174,7 @@ function extractSection(
  * @throws {Error} If PDF.js is not loaded or PDF parsing fails
  */
 export async function parseUploadedMSDS() {
-    console.log('parseUploadedMSDS called');
+    debug('parseUploadedMSDS called');
     const fileInput = safeGetElementById('msdsFile');
     const statusDiv = safeGetElementById('parserStatus');
     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
@@ -181,25 +182,28 @@ export async function parseUploadedMSDS() {
         return;
     }
     const file = fileInput.files[0];
+    debug('Starting PDF parse', { fileSize: file.size, fileName: file.name });
     if (statusDiv) statusDiv.textContent = `Processing ${file.name}...`;
     try {
         const arrayBuffer = await file.arrayBuffer();
         if (typeof pdfjsLib === 'undefined') {
-            console.error('pdf.js is not loaded.');
+            error('PDF.js library is not loaded');
             if (statusDiv) statusDiv.textContent = 'PDF library not loaded.';
             return;
         }
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        debug('PDF loaded successfully', { pageCount: pdf.numPages });
         let fullText = '';
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
             fullText += textContent.items.map(item => item.str).join(' ') + '\n';
         }
+        debug('PDF text extraction complete', { pageCount: pdf.numPages, textLength: fullText.length });
         if (statusDiv) statusDiv.textContent = 'PDF text extracted. Now parsing...';
         processMSDSText(fullText);
-    } catch (error) {
-        console.error('Error parsing PDF:', error);
+    } catch (err) {
+        error('Error parsing PDF', err);
         if (statusDiv) {
             statusDiv.innerHTML = `<span class="error-message">❌ Could not parse PDF file. Please try:<br>
                 (1) Check the file isn't corrupted<br>
@@ -214,13 +218,14 @@ export async function parseUploadedMSDS() {
  * Reads text from the msdsTextPaste textarea and processes it
  */
 export function parsePastedMSDS() {
-    console.log('parsePastedMSDS called');
+    debug('parsePastedMSDS called');
     const textEl = safeGetElementById('msdsTextPaste');
     const statusDiv = safeGetElementById('parserStatus');
     if (!textEl || !textEl.value.trim()) {
         if (statusDiv) statusDiv.textContent = 'Please paste text from MSDS.';
         return;
     }
+    debug('Starting text parse', { textLength: textEl.value.length });
     if (statusDiv) statusDiv.textContent = 'Parsing pasted text...';
     processMSDSText(textEl.value);
 }
@@ -231,7 +236,7 @@ export function parsePastedMSDS() {
  * @param {string} text - Raw MSDS text to parse
  */
 export function processMSDSText(text) {
-    console.log('processMSDSText called');
+    debug('processMSDSText called', { textLength: text.length });
     masterParsedMSDSData = {}; // Reset
     const data = {};
 
@@ -467,6 +472,17 @@ export function processMSDSText(text) {
         }
     }
     data.disposal = { value: actionableDisposal, confidence: disposalSection.confidence };
+
+    // Log extracted data with confidence scores
+    debug('Extracted H-phrases', { hPhrases: data.hPhrases?.value });
+    debug('Extracted pictograms', { pictograms: data.parsedRawPictograms?.value });
+    debug('Chemical name extraction', { name: data.chemicalName?.value, confidence: data.chemicalName?.confidence });
+    debug('CAS number extraction', { cas: data.casNumber?.value, confidence: data.casNumber?.confidence });
+
+    const fieldsExtracted = Object.keys(data).filter(k => data[k]?.value && data[k].value !== 'Not clearly found' && data[k].value !== 'Not clearly found in MSDS.').length;
+    const totalFields = Object.keys(data).length;
+    debug('Confidence scoring complete', { fieldsExtracted, totalFields });
+    info('MSDS parsing successful', { fieldsExtracted, totalFields });
 
     masterParsedMSDSData = data;
     const msdsPreviewPaneEl = document.getElementById('msdsPreviewPane');

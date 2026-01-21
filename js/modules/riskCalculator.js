@@ -7,6 +7,7 @@
  */
 
 import { hPhraseSeverityMap } from '../config/hazards.js';
+import { debug, info } from './logger.js';
 
 /**
  * Valid units for quantity measurement
@@ -81,9 +82,13 @@ export function calculateOverallSeverity(hPhrases, signalWord) {
         );
     }
 
+    debug('Calculating severity', { hPhrases, signalWord });
+
     // Handle empty H-phrases array
     if (hPhrases.length === 0) {
-        return getSignalWordSeverity(signalWord);
+        const severity = getSignalWordSeverity(signalWord);
+        debug('No H-phrases, using signal word only', { severity });
+        return severity;
     }
 
     // Find highest severity from H-phrases
@@ -96,7 +101,16 @@ export function calculateOverallSeverity(hPhrases, signalWord) {
 
     // Apply signal word fallback (only if it would increase severity)
     const signalWordSeverity = getSignalWordSeverity(signalWord);
-    return Math.max(maxSeverity, signalWordSeverity);
+    const finalSeverity = Math.max(maxSeverity, signalWordSeverity);
+
+    debug('Severity calculation complete', {
+        maxSeverity,
+        signalWordSeverity,
+        finalSeverity,
+        dominantHazard: hPhrases[0]
+    });
+
+    return finalSeverity;
 }
 
 /**
@@ -234,27 +248,53 @@ export function calculateOverallLikelihood(procedureData, quantity, unit, freque
         );
     }
 
+    debug('Calculating likelihood', {
+        quantity,
+        unit,
+        frequency,
+        duration,
+        procedure: procedureData?.name || 'default'
+    });
+
     let likelihoodScore = 0;
 
     // Step 1-2: Base score from procedure characteristics
     if (procedureData && procedureData.exposureFactor !== undefined) {
         likelihoodScore += (procedureData.exposureFactor || 0.5) * 3;
         likelihoodScore += (procedureData.aerosol || 0) * 2;
+        debug('Base score from procedure', {
+            exposureFactor: procedureData.exposureFactor,
+            aerosol: procedureData.aerosol,
+            baseScore: likelihoodScore
+        });
     } else {
         // Default base score if no procedure data
         likelihoodScore += 1.5;
+        debug('Using default base score (no procedure data)', { baseScore: 1.5 });
     }
 
     // Step 3: Add quantity factor based on normalized quantity
     const normalizedQuantity = normalizeQuantity(quantity, unit);
-    likelihoodScore += getQuantityScore(normalizedQuantity);
+    const quantityScore = getQuantityScore(normalizedQuantity);
+    likelihoodScore += quantityScore;
+    debug('Quantity factor added', { normalizedQuantity, quantityScore, runningTotal: likelihoodScore });
 
     // Step 5: Add frequency multiplier
-    likelihoodScore += getFrequencyScore(frequency);
+    const frequencyScore = getFrequencyScore(frequency);
+    likelihoodScore += frequencyScore;
+    debug('Frequency factor added', { frequency, frequencyScore, runningTotal: likelihoodScore });
 
     // Step 6: Add duration multiplier
-    likelihoodScore += getDurationScore(duration);
+    const durationScore = getDurationScore(duration);
+    likelihoodScore += durationScore;
+    debug('Duration factor added', { duration, durationScore, runningTotal: likelihoodScore });
 
     // Step 7: Cap at 10
-    return Math.min(10, likelihoodScore);
+    const finalLikelihood = Math.min(10, likelihoodScore);
+    debug('Likelihood calculation complete', {
+        uncappedScore: likelihoodScore,
+        likelihood: finalLikelihood
+    });
+
+    return finalLikelihood;
 }

@@ -9,6 +9,7 @@
 
 // Import safe DOM helpers (Phase 2: Runtime Safety)
 import { safeGetElementById, safeSetTextContent } from './modules/domHelpers.js';
+import { debug, info, warn, error } from './modules/logger.js';
 
 // Global variable to store EH40 data
 let eh40Data = [];
@@ -26,7 +27,7 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
-            console.log(`Fetching ${url} (attempt ${attempt + 1}/${maxRetries + 1})`);
+            debug(`Fetching ${url}`, { attempt: attempt + 1, maxAttempts: maxRetries + 1 });
             const response = await fetch(url);
 
             // Don't retry on 4xx errors (client errors - permanent)
@@ -49,19 +50,19 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
             }
 
             throw new Error(`HTTP ${response.status} for ${url}: ${response.statusText}`);
-        } catch (error) {
-            lastError = error;
-            console.error(`Fetch attempt ${attempt + 1} failed for ${url}:`, error.message);
+        } catch (err) {
+            lastError = err;
+            error(`Fetch attempt ${attempt + 1} failed for ${url}`, err);
 
             // Don't retry on client errors (4xx)
-            if (error.message.includes('Client error')) {
-                throw error;
+            if (err.message.includes('Client error')) {
+                throw err;
             }
 
             // If we haven't exhausted retries, wait and try again
             if (attempt < maxRetries) {
                 const waitTime = delay * Math.pow(2, attempt); // Exponential backoff
-                console.log(`Waiting ${waitTime}ms before retry...`);
+                warn('EH40 fetch retry attempt', { attempt: attempt + 1, delayMs: waitTime });
                 await new Promise(resolve => setTimeout(resolve, waitTime));
             }
         }
@@ -80,6 +81,7 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
  */
 async function loadEH40Data() {
     try {
+        debug('Starting EH40 data fetch', { url: 'data/eh40_table.csv' });
         const response = await fetchWithRetry('data/eh40_table.csv');
         const csvText = await response.text();
 
@@ -106,7 +108,8 @@ async function loadEH40Data() {
             }
         }
 
-        console.log(`Loaded ${eh40Data.length} substances from EH40 database`);
+        debug('EH40 fetch complete', { recordCount: eh40Data.length });
+        info('WEL data loaded successfully', { chemicals: eh40Data.length });
         eh40DataLoaded = true;
 
         // Update status message to show data is ready
@@ -117,10 +120,10 @@ async function loadEH40Data() {
         }
 
         return true;
-    } catch (error) {
-        console.error('Error loading EH40 data:', error);
+    } catch (err) {
+        error('EH40 loading failed after retries', err);
         eh40DataLoaded = false;
-        const errorMessage = error.message.includes('Client error')
+        const errorMessage = err.message.includes('Client error')
             ? '❌ Could not load workplace exposure limits (WEL) data file. The file may be missing. You can continue without WEL auto-fill or click Retry below.'
             : '❌ Network connection issue while loading WEL data. Click Retry or check your internet connection.';
         showEH40Error(errorMessage);
@@ -186,7 +189,7 @@ function searchEH40(substanceName, casNumber) {
             entry => normalizeCASNumber(entry.casNumber) === normalizedCAS
         );
         if (casMatch) {
-            console.log(`EH40 match found by CAS: ${casMatch.substance}`);
+            debug(`EH40 match found by CAS`, { cas: normalizedCAS, substance: casMatch.substance });
             return { match: casMatch, matchType: 'CAS' };
         }
     }
@@ -197,7 +200,7 @@ function searchEH40(substanceName, casNumber) {
             entry => normalizeSubstanceName(entry.substance) === normalizedName
         );
         if (exactMatch) {
-            console.log(`EH40 match found by exact name: ${exactMatch.substance}`);
+            debug(`EH40 match found by exact name`, { name: normalizedName, substance: exactMatch.substance });
             return { match: exactMatch, matchType: 'exact name' };
         }
     }
@@ -209,11 +212,12 @@ function searchEH40(substanceName, casNumber) {
             return entryName.includes(normalizedName) || normalizedName.includes(entryName);
         });
         if (partialMatch) {
-            console.log(`EH40 match found by partial name: ${partialMatch.substance}`);
+            debug(`EH40 match found by partial name`, { searchName: normalizedName, substance: partialMatch.substance });
             return { match: partialMatch, matchType: 'partial name' };
         }
     }
 
+    debug('No EH40 match found', { substanceName, casNumber });
     return null;
 }
 
@@ -268,7 +272,7 @@ function autoFillWELValues() {
     const chemicalName = safeGetElementById('chemicalName', false)?.value || '';
     const casNumber = safeGetElementById('casNumber', false)?.value || '';
 
-    console.log('autoFillWELValues called with:', {
+    debug('autoFillWELValues called', {
         chemicalName,
         casNumber,
         dataLoaded: eh40Data.length,

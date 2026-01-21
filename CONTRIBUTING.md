@@ -133,6 +133,29 @@ npm test
 
 If you added new functionality, consider adding tests for it (see Testing Guidelines below).
 
+### 3a. Enable Debug Logging (Optional)
+
+The application includes structured logging with multiple levels (DEBUG, INFO, WARN, ERROR). By default, only INFO and above are shown in the console to keep production logs clean.
+
+To enable debug logs when troubleshooting:
+
+```javascript
+// In browser console:
+logger.setLogLevel('DEBUG');
+```
+
+This will show detailed diagnostic information including:
+
+- MSDS parsing steps (file sizes, page counts, extraction results)
+- Risk calculation breakdowns (severity, likelihood, running totals)
+- EH40 data loading progress (fetch attempts, record counts, match types)
+
+Debug logs are prefixed with `[DEBUG]` for easy filtering. To return to normal logging:
+
+```javascript
+logger.setLogLevel('INFO');
+```
+
 ### 4. Commit Your Changes
 
 Follow our commit message conventions (see next section). Commit early and often with clear, descriptive messages.
