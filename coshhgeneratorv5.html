@@ -28,6 +28,8 @@
     <script type="module" src="js/modules/formManager.js"></script>
     <!-- MSDS Parsing (Phase 4: Modularization) -->
     <script type="module" src="js/modules/msdsParser.js"></script>
+    <!-- Report Generation (Phase 4: Code Quality) -->
+    <script type="module" src="js/modules/reportGenerator.js"></script>
 </head>
 <body>
 
@@ -955,8 +957,11 @@
     }
     
     // --- Report Generation (generateFullReport, printReport) ---
+    // Report generation logic moved to js/modules/reportGenerator.js
+    // Functions available via window.reportGenerator or window.generateFullReport
+    // Keeping old function temporarily for backward compatibility (can be removed after testing)
     function generateFullReport() { /* ... (Full, corrected function from previous response) ... */
-        console.log("generateFullReport called");
+        console.log("generateFullReport called (using OLD inline version - should use module version)");
         const form = document.getElementById('coshhFullForm'); const formData = new FormData(form); const data = {};
         formData.forEach((value, key) => {
             const element = form.elements[key];
