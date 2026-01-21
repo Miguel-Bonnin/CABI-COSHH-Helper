@@ -4,6 +4,38 @@
  *
  * Provides save/load/export/import functionality for form data persistence.
  * Uses localStorage for local persistence and JSON for portable data exchange.
+ *
+ * === EDGE CASES ===
+ *
+ * EDGE CASE 1: LocalStorage quota exceeded (typically 5-10MB per origin)
+ * Behavior: Throws QuotaExceededError, caught and prompts user to export JSON
+ * Trigger: Saving many large assessments or very long text fields
+ * User action: Export to JSON file instead for unlimited storage
+ * Status: HANDLED (try/catch in saveLocally function)
+ *
+ * EDGE CASE 2: Multiple checkboxes with same name (e.g., whoExposed[])
+ * Behavior: FormData collects as array, saved correctly to localStorage
+ * Import: Must handle both array and single values for compatibility
+ * Example: whoExposed: ["lab_staff", "maintenance"] → saved as array
+ * Status: HANDLED (collectFormData checks for RadioNodeList and checkbox type)
+ *
+ * EDGE CASE 3: Importing JSON with missing or extra fields
+ * Behavior: populateFormWithData skips fields not in current form
+ * Rationale: Form schema may have changed between versions
+ * User impact: Some data may not populate if field names changed
+ * Status: GRACEFUL DEGRADATION (ignores unknown fields)
+ *
+ * EDGE CASE 4: File input fields (e.g., MSDS PDF upload)
+ * Behavior: Only filename is saved, not file content
+ * Limitation: File must be re-uploaded after load/import
+ * Rationale: Storing binary file data would exceed localStorage quota
+ * Status: BY DESIGN (file inputs store filename only as reference)
+ *
+ * EDGE CASE 5: Corrupted localStorage data (invalid JSON)
+ * Behavior: JSON.parse throws error, caught and alerts user
+ * User action: Prompted to clear corrupted data manually
+ * Recovery: Data is lost, user must re-enter or import from JSON file
+ * Status: HANDLED (try/catch in loadLocally function)
  */
 
 /**

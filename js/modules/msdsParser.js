@@ -6,6 +6,34 @@
  * relevant hazard information for COSHH assessments. Uses regex patterns
  * to identify chemical names, CAS numbers, H-phrases, GHS pictograms,
  * and safety information sections.
+ *
+ * === PARSING ASSUMPTIONS ===
+ *
+ * This parser is designed for GHS-compliant MSDS documents following the 16-section format:
+ * https://www.hse.gov.uk/chemical-classification/labelling-packaging/safety-data-sheets.htm
+ *
+ * KEY ASSUMPTIONS:
+ * 1. Section numbering: Assumes standard "SECTION X" headers (e.g., "SECTION 3: Composition")
+ * 2. H-phrase format: Expects "H###" or combined "H###-###" (e.g., "H302", "H302-312")
+ * 3. CAS numbers: Expects format "XXXXX-XX-X" or "XXX-XX-X" with hyphens
+ * 4. Signal words: Only recognizes GHS signal words "Danger" and "Warning" (case-insensitive)
+ * 5. GHS pictograms: Looks for "GHS##" codes (e.g., "GHS07") or infers from H-phrases
+ *
+ * KNOWN LIMITATIONS:
+ * - Non-standard MSDS formats: May result in incomplete or low-confidence extraction
+ * - Obsolete R-phrases: Not automatically converted to H-phrases (user must translate)
+ * - Multi-component products: Extracts first CAS as primary, others may be in notes
+ * - Non-English MSDS: Regex patterns are English-centric, may fail on translated docs
+ * - PDF formatting issues: Tables and multi-column layouts may scramble text order
+ *
+ * CONFIDENCE SCORING:
+ * Each extracted field has a confidence level:
+ * - HIGH: Found in standard location with clear formatting (e.g., Section 2 H-phrases)
+ * - MEDIUM: Found but format non-standard or ambiguous (e.g., CAS in early text)
+ * - LOW: Extracted from fallback patterns, likely needs user review
+ *
+ * Users can manually edit extracted data in the preview table before applying to form.
+ * Always review LOW and MEDIUM confidence fields for accuracy.
  */
 
 import { safeGetElementById } from './domHelpers.js';
@@ -234,6 +262,41 @@ export function parsePastedMSDS() {
  * Main MSDS text processing function
  * Extracts chemical name, CAS number, H-phrases, pictograms, and safety sections
  * @param {string} text - Raw MSDS text to parse
+ *
+ * === EDGE CASES ===
+ *
+ * EDGE CASE 1: Multi-component products (mixtures)
+ * Behavior: Extracts first CAS number as primary identifier
+ * Limitation: Other components may be present but not extracted
+ * User action: Review Section 3 of MSDS manually if mixture is complex
+ * Example: Solvent mixture with 3 components → first CAS extracted only
+ *
+ * EDGE CASE 2: Obsolete R-phrases instead of H-phrases
+ * Behavior: R-phrases not recognized by H-phrase regex
+ * Limitation: No automatic conversion from R-phrases to H-phrases
+ * User action: Manually translate using R-phrase to H-phrase conversion table
+ * Example: R36/37/38 (old format) → User must enter H315, H319, H335
+ *
+ * EDGE CASE 3: Combined H-phrase codes (e.g., H302+H312+H332)
+ * Behavior: Regex captures entire combined code string
+ * Post-processing: System handles combined codes correctly in risk calculation
+ * Example: "H302+H312" → parsed as single string, split later if needed
+ *
+ * EDGE CASE 4: No explicit GHS pictogram codes in MSDS
+ * Behavior: Infers pictograms from H-phrases using hPhraseToGHS mapping
+ * Confidence: Marked as MEDIUM (inferred, not explicit)
+ * Example: H350 present but no "GHS08" text → GHS08 inferred from H350
+ *
+ * EDGE CASE 5: Multiple CAS numbers in Section 3 table
+ * Behavior: Extracts first valid CAS number found
+ * Limitation: Secondary components not captured
+ * User action: Review preview table and add notes about other components
+ * Example: 98% component A (123-45-6), 2% component B (789-01-2) → 123-45-6 extracted
+ *
+ * EDGE CASE 6: Non-standard section headers (e.g., "Section Three" instead of "SECTION 3")
+ * Behavior: May fail to extract sections correctly, resulting in LOW confidence
+ * User action: Use "Paste Text" option and review all extracted fields
+ * Fallback: Manual entry always available in form
  */
 export function processMSDSText(text) {
     debug('processMSDSText called', { textLength: text.length });
