@@ -85,10 +85,15 @@ Plans:
 **Goal**: Refactor for clarity, add meaningful comments, improve error messages, and enhance debugging capabilities
 **Depends on**: Phase 3
 **Research**: Unlikely (refactoring existing code, internal patterns)
-**Plans**: TBD
+**Status**: In progress
 
 Plans:
-- [ ] TBD during planning
+
+- [x] 04-01: Extract Inline JavaScript
+- [x] 04-02: Code Formatting & Style
+- [ ] 04-03: Refactor Long Functions
+- [ ] 04-04: Improve Error Messages
+- [ ] 04-05: Add Debug Logging
 
 ### Phase 5: User Role Simulation
 **Goal**: Implement mock user role system in frontend (COSH assessors, lab managers, admin) to demonstrate workflow vision
@@ -115,6 +120,6 @@ Plans:
 | 1. Testing Foundation | 3/3 | Complete | 2026-01-13 |
 | 2. Runtime Safety | 3/3 | Complete | 2026-01-13 |
 | 3. Documentation Excellence | 5/5 | Complete | 2026-01-14 |
-| 4. Code Quality | 0/TBD | Not started | - |
+| 4. Code Quality | 2/5 | In progress | - |
 | 5. User Role Simulation | 0/TBD | Not started | - |
 | 6. Approval Workflow UI | 0/TBD | Not started | - |
