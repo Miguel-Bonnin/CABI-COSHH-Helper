@@ -786,22 +786,69 @@
      * @param {number} likelihoodScore - Likelihood score (0-10)
      * @param {string[]} hPhrases - Array of H-phrase codes
      * @returns {string} Control band (1-4 or S)
+     *
+     * === COSHH CONTROL BANDING ALGORITHM ===
+     *
+     * Based on HSE COSHH Essentials control approach methodology:
+     * https://www.hse.gov.uk/coshh/essentials/
+     *
+     * Control bands determine the level of engineering controls needed:
+     *
+     * BAND S (Specialist): Seek expert advice
+     *   - CMR substances (H340, H350, H360 - carcinogens, mutagens, reproductive toxins)
+     *   - Respiratory sensitizers (H334 - can cause occupational asthma)
+     *   - Critical severity (severity ≥5) regardless of likelihood
+     *   - These substances have special legal requirements under COSHH regulations
+     *   - MUST involve a competent COSHH assessor
+     *
+     * BAND 3 (Containment): Full enclosure or equivalent
+     *   - High severity (≥4) with high likelihood (≥5)
+     *   - Example: Working with toxic volatile liquids daily
+     *   - Requires: Fume cupboard, glove box, or full containment
+     *
+     * BAND 2 (Engineering controls): Local Exhaust Ventilation (LEV)
+     *   - Moderate severity (≥3) with moderate likelihood (≥3)
+     *   - OR lower severity (≥2) with some likelihood (≥2)
+     *   - Example: Using irritant chemicals for routine procedures
+     *   - Requires: LEV system (e.g., fume hood), engineering controls
+     *
+     * BAND 1 (General ventilation): Good workplace hygiene
+     *   - Low severity and low likelihood
+     *   - Example: Using small quantities of low-hazard chemicals infrequently
+     *   - Requires: Good general ventilation, basic hygiene practices
+     *
+     * THRESHOLD RATIONALE:
+     * The thresholds (severity ≥4 + likelihood ≥5 → Band 3) align with the principle:
+     * "Higher consequences + higher probability = stronger controls needed"
+     *
+     * This creates a graduated control hierarchy matching the HSE guidance where
+     * controls scale with both the harm potential (severity) and exposure potential (likelihood).
      */
     function determineControlBand(hazardGroup, severityScore, likelihoodScore, hPhrases) {
         let controlBand = "1";
 
-        // Base control band determination on severity and likelihood
+        // Base control band determination on severity and likelihood thresholds
         if (hazardGroup === "S" || severityScore >= 5) {
+            // CMR substances or critical severity ALWAYS require specialist input
+            // Legal requirement: COSHH regulation 7 for carcinogens/mutagens
             controlBand = "S";
         } else if (severityScore >= 4 && likelihoodScore >= 5) {
+            // High severity + high likelihood = containment needed
+            // Without containment, worker exposure is probable and consequences serious
             controlBand = "3";
         } else if (severityScore >= 3 && likelihoodScore >= 3) {
+            // Moderate severity + moderate likelihood = engineering controls (LEV)
+            // General ventilation insufficient for this risk level
             controlBand = "2";
         } else if (severityScore >= 2 && likelihoodScore >= 2) {
+            // Lower severity but still some risk = engineering controls as precaution
+            // Conservative approach: when in doubt, use LEV
             controlBand = "2";
         }
 
-        // Override for specific CMR or sensitizer H-phrases
+        // Override: Specific CMR or respiratory sensitizer H-phrases MUST go to specialist
+        // This catches cases where hazard group determination might have been incorrect
+        // or where multiple hazards combine to require specialist assessment
         if (hPhrases.some(p => ["H340", "H350", "H360", "H334"].includes(p))) {
             controlBand = "S";
         }

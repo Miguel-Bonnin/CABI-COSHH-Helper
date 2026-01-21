@@ -68,6 +68,29 @@ function getSignalWordSeverity(signalWord) {
  *    - 'Warning' → 2
  *    - Otherwise → 1
  * 4. Return highest severity found
+ *
+ * === EDGE CASES ===
+ *
+ * EDGE CASE 1: Empty H-phrases array
+ * Behavior: Falls back to signal word severity only
+ * Rationale: Signal word provides baseline hazard level per GHS requirements
+ * Example: [] + 'Danger' → severity 3
+ *
+ * EDGE CASE 2: Unknown H-phrases (not in severity map)
+ * Behavior: Uses default severity of 1 (minimal)
+ * Rationale: Conservative approach - better to under-estimate initially than crash
+ * Action: User should verify and manually adjust if needed
+ * Example: ['H999'] → severity 1 (then signal word applied if higher)
+ *
+ * EDGE CASE 3: H-phrase variants (e.g., H360FD, H360Fd)
+ * Behavior: Uses startsWith() matching - 'H360FD' matches 'H360' entry
+ * Rationale: GHS allows combined codes - all variants have same base hazard
+ * Example: 'H360FD' (fertility + development) → severity 5 (from H360 base)
+ *
+ * EDGE CASE 4: Multiple H-phrases with different severities
+ * Behavior: Returns maximum severity found (most conservative)
+ * Rationale: Risk assessment should reflect worst-case hazard
+ * Example: ['H302', 'H350'] → severity 5 (from H350, not 3 from H302)
  */
 export function calculateOverallSeverity(hPhrases, signalWord) {
     // Validate inputs
@@ -206,14 +229,75 @@ function getDurationScore(duration) {
  * @param {string} duration - Task duration (very_long, long, medium, etc.)
  * @returns {number} Likelihood score from 0-10
  *
- * Algorithm (from coshhgeneratorv5.html line 1081-1109):
- * 1. Base score from procedure exposureFactor * 3 + aerosol * 2
- * 2. If no procedure data, use default base of 1.5
- * 3. Add quantity factor based on normalized quantity thresholds
- * 4. Add material type bonus (handled via aerosol in procedureData)
- * 5. Add frequency multiplier (multiple_daily=3, daily=2, weekly=1)
- * 6. Add duration multiplier (very_long=3, long=2, medium=1)
- * 7. Cap final score at 10
+ * === LIKELIHOOD CALCULATION ALGORITHM ===
+ *
+ * Based on COSHH Essentials exposure potential assessment.
+ * Likelihood represents "how likely is worker exposure during this task?"
+ *
+ * Algorithm combines 4 factors:
+ * 1. PROCEDURE TYPE (base score): Intrinsic exposure potential of the activity
+ *    - exposureFactor (0-1): How much the procedure exposes workers
+ *    - aerosol (0-1): Whether the procedure generates airborne particles
+ *    - Formula: exposureFactor * 3 + aerosol * 2
+ *    - Default (unknown procedure): 1.5 (conservative mid-point)
+ *
+ * 2. QUANTITY (0-3 points): How much chemical is being used
+ *    - >500 units (mg/mL): +3 points (large scale = high exposure potential)
+ *    - >50 units: +2 points (medium scale)
+ *    - >1 unit: +1 point (small scale)
+ *    - ≤1 unit: +0 points (trace amounts)
+ *    - Rationale: More chemical = more opportunity for exposure
+ *
+ * 3. FREQUENCY (0-3 points): How often the task is performed
+ *    - multiple_daily: +3 (frequent exposure events)
+ *    - daily: +2 (regular exposure)
+ *    - weekly: +1 (occasional exposure)
+ *    - less frequent: +0
+ *    - Rationale: Frequency increases cumulative exposure risk
+ *
+ * 4. DURATION (0-3 points): How long each task takes
+ *    - very_long (>4h): +3 (extended exposure window)
+ *    - long (1-4h): +2 (significant exposure time)
+ *    - medium (15min-1h): +1 (moderate exposure time)
+ *    - short (<15min): +0 (brief exposure)
+ *    - Rationale: Longer exposure = more time for absorption
+ *
+ * SCORE INTERPRETATION:
+ * 0-2: Very low likelihood (minimal exposure expected)
+ * 3-5: Low to moderate likelihood (some exposure possible)
+ * 6-8: High likelihood (exposure probable without controls)
+ * 9-10: Very high likelihood (exposure certain without controls)
+ *
+ * The final score is capped at 10 to maintain a 0-10 scale that pairs
+ * with the 1-5 severity scale in risk matrix calculations.
+ *
+ * === EDGE CASES ===
+ *
+ * EDGE CASE 1: Null procedureData (no procedure selected)
+ * Behavior: Uses default base score of 1.5
+ * Rationale: Conservative mid-point estimate for unknown procedure exposure
+ * Action: User should select a procedure for accurate assessment
+ * Example: null procedure + 100mL + daily → starts from 1.5 base
+ *
+ * EDGE CASE 2: Zero quantity
+ * Behavior: Returns low likelihood (base score + 0 quantity points)
+ * Rationale: No chemical used = minimal exposure potential
+ * Example: 0mL → quantity score = 0 (minimal exposure)
+ *
+ * EDGE CASE 3: Very large quantities (>500 units)
+ * Behavior: Adds +3 points, but total still capped at 10
+ * Rationale: Large scale increases exposure but score has upper limit
+ * Example: 5000mL (uncapped 15) → capped to 10
+ *
+ * EDGE CASE 4: Invalid or unrecognized units
+ * Behavior: Throws TypeError during validation
+ * Rationale: Prevents incorrect calculations from unit mismatches
+ * Action: Code must pass valid unit from VALID_UNITS array
+ *
+ * EDGE CASE 5: Negative quantity values
+ * Behavior: Throws RangeError during validation
+ * Rationale: Negative quantities are physically impossible
+ * Action: Form validation should prevent this, but caught here as safety
  */
 export function calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration) {
     // Validate inputs
