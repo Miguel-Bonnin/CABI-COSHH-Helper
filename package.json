@@ -10,7 +10,11 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "format": "prettier --write \"js/**/*.js\" \"tests/**/*.js\" \"admin-scripts/**/*.js\"",
+    "format:check": "prettier --check \"js/**/*.js\" \"tests/**/*.js\" \"admin-scripts/**/*.js\"",
+    "lint": "eslint \"js/**/*.js\" \"tests/**/*.js\" \"admin-scripts/**/*.js\"",
+    "lint:fix": "eslint --fix \"js/**/*.js\" \"tests/**/*.js\" \"admin-scripts/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -24,7 +28,10 @@
   },
   "homepage": "https://github.com/Miguel-Bonnin/CABI-COSHH-Helper#readme",
   "devDependencies": {
+    "eslint": "^9.39.2",
+    "globals": "^17.0.0",
     "happy-dom": "^20.1.0",
+    "prettier": "^3.8.0",
     "vitest": "^4.0.17"
   }
 }
