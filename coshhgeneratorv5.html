@@ -661,53 +661,175 @@
 
         return calculateOverallLikelihood(procDetails, quantityValue, quantityUnit, frequency, duration);
     }
-    function determineRiskEvaluationParameters() { /* ... (Full function from previous correct version) ... */
-        const hPhrases = getHphrases(); let determinedHazardGroup = "A"; let maxHGSeverity = 0;
+    /**
+     * Determines hazard group from H-phrases
+     * @param {string[]} hPhrases - Array of H-phrase codes
+     * @returns {string} Hazard group letter (A-E or S)
+     */
+    function determineHazardGroup(hPhrases) {
+        let determinedHazardGroup = "A";
+        let maxHGSeverity = 0;
+
         hPhrases.forEach(phrase => {
             for (const pattern in hPhraseToHazardGroup) {
                 if (phrase.startsWith(pattern) && pattern !== "default_low_sev" && pattern !== "default_no_sig_haz") {
                     const groupSeverity = {'E':5, 'S':5, 'D':4, 'C':3, 'B':2, 'A':1}[hPhraseToHazardGroup[pattern]] || 0;
-                    if(groupSeverity > maxHGSeverity){ determinedHazardGroup = hPhraseToHazardGroup[pattern]; maxHGSeverity = groupSeverity; }
+                    if(groupSeverity > maxHGSeverity) {
+                        determinedHazardGroup = hPhraseToHazardGroup[pattern];
+                        maxHGSeverity = groupSeverity;
+                    }
                 }
             }
         });
-        if(maxHGSeverity === 0 && hPhrases.length > 0) determinedHazardGroup = hPhraseToHazardGroup["default_low_sev"];
-        if(hPhrases.length === 0) determinedHazardGroup = hPhraseToHazardGroup["default_no_sig_haz"];
-        setRadio("hazardGroup", determinedHazardGroup);
 
+        if(maxHGSeverity === 0 && hPhrases.length > 0) {
+            determinedHazardGroup = hPhraseToHazardGroup["default_low_sev"];
+        }
+        if(hPhrases.length === 0) {
+            determinedHazardGroup = hPhraseToHazardGroup["default_no_sig_haz"];
+        }
+
+        return determinedHazardGroup;
+    }
+
+    /**
+     * Determines quantity category from procedure and entered quantity
+     * @returns {string} Quantity category: "Small", "Medium", or "Large"
+     */
+    function determineQuantityCategory() {
         const procedureKey = document.getElementById('labProcedure')?.value;
         const procDetails = procedureData[procedureKey];
         let quantityCat = procDetails ? procDetails.volCat : "Medium";
+
         const quantityValueEl = document.getElementById('quantityValue');
         const quantityValue = quantityValueEl ? parseFloat(quantityValueEl.value) || 0 : 0;
+
         const quantityUnitEl = document.getElementById('quantityUnit');
         const quantityUnit = quantityUnitEl ? quantityUnitEl.value : 'mL';
-        let normalizedQuantity = quantityValue; 
-        if (['µL', 'µg'].includes(quantityUnit)) normalizedQuantity /= 1000; if (['L', 'kg'].includes(quantityUnit)) normalizedQuantity *= 1000;
-        if (normalizedQuantity <= 10) quantityCat = "Small"; else if (normalizedQuantity > 10 && normalizedQuantity <= 250) quantityCat = "Medium"; else if (normalizedQuantity > 250) quantityCat = "Large";
-        setRadio("quantityGroup", quantityCat);
 
+        // Normalize quantity to mL/g scale
+        let normalizedQuantity = quantityValue;
+        if (['µL', 'µg'].includes(quantityUnit)) normalizedQuantity /= 1000;
+        if (['L', 'kg'].includes(quantityUnit)) normalizedQuantity *= 1000;
+
+        // Determine category based on normalized quantity
+        if (normalizedQuantity <= 10) quantityCat = "Small";
+        else if (normalizedQuantity > 10 && normalizedQuantity <= 250) quantityCat = "Medium";
+        else if (normalizedQuantity > 250) quantityCat = "Large";
+
+        return quantityCat;
+    }
+
+    /**
+     * Determines physical characteristics category from material type
+     * @returns {string} Physical characteristics: "Low", "Medium", or "High"
+     */
+    function determinePhysicalCharacteristics() {
         const materialTypeEl = document.getElementById('materialTypeForm');
         const materialType = materialTypeEl ? materialTypeEl.value : "";
         let physCharCat = "Low";
-        if (materialType && (materialType.includes("volatile") || materialType.includes("dusty") || materialType.includes("gas_direct_use") || materialType.includes("aerosol_generated"))) physCharCat = "High";
-        else if (materialType && (materialType.includes("liquid_nonvolatile") || materialType.includes("solid_pellet_granule"))) physCharCat = "Low";
-        else physCharCat = "Medium"; 
-        setRadio("physCharGroup", physCharCat);
 
-        const severityScore = calculateOverallSeverityFromDOM(); const likelihoodScore = calculateOverallLikelihoodFromDOM(); let controlBand = "1";
-        const totalRiskScore = severityScore * (likelihoodScore / 2); 
-        
-        const sevScoreEl = document.getElementById('calculatedSeverityScore'); if(sevScoreEl) sevScoreEl.textContent = severityScore.toFixed(1);
-        const likeScoreEl = document.getElementById('calculatedLikelihoodScore'); if(likeScoreEl) likeScoreEl.textContent = likelihoodScore.toFixed(1);
-        const totalScoreEl = document.getElementById('calculatedTotalRiskScore'); if(totalScoreEl) totalScoreEl.textContent = totalRiskScore.toFixed(1);
+        if (materialType && (materialType.includes("volatile") || materialType.includes("dusty") ||
+            materialType.includes("gas_direct_use") || materialType.includes("aerosol_generated"))) {
+            physCharCat = "High";
+        } else if (materialType && (materialType.includes("liquid_nonvolatile") ||
+            materialType.includes("solid_pellet_granule"))) {
+            physCharCat = "Low";
+        } else {
+            physCharCat = "Medium";
+        }
 
-        if (determinedHazardGroup === "S" || severityScore >= 5) controlBand = "S";
-        else if (severityScore >= 4 && likelihoodScore >= 5) controlBand = "3";
-        else if (severityScore >= 3 && likelihoodScore >= 3) controlBand = "2";
-        else if (severityScore >= 2 && likelihoodScore >= 2) controlBand = "2";
-        else controlBand = "1";
-        if (hPhrases.some(p => ["H340", "H350", "H360", "H334"].includes(p))) controlBand = "S";
+        return physCharCat;
+    }
+
+    /**
+     * Calculates risk scores (severity, likelihood, total)
+     * @returns {{severity: number, likelihood: number, total: number}} Risk scores
+     */
+    function calculateRiskScores() {
+        const severityScore = calculateOverallSeverityFromDOM();
+        const likelihoodScore = calculateOverallLikelihoodFromDOM();
+        const totalRiskScore = severityScore * (likelihoodScore / 2);
+
+        return {
+            severity: severityScore,
+            likelihood: likelihoodScore,
+            total: totalRiskScore
+        };
+    }
+
+    /**
+     * Updates risk display elements in the UI
+     * @param {number} severityScore - Severity score
+     * @param {number} likelihoodScore - Likelihood score
+     * @param {number} totalRiskScore - Total risk score
+     */
+    function updateRiskDisplayElements(severityScore, likelihoodScore, totalRiskScore) {
+        const sevScoreEl = document.getElementById('calculatedSeverityScore');
+        if(sevScoreEl) sevScoreEl.textContent = severityScore.toFixed(1);
+
+        const likeScoreEl = document.getElementById('calculatedLikelihoodScore');
+        if(likeScoreEl) likeScoreEl.textContent = likelihoodScore.toFixed(1);
+
+        const totalScoreEl = document.getElementById('calculatedTotalRiskScore');
+        if(totalScoreEl) totalScoreEl.textContent = totalRiskScore.toFixed(1);
+    }
+
+    /**
+     * Determines control band from risk assessment parameters
+     * @param {string} hazardGroup - Hazard group (A-E or S)
+     * @param {number} severityScore - Severity score (1-5)
+     * @param {number} likelihoodScore - Likelihood score (0-10)
+     * @param {string[]} hPhrases - Array of H-phrase codes
+     * @returns {string} Control band (1-4 or S)
+     */
+    function determineControlBand(hazardGroup, severityScore, likelihoodScore, hPhrases) {
+        let controlBand = "1";
+
+        // Base control band determination on severity and likelihood
+        if (hazardGroup === "S" || severityScore >= 5) {
+            controlBand = "S";
+        } else if (severityScore >= 4 && likelihoodScore >= 5) {
+            controlBand = "3";
+        } else if (severityScore >= 3 && likelihoodScore >= 3) {
+            controlBand = "2";
+        } else if (severityScore >= 2 && likelihoodScore >= 2) {
+            controlBand = "2";
+        }
+
+        // Override for specific CMR or sensitizer H-phrases
+        if (hPhrases.some(p => ["H340", "H350", "H360", "H334"].includes(p))) {
+            controlBand = "S";
+        }
+
+        return controlBand;
+    }
+
+    /**
+     * Main orchestrator function for risk evaluation parameters
+     * Coordinates all risk assessment sub-functions and updates the form
+     */
+    function determineRiskEvaluationParameters() {
+        const hPhrases = getHphrases();
+
+        // Step 1: Determine hazard group
+        const hazardGroup = determineHazardGroup(hPhrases);
+        setRadio("hazardGroup", hazardGroup);
+
+        // Step 2: Determine quantity category
+        const quantityCategory = determineQuantityCategory();
+        setRadio("quantityGroup", quantityCategory);
+
+        // Step 3: Determine physical characteristics
+        const physicalCharacteristics = determinePhysicalCharacteristics();
+        setRadio("physCharGroup", physicalCharacteristics);
+
+        // Step 4: Calculate risk scores
+        const riskScores = calculateRiskScores();
+        updateRiskDisplayElements(riskScores.severity, riskScores.likelihood, riskScores.total);
+
+        // Step 5: Determine control band
+        const controlBand = determineControlBand(hazardGroup, riskScores.severity, riskScores.likelihood, hPhrases);
         setRadio("controlGroup", controlBand);
     }
     function updateControlSuggestions() { /* ... (Full, corrected function from previous response) ... */
