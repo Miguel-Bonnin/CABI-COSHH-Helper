@@ -31,12 +31,16 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
 
             // Don't retry on 4xx errors (client errors - permanent)
             if (response.status >= 400 && response.status < 500) {
-                throw new Error(`Client error ${response.status} for ${url}: ${response.statusText}`);
+                throw new Error(
+                    `Client error ${response.status} for ${url}: ${response.statusText}`
+                );
             }
 
             // Retry on 5xx errors (server errors - transient)
             if (response.status >= 500) {
-                throw new Error(`Server error ${response.status} for ${url}: ${response.statusText}`);
+                throw new Error(
+                    `Server error ${response.status} for ${url}: ${response.statusText}`
+                );
             }
 
             // Success
@@ -45,7 +49,6 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
             }
 
             throw new Error(`HTTP ${response.status} for ${url}: ${response.statusText}`);
-
         } catch (error) {
             lastError = error;
             console.error(`Fetch attempt ${attempt + 1} failed for ${url}:`, error.message);
@@ -65,7 +68,9 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
     }
 
     // All retries exhausted
-    throw new Error(`Failed to fetch ${url} after ${maxRetries + 1} attempts. Last error: ${lastError.message}`);
+    throw new Error(
+        `Failed to fetch ${url} after ${maxRetries + 1} attempts. Last error: ${lastError.message}`
+    );
 }
 
 /**
@@ -96,7 +101,7 @@ async function loadEH40Data() {
                     ltePPM: values[2].trim(),
                     lteMgM3: values[3].trim(),
                     stePPM: values[4].trim(),
-                    steMgM3: values[5].trim()
+                    steMgM3: values[5].trim(),
                 });
             }
         }
@@ -115,7 +120,9 @@ async function loadEH40Data() {
     } catch (error) {
         console.error('Error loading EH40 data:', error);
         eh40DataLoaded = false;
-        showEH40Error('Could not load EH40 workplace exposure limits data. The data file may be missing or inaccessible.');
+        showEH40Error(
+            'Could not load EH40 workplace exposure limits data. The data file may be missing or inaccessible.'
+        );
         return false;
     }
 }
@@ -150,9 +157,10 @@ function parseCSVLine(line) {
  */
 function normalizeSubstanceName(name) {
     if (!name) return '';
-    return name.toLowerCase()
+    return name
+        .toLowerCase()
         .replace(/[^\w\s-]/g, '') // Remove special chars except hyphens
-        .replace(/\s+/g, ' ')      // Normalize whitespace
+        .replace(/\s+/g, ' ') // Normalize whitespace
         .trim();
 }
 
@@ -173,8 +181,8 @@ function searchEH40(substanceName, casNumber) {
 
     // Try exact CAS match first (most reliable)
     if (normalizedCAS && normalizedCAS !== '-') {
-        const casMatch = eh40Data.find(entry =>
-            normalizeCASNumber(entry.casNumber) === normalizedCAS
+        const casMatch = eh40Data.find(
+            entry => normalizeCASNumber(entry.casNumber) === normalizedCAS
         );
         if (casMatch) {
             console.log(`EH40 match found by CAS: ${casMatch.substance}`);
@@ -184,8 +192,8 @@ function searchEH40(substanceName, casNumber) {
 
     // Try exact substance name match
     if (normalizedName) {
-        const exactMatch = eh40Data.find(entry =>
-            normalizeSubstanceName(entry.substance) === normalizedName
+        const exactMatch = eh40Data.find(
+            entry => normalizeSubstanceName(entry.substance) === normalizedName
         );
         if (exactMatch) {
             console.log(`EH40 match found by exact name: ${exactMatch.substance}`);
@@ -259,7 +267,11 @@ function autoFillWELValues() {
     const chemicalName = safeGetElementById('chemicalName', false)?.value || '';
     const casNumber = safeGetElementById('casNumber', false)?.value || '';
 
-    console.log('autoFillWELValues called with:', { chemicalName, casNumber, dataLoaded: eh40Data.length });
+    console.log('autoFillWELValues called with:', {
+        chemicalName,
+        casNumber,
+        dataLoaded: eh40Data.length,
+    });
 
     if (!chemicalName && !casNumber) {
         console.log('No chemical name or CAS number to search');

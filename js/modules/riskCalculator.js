@@ -22,20 +22,20 @@ const VALID_UNITS = ['µg', 'mg', 'g', 'kg', 'µL', 'mL', 'L'];
  * @private
  */
 function getMaxHPhraseSeverity(hPhrases) {
-  let maxSeverity = 0;
+    let maxSeverity = 0;
 
-  for (const phrase of hPhrases) {
-    const normalizedPhrase = phrase.toUpperCase();
+    for (const phrase of hPhrases) {
+        const normalizedPhrase = phrase.toUpperCase();
 
-    // Check each pattern in severity map (uses startsWith for H-phrase variants)
-    for (const pattern in hPhraseSeverityMap) {
-      if (pattern !== 'default' && normalizedPhrase.startsWith(pattern)) {
-        maxSeverity = Math.max(maxSeverity, hPhraseSeverityMap[pattern]);
-      }
+        // Check each pattern in severity map (uses startsWith for H-phrase variants)
+        for (const pattern in hPhraseSeverityMap) {
+            if (pattern !== 'default' && normalizedPhrase.startsWith(pattern)) {
+                maxSeverity = Math.max(maxSeverity, hPhraseSeverityMap[pattern]);
+            }
+        }
     }
-  }
 
-  return maxSeverity;
+    return maxSeverity;
 }
 
 /**
@@ -46,10 +46,10 @@ function getMaxHPhraseSeverity(hPhrases) {
  * @private
  */
 function getSignalWordSeverity(signalWord) {
-  const normalized = signalWord.trim().toLowerCase();
-  if (normalized === 'danger') return 3;
-  if (normalized === 'warning') return 2;
-  return 1;
+    const normalized = signalWord.trim().toLowerCase();
+    if (normalized === 'danger') return 3;
+    if (normalized === 'warning') return 2;
+    return 1;
 }
 
 /**
@@ -69,30 +69,34 @@ function getSignalWordSeverity(signalWord) {
  * 4. Return highest severity found
  */
 export function calculateOverallSeverity(hPhrases, signalWord) {
-  // Validate inputs
-  if (!Array.isArray(hPhrases)) {
-    throw new TypeError(`calculateOverallSeverity: hPhrases must be an array, got ${typeof hPhrases}`);
-  }
-  if (typeof signalWord !== 'string') {
-    throw new TypeError(`calculateOverallSeverity: signalWord must be a string, got ${typeof signalWord}`);
-  }
+    // Validate inputs
+    if (!Array.isArray(hPhrases)) {
+        throw new TypeError(
+            `calculateOverallSeverity: hPhrases must be an array, got ${typeof hPhrases}`
+        );
+    }
+    if (typeof signalWord !== 'string') {
+        throw new TypeError(
+            `calculateOverallSeverity: signalWord must be a string, got ${typeof signalWord}`
+        );
+    }
 
-  // Handle empty H-phrases array
-  if (hPhrases.length === 0) {
-    return getSignalWordSeverity(signalWord);
-  }
+    // Handle empty H-phrases array
+    if (hPhrases.length === 0) {
+        return getSignalWordSeverity(signalWord);
+    }
 
-  // Find highest severity from H-phrases
-  let maxSeverity = getMaxHPhraseSeverity(hPhrases);
+    // Find highest severity from H-phrases
+    let maxSeverity = getMaxHPhraseSeverity(hPhrases);
 
-  // If no H-phrases matched, use default severity
-  if (maxSeverity === 0) {
-    maxSeverity = hPhraseSeverityMap['default'];
-  }
+    // If no H-phrases matched, use default severity
+    if (maxSeverity === 0) {
+        maxSeverity = hPhraseSeverityMap['default'];
+    }
 
-  // Apply signal word fallback (only if it would increase severity)
-  const signalWordSeverity = getSignalWordSeverity(signalWord);
-  return Math.max(maxSeverity, signalWordSeverity);
+    // Apply signal word fallback (only if it would increase severity)
+    const signalWordSeverity = getSignalWordSeverity(signalWord);
+    return Math.max(maxSeverity, signalWordSeverity);
 }
 
 /**
@@ -113,27 +117,27 @@ export function calculateOverallSeverity(hPhrases, signalWord) {
  * - 1kg = 1000g
  */
 function normalizeQuantity(quantity, unit) {
-  let normalized = quantity;
+    let normalized = quantity;
 
-  // Convert micro units (divide by 1000)
-  if (['µL', 'µg'].includes(unit)) {
-    normalized /= 1000;
-  }
+    // Convert micro units (divide by 1000)
+    if (['µL', 'µg'].includes(unit)) {
+        normalized /= 1000;
+    }
 
-  // Convert large units (multiply by 1000)
-  if (['L', 'kg'].includes(unit)) {
-    normalized *= 1000;
-  }
+    // Convert large units (multiply by 1000)
+    if (['L', 'kg'].includes(unit)) {
+        normalized *= 1000;
+    }
 
-  // g needs to be converted to mg (multiply by 1000)
-  // This ensures 1000mg = 1g in normalized form
-  if (unit === 'g') {
-    normalized *= 1000;
-  }
+    // g needs to be converted to mg (multiply by 1000)
+    // This ensures 1000mg = 1g in normalized form
+    if (unit === 'g') {
+        normalized *= 1000;
+    }
 
-  // mg and mL are base units (no conversion)
+    // mg and mL are base units (no conversion)
 
-  return normalized;
+    return normalized;
 }
 
 /**
@@ -144,10 +148,10 @@ function normalizeQuantity(quantity, unit) {
  * @private
  */
 function getQuantityScore(normalizedQuantity) {
-  if (normalizedQuantity > 500) return 3;
-  if (normalizedQuantity > 50) return 2;
-  if (normalizedQuantity > 1) return 1;
-  return 0;
+    if (normalizedQuantity > 500) return 3;
+    if (normalizedQuantity > 50) return 2;
+    if (normalizedQuantity > 1) return 1;
+    return 0;
 }
 
 /**
@@ -158,10 +162,10 @@ function getQuantityScore(normalizedQuantity) {
  * @private
  */
 function getFrequencyScore(frequency) {
-  if (frequency === 'multiple_daily') return 3;
-  if (frequency === 'daily') return 2;
-  if (frequency === 'weekly') return 1;
-  return 0;
+    if (frequency === 'multiple_daily') return 3;
+    if (frequency === 'daily') return 2;
+    if (frequency === 'weekly') return 1;
+    return 0;
 }
 
 /**
@@ -172,10 +176,10 @@ function getFrequencyScore(frequency) {
  * @private
  */
 function getDurationScore(duration) {
-  if (duration === 'very_long') return 3;
-  if (duration === 'long') return 2;
-  if (duration === 'medium') return 1;
-  return 0;
+    if (duration === 'very_long') return 3;
+    if (duration === 'long') return 2;
+    if (duration === 'medium') return 1;
+    return 0;
 }
 
 /**
@@ -198,47 +202,59 @@ function getDurationScore(duration) {
  * 7. Cap final score at 10
  */
 export function calculateOverallLikelihood(procedureData, quantity, unit, frequency, duration) {
-  // Validate inputs
-  if (typeof quantity !== 'number' || isNaN(quantity)) {
-    throw new TypeError(`calculateOverallLikelihood: quantity must be a number, got ${typeof quantity}`);
-  }
-  if (quantity < 0) {
-    throw new RangeError(`calculateOverallLikelihood: quantity must be non-negative, got ${quantity}`);
-  }
-  if (typeof unit !== 'string') {
-    throw new TypeError(`calculateOverallLikelihood: unit must be a string, got ${typeof unit}`);
-  }
-  if (!VALID_UNITS.includes(unit)) {
-    throw new TypeError(`calculateOverallLikelihood: unit must be one of [${VALID_UNITS.join(', ')}], got '${unit}'`);
-  }
-  if (typeof frequency !== 'string') {
-    throw new TypeError(`calculateOverallLikelihood: frequency must be a string, got ${typeof frequency}`);
-  }
-  if (typeof duration !== 'string') {
-    throw new TypeError(`calculateOverallLikelihood: duration must be a string, got ${typeof duration}`);
-  }
+    // Validate inputs
+    if (typeof quantity !== 'number' || isNaN(quantity)) {
+        throw new TypeError(
+            `calculateOverallLikelihood: quantity must be a number, got ${typeof quantity}`
+        );
+    }
+    if (quantity < 0) {
+        throw new RangeError(
+            `calculateOverallLikelihood: quantity must be non-negative, got ${quantity}`
+        );
+    }
+    if (typeof unit !== 'string') {
+        throw new TypeError(
+            `calculateOverallLikelihood: unit must be a string, got ${typeof unit}`
+        );
+    }
+    if (!VALID_UNITS.includes(unit)) {
+        throw new TypeError(
+            `calculateOverallLikelihood: unit must be one of [${VALID_UNITS.join(', ')}], got '${unit}'`
+        );
+    }
+    if (typeof frequency !== 'string') {
+        throw new TypeError(
+            `calculateOverallLikelihood: frequency must be a string, got ${typeof frequency}`
+        );
+    }
+    if (typeof duration !== 'string') {
+        throw new TypeError(
+            `calculateOverallLikelihood: duration must be a string, got ${typeof duration}`
+        );
+    }
 
-  let likelihoodScore = 0;
+    let likelihoodScore = 0;
 
-  // Step 1-2: Base score from procedure characteristics
-  if (procedureData && procedureData.exposureFactor !== undefined) {
-    likelihoodScore += (procedureData.exposureFactor || 0.5) * 3;
-    likelihoodScore += (procedureData.aerosol || 0) * 2;
-  } else {
-    // Default base score if no procedure data
-    likelihoodScore += 1.5;
-  }
+    // Step 1-2: Base score from procedure characteristics
+    if (procedureData && procedureData.exposureFactor !== undefined) {
+        likelihoodScore += (procedureData.exposureFactor || 0.5) * 3;
+        likelihoodScore += (procedureData.aerosol || 0) * 2;
+    } else {
+        // Default base score if no procedure data
+        likelihoodScore += 1.5;
+    }
 
-  // Step 3: Add quantity factor based on normalized quantity
-  const normalizedQuantity = normalizeQuantity(quantity, unit);
-  likelihoodScore += getQuantityScore(normalizedQuantity);
+    // Step 3: Add quantity factor based on normalized quantity
+    const normalizedQuantity = normalizeQuantity(quantity, unit);
+    likelihoodScore += getQuantityScore(normalizedQuantity);
 
-  // Step 5: Add frequency multiplier
-  likelihoodScore += getFrequencyScore(frequency);
+    // Step 5: Add frequency multiplier
+    likelihoodScore += getFrequencyScore(frequency);
 
-  // Step 6: Add duration multiplier
-  likelihoodScore += getDurationScore(duration);
+    // Step 6: Add duration multiplier
+    likelihoodScore += getDurationScore(duration);
 
-  // Step 7: Cap at 10
-  return Math.min(10, likelihoodScore);
+    // Step 7: Cap at 10
+    return Math.min(10, likelihoodScore);
 }

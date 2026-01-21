@@ -51,7 +51,9 @@ if (!API_TOKEN) {
 // Debug: Show token info (first/last chars only for security)
 if (process.argv.includes('--debug')) {
     console.log(`🔍 Debug: Token length: ${API_TOKEN.length} characters`);
-    console.log(`🔍 Debug: Token preview: ${API_TOKEN.substring(0, 5)}...${API_TOKEN.substring(API_TOKEN.length - 5)}`);
+    console.log(
+        `🔍 Debug: Token preview: ${API_TOKEN.substring(0, 5)}...${API_TOKEN.substring(API_TOKEN.length - 5)}`
+    );
 }
 
 /**
@@ -61,7 +63,7 @@ function makeRequest(endpoint, data) {
     return new Promise((resolve, reject) => {
         const postData = JSON.stringify({
             authtoken: API_TOKEN,
-            ...data
+            ...data,
         });
 
         const options = {
@@ -70,24 +72,24 @@ function makeRequest(endpoint, data) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
+                'Content-Length': Buffer.byteLength(postData),
+            },
         };
 
         if (process.argv.includes('--debug')) {
             console.log(`🔍 Debug: Request to https://${options.hostname}${options.path}`);
             console.log(`🔍 Debug: Method: ${options.method}`);
-            console.log(`🔍 Debug: Headers:`, options.headers);
+            console.log('🔍 Debug: Headers:', options.headers);
         }
 
-        const req = https.request(options, (res) => {
+        const req = https.request(options, res => {
             if (process.argv.includes('--debug')) {
                 console.log(`🔍 Debug: Response status: ${res.statusCode}`);
-                console.log(`🔍 Debug: Response headers:`, res.headers);
+                console.log('🔍 Debug: Response headers:', res.headers);
             }
 
             let body = '';
-            res.on('data', (chunk) => body += chunk);
+            res.on('data', chunk => (body += chunk));
             res.on('end', () => {
                 if (process.argv.includes('--debug')) {
                     console.log(`🔍 Debug: Response body: ${body.substring(0, 200)}...`);
@@ -122,7 +124,7 @@ async function fetchInventory() {
         // Get inventory export
         const response = await makeRequest('/inventorymanagement/export', {
             includeEmptyContainers: false,
-            includeSublocations: true
+            includeSublocations: true,
         });
 
         // Debug: Check what we actually received
@@ -139,7 +141,10 @@ async function fetchInventory() {
         if (response.columns && response.rows) {
             if (process.argv.includes('--debug')) {
                 console.log('🔍 Debug: Number of rows:', response.rows.length);
-                console.log('🔍 Debug: First row type:', Array.isArray(response.rows[0]) ? 'Array' : 'Object');
+                console.log(
+                    '🔍 Debug: First row type:',
+                    Array.isArray(response.rows[0]) ? 'Array' : 'Object'
+                );
             }
 
             // Rows are already objects with the data - use them directly
@@ -147,7 +152,9 @@ async function fetchInventory() {
         } else if (Array.isArray(response)) {
             containers = response;
         } else {
-            throw new Error(`Unexpected response format. Type: ${typeof response}, Keys: ${Object.keys(response || {}).join(', ')}`);
+            throw new Error(
+                `Unexpected response format. Type: ${typeof response}, Keys: ${Object.keys(response || {}).join(', ')}`
+            );
         }
 
         console.log(`✅ Fetched ${containers.length} containers`);
@@ -191,17 +198,16 @@ async function fetchInventory() {
                     additionalCAS: container['cf-8665'] || null,
                     productCode: container['cf-8662'] || null,
                     unNumber: container['sf-1928'] || null,
-                    mappNumber: container['cf-9014'] || null
-                }
+                    mappNumber: container['cf-9014'] || null,
+                },
             };
         });
 
         return {
             lastUpdated: new Date().toISOString(),
             totalChemicals: inventory.length,
-            inventory: inventory
+            inventory: inventory,
         };
-
     } catch (error) {
         throw new Error(`Failed to fetch inventory: ${error.message}`);
     }
@@ -234,7 +240,6 @@ async function main() {
         console.log('✅ Complete!');
         console.log(`   Total chemicals: ${inventory.totalChemicals}`);
         console.log(`   Last updated: ${inventory.lastUpdated}`);
-
     } catch (error) {
         console.error('❌ Error:', error.message);
         process.exit(1);

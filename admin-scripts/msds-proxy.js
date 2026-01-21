@@ -36,7 +36,7 @@ function makeChemInventoryRequest(endpoint, data) {
     return new Promise((resolve, reject) => {
         const postData = JSON.stringify({
             authtoken: API_TOKEN,
-            ...data
+            ...data,
         });
 
         const options = {
@@ -45,13 +45,13 @@ function makeChemInventoryRequest(endpoint, data) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(postData)
-            }
+                'Content-Length': Buffer.byteLength(postData),
+            },
         };
 
-        const req = https.request(options, (res) => {
+        const req = https.request(options, res => {
             let body = '';
-            res.on('data', (chunk) => body += chunk);
+            res.on('data', chunk => (body += chunk));
             res.on('end', () => {
                 try {
                     const response = JSON.parse(body);
@@ -104,7 +104,7 @@ const server = http.createServer(async (req, res) => {
             }
 
             const files = await makeChemInventoryRequest('/filestore/getlinkedfiles', {
-                substanceid: parseInt(substanceId)
+                substanceid: parseInt(substanceId),
             });
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -121,13 +121,12 @@ const server = http.createServer(async (req, res) => {
             }
 
             const downloadUrl = await makeChemInventoryRequest('/filestore/download', {
-                fileid: parseInt(fileId)
+                fileid: parseInt(fileId),
             });
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ url: downloadUrl }));
-        }
-        else {
+        } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Not found' }));
         }
@@ -144,8 +143,8 @@ server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
     console.log('');
     console.log('Endpoints:');
-    console.log(`  GET /files?substanceId=123    - List files for substance`);
-    console.log(`  GET /download?fileId=456      - Get download URL for file`);
+    console.log('  GET /files?substanceId=123    - List files for substance');
+    console.log('  GET /download?fileId=456      - Get download URL for file');
     console.log('');
     console.log('Press Ctrl+C to stop');
 });

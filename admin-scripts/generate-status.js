@@ -53,7 +53,7 @@ try {
             assessedBy: null,
             assessmentDate: null,
             reviewDueDate: null, // Set to 1 year from assessment date when completed
-            notes: coshhRequired === 'Yes' ? 'COSHH assessment required (from ChemInventory)' : ''
+            notes: coshhRequired === 'Yes' ? 'COSHH assessment required (from ChemInventory)' : '',
         };
     });
 
@@ -62,7 +62,7 @@ try {
         complete: assessments.filter(a => a.status === 'complete').length,
         in_progress: assessments.filter(a => a.status === 'in_progress').length,
         needs_assessment: assessments.filter(a => a.status === 'needs_assessment').length,
-        not_required: assessments.filter(a => a.status === 'not_required').length
+        not_required: assessments.filter(a => a.status === 'not_required').length,
     };
 
     console.log('\n📊 Status Breakdown:');
@@ -74,7 +74,7 @@ try {
     // Create status file
     const statusData = {
         lastUpdated: new Date().toISOString(),
-        assessments: assessments
+        assessments: assessments,
     };
 
     // Ensure directory exists
@@ -89,7 +89,6 @@ try {
 
     console.log('\n✅ Complete! The assessment-status.json file has been generated.');
     console.log('   You can now view the inventory in the COSHH Helper tool.');
-
 } catch (error) {
     console.error('❌ Error:', error.message);
     process.exit(1);

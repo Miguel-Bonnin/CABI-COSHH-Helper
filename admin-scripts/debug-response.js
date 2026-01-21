@@ -19,7 +19,7 @@ console.log('===================================\n');
 const postData = JSON.stringify({
     authtoken: API_TOKEN,
     includeEmptyContainers: false,
-    includeSublocations: true
+    includeSublocations: true,
 });
 
 const options = {
@@ -28,13 +28,13 @@ const options = {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(postData)
-    }
+        'Content-Length': Buffer.byteLength(postData),
+    },
 };
 
-const req = https.request(options, (res) => {
+const req = https.request(options, res => {
     let body = '';
-    res.on('data', (chunk) => body += chunk);
+    res.on('data', chunk => (body += chunk));
     res.on('end', () => {
         try {
             const response = JSON.parse(body);
@@ -60,7 +60,10 @@ const req = https.request(options, (res) => {
                     console.log('📦 First Row Structure:');
                     const firstRow = data.rows[0];
                     console.log('   Type:', Array.isArray(firstRow) ? 'Array' : 'Object');
-                    console.log('   Length/Keys:', Array.isArray(firstRow) ? firstRow.length : Object.keys(firstRow).length);
+                    console.log(
+                        '   Length/Keys:',
+                        Array.isArray(firstRow) ? firstRow.length : Object.keys(firstRow).length
+                    );
                     console.log('');
 
                     if (Array.isArray(firstRow)) {
@@ -83,7 +86,6 @@ const req = https.request(options, (res) => {
                     });
                     console.log(JSON.stringify(mapped, null, 2));
                 }
-
             } else {
                 console.log('❌ API Error:', response);
             }
@@ -94,7 +96,7 @@ const req = https.request(options, (res) => {
     });
 });
 
-req.on('error', (error) => {
+req.on('error', error => {
     console.error('❌ Request Error:', error.message);
 });
 

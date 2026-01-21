@@ -31,12 +31,16 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
 
             // Don't retry on 4xx errors (client errors - permanent)
             if (response.status >= 400 && response.status < 500) {
-                throw new Error(`Client error ${response.status} for ${url}: ${response.statusText}`);
+                throw new Error(
+                    `Client error ${response.status} for ${url}: ${response.statusText}`
+                );
             }
 
             // Retry on 5xx errors (server errors - transient)
             if (response.status >= 500) {
-                throw new Error(`Server error ${response.status} for ${url}: ${response.statusText}`);
+                throw new Error(
+                    `Server error ${response.status} for ${url}: ${response.statusText}`
+                );
             }
 
             // Success
@@ -45,7 +49,6 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
             }
 
             throw new Error(`HTTP ${response.status} for ${url}: ${response.statusText}`);
-
         } catch (error) {
             lastError = error;
             console.error(`Fetch attempt ${attempt + 1} failed for ${url}:`, error.message);
@@ -65,7 +68,9 @@ async function fetchWithRetry(url, maxRetries = 3, delay = 1000) {
     }
 
     // All retries exhausted
-    throw new Error(`Failed to fetch ${url} after ${maxRetries + 1} attempts. Last error: ${lastError.message}`);
+    throw new Error(
+        `Failed to fetch ${url} after ${maxRetries + 1} attempts. Last error: ${lastError.message}`
+    );
 }
 
 /**
@@ -118,7 +123,7 @@ function updateInventoryStats() {
         inProgress: 0,
         needsAssessment: 0,
         reviewDue: 0,
-        notRequired: 0
+        notRequired: 0,
     };
 
     // Count by status
@@ -169,7 +174,7 @@ function renderInventoryTable() {
             assessedBy: null,
             assessmentDate: null,
             reviewDueDate: null,
-            notes: ''
+            notes: '',
         };
         return { ...chemical, assessmentStatus: status };
     });
@@ -177,7 +182,8 @@ function renderInventoryTable() {
     // Apply filters
     filteredInventory = mergedData.filter(item => {
         // Search filter
-        const matchesSearch = !searchTerm ||
+        const matchesSearch =
+            !searchTerm ||
             item.name.toLowerCase().includes(searchTerm) ||
             (item.casNumber && item.casNumber.includes(searchTerm)) ||
             (item.location && item.location.toLowerCase().includes(searchTerm)) ||
@@ -198,16 +204,18 @@ function renderInventoryTable() {
 
     // Render rows
     if (filteredInventory.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">No chemicals found matching filters.</td></tr>';
+        tbody.innerHTML =
+            '<tr><td colspan="8" style="text-align:center; padding: 40px;">No chemicals found matching filters.</td></tr>';
         return;
     }
 
-    tbody.innerHTML = filteredInventory.map(item => {
-        const status = item.assessmentStatus;
-        const isReviewDue = status.reviewDueDate && new Date(status.reviewDueDate) < new Date();
-        const displayStatus = isReviewDue ? 'review_due' : status.status;
+    tbody.innerHTML = filteredInventory
+        .map(item => {
+            const status = item.assessmentStatus;
+            const isReviewDue = status.reviewDueDate && new Date(status.reviewDueDate) < new Date();
+            const displayStatus = isReviewDue ? 'review_due' : status.status;
 
-        return `
+            return `
             <tr data-chemical-id="${item.id}">
                 <td><strong>${escapeHtml(item.name)}</strong></td>
                 <td>${item.casNumber || '-'}</td>
@@ -219,7 +227,8 @@ function renderInventoryTable() {
                 <td>${renderActionButtons(item)}</td>
             </tr>
         `;
-    }).join('');
+        })
+        .join('');
 }
 
 /**
@@ -232,7 +241,10 @@ function renderHazardBadges(hazards, statements) {
     }
 
     // Display hazard statements as badges
-    const badges = statements.slice(0, 5).map(h => `<span class="hazard-badge">${h}</span>`).join(' ');
+    const badges = statements
+        .slice(0, 5)
+        .map(h => `<span class="hazard-badge">${h}</span>`)
+        .join(' ');
     const more = statements.length > 5 ? `<br><small>+${statements.length - 5} more</small>` : '';
 
     return badges + more;
@@ -243,11 +255,11 @@ function renderHazardBadges(hazards, statements) {
  */
 function renderStatusBadge(status) {
     const badges = {
-        'complete': '<span class="status-badge status-complete">✓ Complete</span>',
-        'in_progress': '<span class="status-badge status-in-progress">⏳ In Progress</span>',
-        'needs_assessment': '<span class="status-badge status-needs">⚠ Needs Assessment</span>',
-        'not_required': '<span class="status-badge status-not-required">- Not Required</span>',
-        'review_due': '<span class="status-badge status-review-due">📅 Review Due</span>'
+        complete: '<span class="status-badge status-complete">✓ Complete</span>',
+        in_progress: '<span class="status-badge status-in-progress">⏳ In Progress</span>',
+        needs_assessment: '<span class="status-badge status-needs">⚠ Needs Assessment</span>',
+        not_required: '<span class="status-badge status-not-required">- Not Required</span>',
+        review_due: '<span class="status-badge status-review-due">📅 Review Due</span>',
     };
     return badges[status] || badges['needs_assessment'];
 }
@@ -257,28 +269,33 @@ function renderStatusBadge(status) {
  */
 function renderActionButtons(item) {
     const status = item.assessmentStatus.status;
-    const isReviewDue = item.assessmentStatus.reviewDueDate &&
-                        new Date(item.assessmentStatus.reviewDueDate) < new Date();
+    const isReviewDue =
+        item.assessmentStatus.reviewDueDate &&
+        new Date(item.assessmentStatus.reviewDueDate) < new Date();
 
     let buttons = [];
 
     // Create/Edit Assessment button
     if (status === 'needs_assessment' || status === 'in_progress' || isReviewDue) {
-        buttons.push(`<button type="button" class="action-button small" onclick="createAssessmentFromInventory('${item.id}')">Create Assessment</button>`);
+        buttons.push(
+            `<button type="button" class="action-button small" onclick="createAssessmentFromInventory('${item.id}')">Create Assessment</button>`
+        );
     }
 
     // View Assessment button
     if (status === 'complete' && item.assessmentStatus.assessmentFile) {
-        buttons.push(`<button type="button" class="secondary-button small" onclick="loadAssessmentFromInventory('${item.assessmentStatus.assessmentFile}')">View Assessment</button>`);
+        buttons.push(
+            `<button type="button" class="secondary-button small" onclick="loadAssessmentFromInventory('${item.assessmentStatus.assessmentFile}')">View Assessment</button>`
+        );
     }
 
     // MSDS Download button (if substance has ID)
     if (item.substanceId) {
-        buttons.push(`<button type="button" class="secondary-button small">📄 MSDS</button>`);
+        buttons.push('<button type="button" class="secondary-button small">📄 MSDS</button>');
     }
 
     // View Details button
-    buttons.push(`<button type="button" class="secondary-button small">Details</button>`);
+    buttons.push('<button type="button" class="secondary-button small">Details</button>');
 
     return buttons.join(' ');
 }
@@ -319,10 +336,13 @@ function createAssessmentFromInventory(chemicalId) {
 
         // Add location info to task description
         if (taskField) {
-            const locationNote = chemical.location ? `\n\nInventory Location: ${chemical.location}` : '';
+            const locationNote = chemical.location
+                ? `\n\nInventory Location: ${chemical.location}`
+                : '';
             const currentTask = taskField.value;
             if (!currentTask.includes('Inventory Location:')) {
-                taskField.value = (currentTask ? currentTask : `Using chemical: ${chemical.name}`) + locationNote;
+                taskField.value =
+                    (currentTask ? currentTask : `Using chemical: ${chemical.name}`) + locationNote;
             }
         }
 
@@ -331,11 +351,13 @@ function createAssessmentFromInventory(chemicalId) {
             window.inventoryHazardData = {
                 chemicalId: chemicalId,
                 hazardStatements: chemical.hazardStatements,
-                ghsPictograms: chemical.hazards || []
+                ghsPictograms: chemical.hazards || [],
             };
         }
 
-        alert(`Assessment started for ${chemical.name}\n\nPre-filled:\n- Chemical Name\n- CAS Number: ${chemical.casNumber || 'N/A'}\n- Supplier: ${chemical.supplier || 'N/A'}\n${chemical.hazardStatements && chemical.hazardStatements.length > 0 ? '\n' + chemical.hazardStatements.length + ' hazard codes available' : ''}`);
+        alert(
+            `Assessment started for ${chemical.name}\n\nPre-filled:\n- Chemical Name\n- CAS Number: ${chemical.casNumber || 'N/A'}\n- Supplier: ${chemical.supplier || 'N/A'}\n${chemical.hazardStatements && chemical.hazardStatements.length > 0 ? '\n' + chemical.hazardStatements.length + ' hazard codes available' : ''}`
+        );
     }, 100);
 }
 
@@ -440,7 +462,7 @@ function setupInventoryEventListeners() {
     // Set up event delegation for dynamically created buttons
     const tableBody = safeGetElementById('inventoryTableBody', false);
     if (tableBody) {
-        tableBody.addEventListener('click', function(e) {
+        tableBody.addEventListener('click', function (e) {
             const target = e.target;
 
             // Handle button clicks
@@ -460,7 +482,10 @@ function setupInventoryEventListeners() {
                     if (chemical && chemical.assessmentStatus.assessmentFile) {
                         loadAssessmentFromInventory(chemical.assessmentStatus.assessmentFile);
                     }
-                } else if (target.textContent.includes('MSDS') || target.textContent.includes('📄')) {
+                } else if (
+                    target.textContent.includes('MSDS') ||
+                    target.textContent.includes('📄')
+                ) {
                     showMSDSFiles(id);
                 } else if (target.textContent.includes('Details')) {
                     showChemicalDetails(id);
@@ -536,7 +561,7 @@ function escapeHtml(text) {
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
-        "'": '&#039;'
+        "'": '&#039;',
     };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
@@ -581,16 +606,19 @@ async function showMSDSFiles(chemicalId) {
         const files = await response.json();
 
         if (!files || files.length === 0) {
-            alert(`No MSDS files found for ${chemical.name}\n\nThis chemical may not have any uploaded documents in ChemInventory.`);
+            alert(
+                `No MSDS files found for ${chemical.name}\n\nThis chemical may not have any uploaded documents in ChemInventory.`
+            );
             return;
         }
 
         // Show file selection dialog
         showMSDSFileDialog(chemical, files);
-
     } catch (error) {
         console.error('Error fetching MSDS files:', error);
-        alert(`Failed to fetch MSDS files.\n\nError: ${error.message}\n\nMake sure the MSDS proxy server is running:\n  cd admin-scripts\n  node msds-proxy.js`);
+        alert(
+            `Failed to fetch MSDS files.\n\nError: ${error.message}\n\nMake sure the MSDS proxy server is running:\n  cd admin-scripts\n  node msds-proxy.js`
+        );
     }
 }
 
@@ -600,14 +628,18 @@ async function showMSDSFiles(chemicalId) {
 function showMSDSFileDialog(chemical, files) {
     // Create modal backdrop
     const backdrop = document.createElement('div');
-    backdrop.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+    backdrop.style.cssText =
+        'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;';
 
     // Create dialog
     const dialog = document.createElement('div');
-    dialog.style.cssText = 'background: white; padding: 30px; border-radius: 8px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);';
+    dialog.style.cssText =
+        'background: white; padding: 30px; border-radius: 8px; max-width: 600px; max-height: 80vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);';
 
     // Build file list
-    const fileListHTML = files.map(file => `
+    const fileListHTML = files
+        .map(
+            file => `
         <div style="padding: 12px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <strong>${escapeHtml(file.name)}</strong><br>
@@ -620,7 +652,9 @@ function showMSDSFileDialog(chemical, files) {
                 Download
             </button>
         </div>
-    `).join('');
+    `
+        )
+        .join('');
 
     dialog.innerHTML = `
         <h2 style="margin-top: 0;">MSDS Files for ${escapeHtml(chemical.name)}</h2>
@@ -635,7 +669,7 @@ function showMSDSFileDialog(chemical, files) {
 
     backdrop.className = 'msds-dialog-backdrop';
     backdrop.appendChild(dialog);
-    backdrop.onclick = (e) => {
+    backdrop.onclick = e => {
         if (e.target === backdrop) backdrop.remove();
     };
 
@@ -653,7 +687,7 @@ async function downloadMSDSFile(fileId, fileName) {
         const response = await fetch(`${MSDS_PROXY_URL}/download?fileId=${fileId}`);
 
         if (!response.ok) {
-            throw new Error(`Failed to get download URL`);
+            throw new Error('Failed to get download URL');
         }
 
         const data = await response.json();
@@ -662,8 +696,9 @@ async function downloadMSDSFile(fileId, fileName) {
         // Open in new tab
         window.open(downloadUrl, '_blank');
 
-        alert(`MSDS file opened in new tab!\n\nFile: ${fileName}\n\nNote: The download link expires after 30 minutes.`);
-
+        alert(
+            `MSDS file opened in new tab!\n\nFile: ${fileName}\n\nNote: The download link expires after 30 minutes.`
+        );
     } catch (error) {
         console.error('Error downloading MSDS:', error);
         alert(`Failed to download MSDS file.\n\nError: ${error.message}`);
@@ -675,10 +710,10 @@ window.downloadMSDSFile = downloadMSDSFile;
 window.showMSDSFiles = showMSDSFiles;
 
 // Initialize when inventory tab is first opened
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Override openTab function to initialize inventory on first open
     const originalOpenTab = window.openTab;
-    window.openTab = function(event, tabName) {
+    window.openTab = function (event, tabName) {
         if (tabName === 'inventoryTab' && !inventoryData) {
             initializeInventory();
         }

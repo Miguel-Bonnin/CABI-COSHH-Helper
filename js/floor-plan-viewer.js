@@ -106,7 +106,7 @@ function setupFloorPlanEventListeners() {
     floorPlanModal.querySelector('.close-floor-plan').addEventListener('click', closeFloorPlan);
 
     // Click outside to close
-    floorPlanModal.addEventListener('click', (e) => {
+    floorPlanModal.addEventListener('click', e => {
         if (e.target === floorPlanModal) {
             closeFloorPlan();
         }
@@ -129,7 +129,7 @@ function setupFloorPlanEventListeners() {
     if (zoomResetEl) zoomResetEl.addEventListener('click', resetZoom);
 
     // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
         if (floorPlanModal.style.display === 'flex') {
             if (e.key === 'Escape') closeFloorPlan();
             if (e.key === '+' || e.key === '=') zoomFloorPlan(1.2);
@@ -263,8 +263,8 @@ async function processRoomData() {
                     complete: 0,
                     in_progress: 0,
                     needs_assessment: 0,
-                    not_required: 0
-                }
+                    not_required: 0,
+                },
             };
         }
 
@@ -274,7 +274,7 @@ async function processRoomData() {
 
         roomData[roomCode].chemicals.push({
             ...chemical,
-            assessmentStatus: status || { status: 'needs_assessment' }
+            assessmentStatus: status || { status: 'needs_assessment' },
         });
 
         roomData[roomCode].stats.total++;
@@ -345,9 +345,9 @@ function makeRoomsInteractive(svg) {
         // Extract room code from label
         // Supports formats like: "Room_E1.07", "E1.6", "room-E2.2", etc.
         const patterns = [
-            /room[-_\s]?([EH]\d+\.?\d*)/i,  // Room_E1.07, room-E1.6
-            /^([EH]\d+\.?\d*)$/i,            // E1.6
-            /([EH]\d+\.?\d*)/i               // Any E1.6 in the string
+            /room[-_\s]?([EH]\d+\.?\d*)/i, // Room_E1.07, room-E1.6
+            /^([EH]\d+\.?\d*)$/i, // E1.6
+            /([EH]\d+\.?\d*)/i, // Any E1.6 in the string
         ];
 
         for (const pattern of patterns) {
@@ -368,7 +368,9 @@ function makeRoomsInteractive(svg) {
                 console.log(`  ✓ Found matching room data for ${roomCode}`);
                 makeRoomInteractive(svg, rect, roomCode);
             } else {
-                console.log(`  ✗ No room data found for ${roomCode} (no chemicals in inventory for this room)`);
+                console.log(
+                    `  ✗ No room data found for ${roomCode} (no chemicals in inventory for this room)`
+                );
             }
         }
     });
@@ -380,16 +382,18 @@ function makeRoomsInteractive(svg) {
         console.warn('⚠ No room rectangles detected!');
         console.log('Showing first 10 rectangles for debugging:');
 
-        Array.from(allRects).slice(0, 10).forEach((r, i) => {
-            const titleEl = r.querySelector('title');
-            const id = r.getAttribute('id');
-            const inkscapeLabel = r.getAttribute('inkscape:label');
+        Array.from(allRects)
+            .slice(0, 10)
+            .forEach((r, i) => {
+                const titleEl = r.querySelector('title');
+                const id = r.getAttribute('id');
+                const inkscapeLabel = r.getAttribute('inkscape:label');
 
-            console.log(`  Rect ${i + 1}:`);
-            if (titleEl) console.log(`    <title>: "${titleEl.textContent}"`);
-            if (id) console.log(`    id: "${id}"`);
-            if (inkscapeLabel) console.log(`    inkscape:label: "${inkscapeLabel}"`);
-        });
+                console.log(`  Rect ${i + 1}:`);
+                if (titleEl) console.log(`    <title>: "${titleEl.textContent}"`);
+                if (id) console.log(`    id: "${id}"`);
+                if (inkscapeLabel) console.log(`    inkscape:label: "${inkscapeLabel}"`);
+            });
 
         console.log('\nAvailable room codes in inventory:');
         console.log(Object.keys(roomData).join(', '));
@@ -431,12 +435,12 @@ function makeRoomInteractive(svg, rect, roomCode) {
     rect.dataset.roomCode = roomCode;
 
     // Add event listeners to the rectangle
-    rect.addEventListener('mouseenter', (e) => {
+    rect.addEventListener('mouseenter', e => {
         showRoomTooltip(e, roomCode);
         highlight.classList.add('hover');
     });
 
-    rect.addEventListener('mousemove', (e) => moveRoomTooltip(e));
+    rect.addEventListener('mousemove', e => moveRoomTooltip(e));
 
     rect.addEventListener('mouseleave', () => {
         hideRoomTooltip();
@@ -476,8 +480,8 @@ function showRoomTooltip(event, roomCode) {
  */
 function moveRoomTooltip(event) {
     const tooltip = safeGetElementById('floorPlanTooltip', false);
-    tooltip.style.left = (event.clientX + 15) + 'px';
-    tooltip.style.top = (event.clientY + 15) + 'px';
+    tooltip.style.left = event.clientX + 15 + 'px';
+    tooltip.style.top = event.clientY + 15 + 'px';
 }
 
 /**
@@ -527,10 +531,10 @@ function selectRoom(roomCode) {
  */
 function getStatusBadge(status) {
     const badges = {
-        'complete': '<span style="color: #2ecc71;">✓ Complete</span>',
-        'in_progress': '<span style="color: #f1c40f;">⏳ In Progress</span>',
-        'needs_assessment': '<span style="color: #e74c3c;">⚠ Needs Assessment</span>',
-        'not_required': '<span style="color: #95a5a6;">- Not Required</span>'
+        complete: '<span style="color: #2ecc71;">✓ Complete</span>',
+        in_progress: '<span style="color: #f1c40f;">⏳ In Progress</span>',
+        needs_assessment: '<span style="color: #e74c3c;">⚠ Needs Assessment</span>',
+        not_required: '<span style="color: #95a5a6;">- Not Required</span>',
     };
     return badges[status] || badges['needs_assessment'];
 }
@@ -566,7 +570,7 @@ function enablePanning(svg) {
     let startX, startY, scrollLeft, scrollTop;
     const container = svg.parentElement;
 
-    svg.addEventListener('mousedown', (e) => {
+    svg.addEventListener('mousedown', e => {
         isPanning = true;
         startX = e.pageX - container.offsetLeft;
         startY = e.pageY - container.offsetTop;
@@ -574,10 +578,10 @@ function enablePanning(svg) {
         scrollTop = container.scrollTop;
     });
 
-    svg.addEventListener('mouseup', () => isPanning = false);
-    svg.addEventListener('mouseleave', () => isPanning = false);
+    svg.addEventListener('mouseup', () => (isPanning = false));
+    svg.addEventListener('mouseleave', () => (isPanning = false));
 
-    svg.addEventListener('mousemove', (e) => {
+    svg.addEventListener('mousemove', e => {
         if (!isPanning) return;
         e.preventDefault();
         const x = e.pageX - container.offsetLeft;
