@@ -14,7 +14,7 @@
 export function safeGetElementById(id, warnIfMissing = true) {
     const element = document.getElementById(id);
     if (!element && warnIfMissing) {
-        console.warn(`[DOM] Element not found: #${id}`);
+        console.warn(`[DOM] Could not find form element with ID '${id}'. This is likely a bug - please report it.`);
     }
     return element;
 }
@@ -28,7 +28,7 @@ export function safeGetElementById(id, warnIfMissing = true) {
 export function safeQuerySelector(selector, warnIfMissing = true) {
     const element = document.querySelector(selector);
     if (!element && warnIfMissing) {
-        console.warn(`[DOM] Element not found: ${selector}`);
+        console.warn(`[DOM] Could not find element with selector '${selector}'. This is likely a bug - please report it.`);
     }
     return element;
 }

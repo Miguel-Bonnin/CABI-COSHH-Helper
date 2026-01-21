@@ -120,9 +120,10 @@ async function loadEH40Data() {
     } catch (error) {
         console.error('Error loading EH40 data:', error);
         eh40DataLoaded = false;
-        showEH40Error(
-            'Could not load EH40 workplace exposure limits data. The data file may be missing or inaccessible.'
-        );
+        const errorMessage = error.message.includes('Client error')
+            ? '❌ Could not load workplace exposure limits (WEL) data file. The file may be missing. You can continue without WEL auto-fill or click Retry below.'
+            : '❌ Network connection issue while loading WEL data. Click Retry or check your internet connection.';
+        showEH40Error(errorMessage);
         return false;
     }
 }
@@ -223,9 +224,9 @@ function showEH40Error(message) {
     const statusEl = safeGetElementById('welMatchStatus', false);
     if (statusEl) {
         statusEl.innerHTML = `
-            <div style="color: #d32f2f; margin-bottom: 10px;">${message}</div>
+            <div class="error-message" style="margin-bottom: 10px;">${message}</div>
             <button type="button" class="secondary-button small" onclick="retryLoadEH40Data()" style="font-size: 12px;">
-                Retry Loading EH40 Data
+                🔄 Retry Loading EH40 Data
             </button>
         `;
     }

@@ -200,7 +200,12 @@ export async function parseUploadedMSDS() {
         processMSDSText(fullText);
     } catch (error) {
         console.error('Error parsing PDF:', error);
-        if (statusDiv) statusDiv.textContent = 'Error parsing PDF. ' + error.message;
+        if (statusDiv) {
+            statusDiv.innerHTML = `<span class="error-message">❌ Could not parse PDF file. Please try:<br>
+                (1) Check the file isn't corrupted<br>
+                (2) Try pasting MSDS text instead<br>
+                (3) Manually enter hazard information in Step 3</span>`;
+        }
     }
 }
 
@@ -468,9 +473,10 @@ export function processMSDSText(text) {
     if (msdsPreviewPaneEl) msdsPreviewPaneEl.style.display = 'block';
     displayParsePreview(masterParsedMSDSData);
     const parserStatusEl = document.getElementById('parserStatus');
-    if (parserStatusEl)
-        parserStatusEl.textContent =
-            "Parsing complete. Review data above and click 'Apply Parsed Data'.";
+    if (parserStatusEl) {
+        const fieldsExtracted = Object.keys(data).filter(k => data[k]?.value && data[k].value !== 'Not clearly found' && data[k].value !== 'Not clearly found in MSDS.').length;
+        parserStatusEl.innerHTML = `<span class="success-message">✅ MSDS parsing complete. Extracted ${fieldsExtracted} fields successfully. Please review and manually complete missing information.</span>`;
+    }
 }
 
 /**
