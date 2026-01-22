@@ -329,5 +329,6 @@ function autoFillWELValues() {
     }
 }
 
-// Expose loadEH40Data globally so it can be called from inline scripts
+// Expose functions globally so they can be called from inline scripts and onclick handlers
 window.loadEH40Data = loadEH40Data;
+window.autoFillWELValues = autoFillWELValues;
