@@ -184,6 +184,16 @@
                     <div class="column"><label for="signatureCarriedOut">Signature (Type Name):</label><input type="text" id="signatureCarriedOut" name="signatureCarriedOut"></div>
                     <div class="column"><label for="dateCarriedOut">Date:</label><input type="date" id="dateCarriedOut" name="dateCarriedOut"></div>
                 </div>
+                <!-- Assignment to COSHH Assessor (Phase 5: Plan 03) -->
+                <div class="column-layout" style="margin-top: 15px;">
+                    <div class="column">
+                        <label for="assignedToAssessor">Assign to COSHH Assessor:</label>
+                        <select id="assignedToAssessor" name="assignedToAssessor">
+                            <option value="">-- Not yet assigned --</option>
+                            <!-- Options populated by JavaScript from mockUsers (assessors and admins) -->
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -508,7 +518,7 @@
     import { getMasterParsedMSDSData } from './js/modules/msdsParser.js';
 
     // --- Module Imports (Phase 5: User Role Simulation) ---
-    import { getCurrentUser, setCurrentUser, mockUsers, ROLES, hasPermission } from './js/modules/userRoles.js';
+    import { getCurrentUser, setCurrentUser, getUserById, mockUsers, ROLES, hasPermission } from './js/modules/userRoles.js';
 
     // Note: masterParsedMSDSData is now managed by msdsParser.js module
     // Access via window.masterParsedMSDSData or getMasterParsedMSDSData()
@@ -589,6 +599,37 @@
         });
 
         console.log(`[Role Switcher] Initialized with user: ${currentUser.name}`);
+    }
+
+    /**
+     * Populates the assessor assignment dropdown with COSHH Assessors and Admins
+     * Only users with 'approve' permission can be assigned (Phase 5: Plan 03)
+     */
+    function populateAssessorDropdown() {
+        const assignedToSelect = document.getElementById('assignedToAssessor');
+        if (!assignedToSelect) {
+            console.warn('[populateAssessorDropdown] Assignment dropdown not found');
+            return;
+        }
+
+        // Clear existing options (keep the default "Not yet assigned" option)
+        assignedToSelect.innerHTML = '<option value="">-- Not yet assigned --</option>';
+
+        // Filter users who can approve (coshh_assessor and admin roles)
+        const assessors = mockUsers.filter(user => {
+            const role = ROLES[user.role];
+            return role && role.permissions.includes('approve');
+        });
+
+        // Add assessor options
+        assessors.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.name} (${ROLES[user.role].displayName})`;
+            assignedToSelect.appendChild(option);
+        });
+
+        console.log(`[populateAssessorDropdown] Populated with ${assessors.length} assessors`);
     }
 
     /**
@@ -696,6 +737,20 @@
             }
         });
 
+        // --- Assignment Field Permissions (Phase 5: Plan 03) ---
+        const assignedToSelect = document.getElementById('assignedToAssessor');
+        if (assignedToSelect) {
+            if (hasPermission('draft_assessment')) {
+                // Lab managers, assessors, and admins can assign
+                assignedToSelect.disabled = false;
+                assignedToSelect.classList.remove('disabled-for-role');
+            } else {
+                // Viewers cannot change assignment
+                assignedToSelect.disabled = true;
+                assignedToSelect.classList.add('disabled-for-role');
+            }
+        }
+
         console.log(`[applyRoleBasedUI] UI updated successfully`);
     }
 
@@ -738,6 +793,9 @@
 
         // --- Initialize Role Switcher (Phase 5: User Role Simulation) ---
         initializeRoleSwitcher();
+
+        // --- Populate Assessor Dropdown (Phase 5: Plan 03) ---
+        populateAssessorDropdown();
 
         // --- Apply Role-Based UI (Phase 5: Plan 02) ---
         applyRoleBasedUI();
@@ -784,6 +842,22 @@
         }
         if (casNumberEl) {
             casNumberEl.addEventListener('blur', autoFillWELValues);
+        }
+
+        // Add assignment change listener (Phase 5: Plan 03)
+        const assignedToSelect = safeGetElementById('assignedToAssessor');
+        if (assignedToSelect) {
+            assignedToSelect.addEventListener('change', (event) => {
+                const selectedUserId = event.target.value;
+                if (selectedUserId) {
+                    const assignedUser = mockUsers.find(u => u.id === selectedUserId);
+                    if (assignedUser) {
+                        console.log(`[Assignment] Assessment will be assigned to ${assignedUser.name} for review`);
+                    }
+                } else {
+                    console.log('[Assignment] Assessment assignment cleared');
+                }
+            });
         }
         document.querySelectorAll('input[name="ghsPictogram"]').forEach(cb => cb.addEventListener('change', runFullRiskAssessmentLogic));
         document.querySelectorAll('#riskEvalTab input[type="radio"]').forEach(radio => {

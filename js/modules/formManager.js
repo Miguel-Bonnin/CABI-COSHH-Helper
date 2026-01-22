@@ -38,6 +38,9 @@
  * Status: HANDLED (try/catch in loadLocally function)
  */
 
+// Import user role module for ownership tracking (Phase 5: Plan 03)
+import { getCurrentUser } from './userRoles.js';
+
 /**
  * LocalStorage key for saving form data
  * @type {string}
@@ -47,10 +50,12 @@ const LOCAL_STORAGE_KEY = 'cabiCoshhDynamic_v5_msdsParseFix';
 /**
  * Collects all form data into a structured object
  * Handles checkboxes, radio buttons, and standard inputs appropriately
+ * Also adds _meta object with ownership and assignment tracking (Phase 5: Plan 03)
  * @param {HTMLFormElement} form - The form element to collect data from
- * @returns {Object} Form data as key-value pairs
+ * @param {Object} [existingMeta] - Optional existing _meta from loaded data (preserves createdAt, createdBy)
+ * @returns {Object} Form data as key-value pairs with _meta tracking
  */
-function collectFormData(form) {
+function collectFormData(form, existingMeta) {
     const data = {};
     new FormData(form).forEach((value, key) => {
         const element = form.elements[key];
@@ -74,12 +79,51 @@ function collectFormData(form) {
             data[key] = value;
         }
     });
+
+    // Add assessment metadata for ownership tracking (Phase 5: Plan 03)
+    const currentUser = getCurrentUser();
+    data._meta = {
+        createdBy: existingMeta?.createdBy || currentUser.id,
+        createdByName: existingMeta?.createdByName || currentUser.name,
+        createdAt: existingMeta?.createdAt || new Date().toISOString(),
+        lastModifiedBy: currentUser.id,
+        lastModifiedByName: currentUser.name,
+        lastModifiedAt: new Date().toISOString(),
+        assignedTo: data.assignedToAssessor || null,
+        status: existingMeta?.status || 'draft', // draft, under_review, approved
+        version: (existingMeta?.version || 0) + 1
+    };
+
     return data;
+}
+
+/**
+ * Module-level variable to store current assessment metadata
+ * Preserved across save/load cycles to maintain createdAt and createdBy
+ * @type {Object|null}
+ */
+let currentAssessmentMeta = null;
+
+/**
+ * Gets the current assessment metadata (for external access)
+ * @returns {Object|null} Current _meta object or null if no assessment loaded
+ */
+export function getCurrentAssessmentMeta() {
+    return currentAssessmentMeta;
+}
+
+/**
+ * Sets the current assessment metadata (for external access)
+ * @param {Object|null} meta - The _meta object to set
+ */
+export function setCurrentAssessmentMeta(meta) {
+    currentAssessmentMeta = meta;
 }
 
 /**
  * Saves the current form data to localStorage
  * Collects all form field values and persists them for later recovery
+ * Preserves original creator and creation timestamp on subsequent saves
  * @throws {Error} If localStorage quota is exceeded
  */
 export function saveLocally() {
@@ -91,11 +135,15 @@ export function saveLocally() {
         return;
     }
 
-    const data = collectFormData(form);
+    const data = collectFormData(form, currentAssessmentMeta);
+
+    // Update the module-level meta for subsequent saves
+    currentAssessmentMeta = data._meta;
 
     try {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
         alert('Form data saved locally!');
+        console.log('[formManager] Saved with _meta:', data._meta);
     } catch (e) {
         console.error('Error saving to localStorage:', e);
         if (e.name === 'QuotaExceededError') {
@@ -109,6 +157,7 @@ export function saveLocally() {
 /**
  * Loads previously saved form data from localStorage
  * Restores all form field values from the last saved state
+ * Preserves _meta for ownership tracking (Phase 5: Plan 03)
  * Triggers risk assessment recalculation after loading
  */
 export function loadLocally() {
@@ -118,10 +167,22 @@ export function loadLocally() {
         try {
             const data = JSON.parse(savedData);
             populateFormWithData(data);
+
+            // Store _meta for preservation on subsequent saves (Phase 5: Plan 03)
+            if (data._meta) {
+                currentAssessmentMeta = data._meta;
+                console.log('[formManager] Loaded _meta:', currentAssessmentMeta);
+            }
+
             alert('Form data loaded from local storage!');
             // Trigger recalculation if the function exists in global scope
             if (typeof window.runFullRiskAssessmentLogic === 'function') {
                 window.runFullRiskAssessmentLogic();
+            }
+
+            // Trigger metadata display if function exists (Phase 5: Plan 03)
+            if (typeof window.displayAssessmentMetadata === 'function') {
+                window.displayAssessmentMetadata();
             }
         } catch (e) {
             console.error('Error during loadLocally execution:', e);
@@ -138,6 +199,7 @@ export function loadLocally() {
 /**
  * Exports the current form data as a downloadable JSON file
  * Creates a timestamped filename for easy identification
+ * Includes _meta with ownership tracking (Phase 5: Plan 03)
  */
 export function exportToJson() {
     console.log('exportToJson called');
@@ -148,7 +210,7 @@ export function exportToJson() {
         return;
     }
 
-    const data = collectFormData(form);
+    const data = collectFormData(form, currentAssessmentMeta);
 
     const jsonString = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
@@ -165,6 +227,7 @@ export function exportToJson() {
 /**
  * Imports form data from a selected JSON file
  * Validates file type and parses JSON content
+ * Preserves _meta for ownership tracking (Phase 5: Plan 03)
  * @throws {Error} If file is not valid JSON or wrong type
  */
 export function importFromJsonFile() {
@@ -191,6 +254,12 @@ export function importFromJsonFile() {
 
             populateFormWithData(importedData);
 
+            // Store _meta for preservation on subsequent saves (Phase 5: Plan 03)
+            if (importedData._meta) {
+                currentAssessmentMeta = importedData._meta;
+                console.log('[formManager] Imported _meta:', currentAssessmentMeta);
+            }
+
             alert('COSHH Assessment data imported successfully!');
             // Trigger recalculation and navigate to first tab
             if (typeof window.runFullRiskAssessmentLogic === 'function') {
@@ -198,6 +267,11 @@ export function importFromJsonFile() {
             }
             if (typeof window.openTab === 'function') {
                 window.openTab(null, 'personnelTab');
+            }
+
+            // Trigger metadata display if function exists (Phase 5: Plan 03)
+            if (typeof window.displayAssessmentMetadata === 'function') {
+                window.displayAssessmentMetadata();
             }
         } catch (e) {
             console.error('Error parsing JSON file or populating form:', e);
@@ -310,6 +384,8 @@ window.formManager = {
     exportToJson,
     importFromJsonFile,
     populateFormWithData,
+    getCurrentAssessmentMeta,
+    setCurrentAssessmentMeta,
 };
 
 // Also export individual functions to window for direct access
@@ -318,3 +394,5 @@ window.loadLocally = loadLocally;
 window.exportToJson = exportToJson;
 window.importFromJsonFile = importFromJsonFile;
 window.populateFormWithData = populateFormWithData;
+window.getCurrentAssessmentMeta = getCurrentAssessmentMeta;
+window.setCurrentAssessmentMeta = setCurrentAssessmentMeta;
