@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-13)
 
 **Core value:** Make it demonstrably maintainable and reliable enough to convince IT to support backend integration.
-**Current focus:** Phase 5 — User Role Simulation (Complete)
+**Current focus:** Phase 6 — Approval Workflow UI (Complete)
 
 ## Current Position
 
-Phase: 5 of 6 (User Role Simulation)
-Plan: 3 of 3 in current phase
-Status: Phase complete
-Last activity: 2026-01-22 — Completed Phase 5 via sequential execution
+Phase: 6 of 6 (Approval Workflow UI)
+Plan: 1 of 1 in current phase
+Status: Phase complete - Milestone 1 achieved
+Last activity: 2026-01-22 — Completed 06-01-PLAN.md
 
-Progress: █████████░ 83%
+Progress: ██████████ 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 19
-- Average duration: 17 min
-- Total execution time: 5.5 hours
+- Total plans completed: 20
+- Average duration: 16 min
+- Total execution time: 5.6 hours
 
 **By Phase:**
 
@@ -32,10 +32,11 @@ Progress: █████████░ 83%
 | 03-documentation-excellence | 5 | 78 min | 16 min |
 | 04-code-quality | 5 | 90 min | 18 min |
 | 05-user-role-simulation | 3 | 45 min | 15 min |
+| 06-approval-workflow-ui | 1 | 6 min | 6 min |
 
 **Recent Trend:**
-- Phase 5: 3 plans executed sequentially (~15 min avg per plan)
-- Trend: Consistent execution velocity maintained
+- Phase 6: 1 plan executed in 6 min
+- Trend: Efficient execution with well-defined plan scope
 
 ## Accumulated Context
 
@@ -83,8 +84,17 @@ Recent decisions affecting current work:
 - hasPermission() checks instead of hard-coded role names for flexibility
 - data-requires-permission attribute pattern for declarative UI permissions
 - _meta prefix for metadata fields in form data (creator, timestamps, assignment, status)
-- Assessment status values: 'draft', 'under_review', 'approved' (ready for Phase 6)
+- Assessment status values: 'draft', 'under_review', 'approved'
 - Metadata banner between header and form for ownership visibility
+
+**From Phase 6:**
+
+- Status transitions use permission-based validation (not hard-coded role names)
+- VALID_TRANSITIONS map defines allowed workflow paths
+- statusHistory array tracks all transitions with timestamps and user info
+- Progress indicator uses three-step visual tracker (completed/current/pending)
+- Read-only mode via CSS class for approved assessments
+- Workflow buttons show/hide based on getAvailableActions() result
 
 ### Deferred Issues
 
@@ -96,17 +106,29 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-22T11:30:00Z
-Stopped at: Completed Phase 5 (User Role Simulation) - 3/3 plans executed sequentially
+Last session: 2026-01-22T17:18:00Z
+Stopped at: Completed Phase 6 (Approval Workflow UI) - Milestone 1 complete
 Resume file: None
 
-**Phase 5 Complete:**
+**Phase 6 Complete:**
 
-- 7 commits created across 3 plans
-- 1 new module: userRoles.js (role management and mock users)
-- Role switcher UI added to application header
-- Role-based UI visibility with applyRoleBasedUI() function
-- Assessor approval section in Acknowledge/Review tab
-- Assessment ownership tracking with _meta object in form data
-- Metadata banner displaying creator, modifier, status, and assignment
-- Sequential execution: 3 plans in ~45 minutes
+- 3 commits created for 1 plan
+- 1 new module: workflowManager.js (status transitions and workflow logic)
+- "Submit for Review" button for lab managers
+- "Request Changes" button for assessors
+- "Approve & Finalize" button wired to workflow
+- Visual workflow progress indicator (Draft → Under Review → Approved)
+- Read-only mode for approved assessments
+- Status-specific messaging in metadata banner
+
+**Milestone 1 (v0.6.0) Achieved:**
+
+All 6 phases complete:
+1. Testing Foundation - Vitest + 25 tests
+2. Runtime Safety - Validation + error handling
+3. Documentation Excellence - ARCHITECTURE.md, CONTRIBUTING.md, JSDoc
+4. Code Quality - Prettier, ESLint, logging, refactoring
+5. User Role Simulation - Mock users, role switcher, permissions
+6. Approval Workflow UI - Status transitions, workflow buttons, progress indicator
+
+Ready for IT demonstration or next milestone planning.
