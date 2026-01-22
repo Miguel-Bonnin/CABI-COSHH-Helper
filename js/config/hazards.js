@@ -172,5 +172,5 @@ const hPhraseToHazardGroup = {
     default_no_sig_haz: 'A', // For substances with no significant hazards
 };
 
-// Export for ES6 modules
-export { hPhraseSeverityMap, hPhraseToHazardGroup };
+// Note: These are global variables accessible throughout the application
+// Loaded via <script src="js/config/hazards.js"> (not as ES6 module)

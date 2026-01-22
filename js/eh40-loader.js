@@ -328,3 +328,6 @@ function autoFillWELValues() {
         console.log('No WEL match found in EH40 data');
     }
 }
+
+// Expose loadEH40Data globally so it can be called from inline scripts
+window.loadEH40Data = loadEH40Data;
