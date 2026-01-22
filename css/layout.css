@@ -28,6 +28,55 @@ body {
     color: #00558c;
 }
 
+/* Role Switcher (Phase 5: User Role Simulation) */
+.role-switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    margin-left: 20px;
+}
+
+.role-switcher label {
+    font-size: 0.9em;
+    color: #666;
+    white-space: nowrap;
+}
+
+.role-switcher select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: #fff;
+}
+
+.role-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.role-badge.lab_manager {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #1565c0;
+}
+
+.role-badge.coshh_assessor {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #2e7d32;
+}
+
+.role-badge.admin {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #c62828;
+}
+
 .app-container {
     max-width: 1200px;
     margin: 20px auto;

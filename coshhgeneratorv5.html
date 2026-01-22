@@ -37,6 +37,13 @@
 
 <div class="app-header">
     <img src="https://www.cabi.org/wp-content/uploads/CABI-Logo_Accessible_RGB.png" alt="CABI Logo">
+    <div class="role-switcher">
+        <label for="currentUserSelect">Logged in as:</label>
+        <select id="currentUserSelect">
+            <!-- Options populated by JavaScript -->
+        </select>
+        <span id="currentRoleBadge" class="role-badge"></span>
+    </div>
     <h1>CABI COSHH Helper</h1>
 </div>
 
@@ -481,6 +488,9 @@
     // --- Module Imports (Phase 4: Code Quality) ---
     import { getMasterParsedMSDSData } from './js/modules/msdsParser.js';
 
+    // --- Module Imports (Phase 5: User Role Simulation) ---
+    import { getCurrentUser, setCurrentUser, mockUsers, ROLES } from './js/modules/userRoles.js';
+
     // Note: masterParsedMSDSData is now managed by msdsParser.js module
     // Access via window.masterParsedMSDSData or getMasterParsedMSDSData()
 
@@ -518,6 +528,62 @@
     // Expose openTab globally so onclick handlers can access it
     window.openTab = openTab;
 
+    // --- Role Switcher Initialization (Phase 5: User Role Simulation) ---
+    /**
+     * Initializes the role switcher UI component
+     * Populates dropdown with mock users, sets selected option, and updates badge
+     */
+    function initializeRoleSwitcher() {
+        const userSelect = document.getElementById('currentUserSelect');
+        const roleBadge = document.getElementById('currentRoleBadge');
+
+        if (!userSelect || !roleBadge) {
+            console.warn('[initializeRoleSwitcher] Role switcher elements not found');
+            return;
+        }
+
+        // Populate dropdown with mock users
+        userSelect.innerHTML = '';
+        mockUsers.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.name} (${ROLES[user.role].displayName})`;
+            userSelect.appendChild(option);
+        });
+
+        // Set selected option to current user
+        const currentUser = getCurrentUser();
+        userSelect.value = currentUser.id;
+
+        // Update role badge
+        updateRoleBadge(currentUser, roleBadge);
+
+        // Add change event listener
+        userSelect.addEventListener('change', (event) => {
+            const newUser = setCurrentUser(event.target.value);
+            if (newUser) {
+                updateRoleBadge(newUser, roleBadge);
+                console.log(`[Role Switcher] Switched to: ${newUser.name} (${ROLES[newUser.role].displayName})`);
+            }
+        });
+
+        console.log(`[Role Switcher] Initialized with user: ${currentUser.name}`);
+    }
+
+    /**
+     * Updates the role badge display with current user role
+     * @param {Object} user - User object
+     * @param {HTMLElement} badgeElement - Badge span element
+     */
+    function updateRoleBadge(user, badgeElement) {
+        const role = ROLES[user.role];
+        badgeElement.textContent = role.displayName;
+        // Remove existing role classes
+        badgeElement.classList.remove('lab_manager', 'coshh_assessor', 'admin');
+        // Add current role class for color coding
+        badgeElement.classList.add(user.role);
+    }
+
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOMContentLoaded event fired.");
@@ -551,6 +617,9 @@
         const finalReviewDateEl = safeGetElementById('finalReviewDate');
         if (finalReviewDateEl) finalReviewDateEl.value = nextYear.toISOString().split('T')[0];
         console.log("Default dates set.");
+
+        // --- Initialize Role Switcher (Phase 5: User Role Simulation) ---
+        initializeRoleSwitcher();
 
         safeAddEventListener('parsePdfButton', 'click', parseUploadedMSDS);
         safeAddEventListener('parseTextButton', 'click', parsePastedMSDS);
