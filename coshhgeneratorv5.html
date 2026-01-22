@@ -594,6 +594,10 @@
                 updateRoleBadge(newUser, roleBadge);
                 // Apply role-based UI updates when user switches roles (Phase 5: Plan 02)
                 applyRoleBasedUI();
+                // Update metadata banner when switching users (Phase 5: Plan 03)
+                if (typeof displayAssessmentMetadata === 'function') {
+                    displayAssessmentMetadata();
+                }
                 console.log(`[Role Switcher] Switched to: ${newUser.name} (${ROLES[newUser.role].displayName})`);
             }
         });
@@ -756,6 +760,83 @@
 
     // Expose applyRoleBasedUI globally for external access
     window.applyRoleBasedUI = applyRoleBasedUI;
+
+    /**
+     * Displays assessment metadata banner above the form
+     * Shows creator, last modified info, status badge, and assignment
+     * Called after loadLocally() or importFromJsonFile() completes
+     * (Phase 5: Plan 03 - Assessment Ownership & Assignment)
+     */
+    function displayAssessmentMetadata() {
+        // Get the current assessment metadata from formManager
+        const meta = window.getCurrentAssessmentMeta ? window.getCurrentAssessmentMeta() : null;
+
+        // Remove existing banner if present
+        let existingBanner = document.getElementById('assessmentMetaBanner');
+        if (existingBanner) {
+            existingBanner.remove();
+        }
+
+        // Don't show banner if no metadata (new assessment)
+        if (!meta) {
+            console.log('[displayAssessmentMetadata] No metadata found, banner not shown');
+            return;
+        }
+
+        // Build the banner HTML
+        const banner = document.createElement('div');
+        banner.id = 'assessmentMetaBanner';
+        banner.className = 'assessment-meta-banner';
+
+        // Format dates for display
+        const createdDate = meta.createdAt ? new Date(meta.createdAt).toLocaleDateString() : 'Unknown';
+        const modifiedDate = meta.lastModifiedAt ? new Date(meta.lastModifiedAt).toLocaleString() : 'Unknown';
+
+        // Get assigned user name if assigned
+        let assignedToText = '';
+        if (meta.assignedTo) {
+            const assignedUser = getUserById(meta.assignedTo);
+            assignedToText = assignedUser ? assignedUser.name : 'Unknown';
+        }
+
+        // Format status for display (replace underscores with spaces)
+        const statusDisplay = meta.status ? meta.status.replace(/_/g, ' ') : 'draft';
+
+        // Build banner content
+        let bannerContent = `
+            <strong>Assessment Info:</strong>
+            Created by ${meta.createdByName || 'Unknown'} on ${createdDate} |
+            Last modified: ${modifiedDate}`;
+
+        if (meta.lastModifiedByName && meta.lastModifiedByName !== meta.createdByName) {
+            bannerContent += ` by ${meta.lastModifiedByName}`;
+        }
+
+        bannerContent += ` |
+            Status: <span class="status-badge status-${meta.status}">${statusDisplay}</span>`;
+
+        if (meta.assignedTo && assignedToText) {
+            bannerContent += ` | Assigned to: ${assignedToText}`;
+        }
+
+        if (meta.version) {
+            bannerContent += ` | Version: ${meta.version}`;
+        }
+
+        banner.innerHTML = bannerContent;
+
+        // Insert banner before app-container
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+            appContainer.insertAdjacentElement('beforebegin', banner);
+            console.log('[displayAssessmentMetadata] Banner displayed with meta:', meta);
+        } else {
+            console.warn('[displayAssessmentMetadata] app-container not found');
+        }
+    }
+
+    // Expose displayAssessmentMetadata globally for external access
+    window.displayAssessmentMetadata = displayAssessmentMetadata;
 
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {

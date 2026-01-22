@@ -216,3 +216,43 @@ body {
     font-size: 0.9em;
     color: #0c5460;
 }
+
+/* Assessment Metadata Banner (Phase 5: Plan 03) */
+.assessment-meta-banner {
+    background: #e8f4f8;
+    border: 1px solid #b8dae8;
+    padding: 12px 20px;
+    margin: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.assessment-meta-banner strong {
+    color: #00558c;
+}
+
+/* Status Badges (Phase 5: Plan 03) */
+.status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: capitalize;
+}
+
+.status-draft {
+    background: #ffc107;
+    color: #000;
+}
+
+.status-under_review {
+    background: #17a2b8;
+    color: #fff;
+}
+
+.status-approved {
+    background: #28a745;
+    color: #fff;
+}
