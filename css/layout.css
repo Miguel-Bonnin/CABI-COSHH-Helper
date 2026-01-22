@@ -146,3 +146,73 @@ body {
 .confidence-low {
     color: red;
 }
+
+/* Role-Based UI Indicators (Phase 5: Plan 02) */
+.role-indicator {
+    background: #f0f8ff;
+    border-left: 4px solid #4a90e2;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 0.95em;
+}
+
+.role-indicator strong {
+    color: #4a90e2;
+}
+
+.permission-warning {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #856404;
+}
+
+.assessor-only {
+    border: 2px solid #28a745;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 4px;
+    background: #f8fff9;
+}
+
+.assessor-only h4 {
+    color: #28a745;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.disabled-for-role {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.hidden-for-role {
+    display: none !important;
+}
+
+.approve-button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.approve-button:hover {
+    background-color: #218838;
+}
+
+.review-notice {
+    background: #e8f4fd;
+    border-left: 4px solid #17a2b8;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #0c5460;
+}

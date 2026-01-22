@@ -170,6 +170,9 @@
         <!-- Tab 1: Personnel Details -->
         <div id="personnelTab" class="tab-pane">
             <h3>Step 1 (Part A): Personnel & Assessment Details</h3>
+            <!-- Role-based indicator (Phase 5: Plan 02) -->
+            <div id="personnelRoleIndicator" class="role-indicator"></div>
+            <div id="personnelPermissionWarning" class="permission-warning hidden-for-role"></div>
             <div class="form-section">
                 <h4>Assessment Details</h4>
                 <div class="column-layout">
@@ -454,15 +457,31 @@
                 <div class="column"><label for="finalReviewDate">Review Date (Next):</label><input type="date" id="finalReviewDate" name="finalReviewDate"></div>
                  <div class="column"><label for="finalDateSigned">Date Signed:</label><input type="date" id="finalDateSigned" name="finalDateSigned"></div>
             </div>
+
+            <!-- COSHH Assessor Approval Section (Phase 5: Plan 02) - visible to assessors/admin only -->
+            <div id="assessorApprovalSection" class="assessor-only hidden-for-role" data-requires-permission="approve">
+                <h4>COSHH Assessor Approval</h4>
+                <label><input type="checkbox" id="assessorApproved" name="assessorApproved"> I approve this assessment as compliant</label>
+                <div class="column-layout">
+                    <div class="column"><label for="assessorName">Assessor Name:</label><input type="text" id="assessorName" name="assessorName"></div>
+                    <div class="column"><label for="assessorApprovalDate">Approval Date:</label><input type="date" id="assessorApprovalDate" name="assessorApprovalDate"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Tab 9: Output & Save (Report Generation) -->
         <div id="outputTab" class="tab-pane">
             <h2>Generated COSHH Assessment Report</h2>
+            <!-- Role-based notices (Phase 5: Plan 02) -->
+            <div id="outputReviewNotice" class="review-notice hidden-for-role">
+                This assessment requires COSHH Assessor review before final approval.
+            </div>
             <button type="button" class="action-button" id="generateReportButtonInternal">Generate/Refresh Report</button>
             <button type="button" class="secondary-button" id="saveLocalButtonInternal">Save Form Data Locally</button>
             <button type="button" class="secondary-button" id="loadLocalButtonInternal">Load Saved Data</button>
             <button type="button" class="secondary-button" id="exportJsonButtonInternal">Export Data (JSON)</button>
+            <!-- Approve & Finalize button (Phase 5: Plan 02) - visible to assessors/admin only -->
+            <button type="button" class="approve-button hidden-for-role" id="approveAndFinalizeButton" data-requires-permission="approve">Approve &amp; Finalize</button>
             <div id="fullReportOutput" class="output-section" style="margin-top:20px; display:none;">
                 <div id="reportContent"></div>
                 <button type="button" class="print-button" id="printReportButtonInternal">Print Report (or Save as PDF)</button>
@@ -489,7 +508,7 @@
     import { getMasterParsedMSDSData } from './js/modules/msdsParser.js';
 
     // --- Module Imports (Phase 5: User Role Simulation) ---
-    import { getCurrentUser, setCurrentUser, mockUsers, ROLES } from './js/modules/userRoles.js';
+    import { getCurrentUser, setCurrentUser, mockUsers, ROLES, hasPermission } from './js/modules/userRoles.js';
 
     // Note: masterParsedMSDSData is now managed by msdsParser.js module
     // Access via window.masterParsedMSDSData or getMasterParsedMSDSData()
@@ -563,6 +582,8 @@
             const newUser = setCurrentUser(event.target.value);
             if (newUser) {
                 updateRoleBadge(newUser, roleBadge);
+                // Apply role-based UI updates when user switches roles (Phase 5: Plan 02)
+                applyRoleBasedUI();
                 console.log(`[Role Switcher] Switched to: ${newUser.name} (${ROLES[newUser.role].displayName})`);
             }
         });
@@ -583,6 +604,103 @@
         // Add current role class for color coding
         badgeElement.classList.add(user.role);
     }
+
+    /**
+     * Applies role-based UI visibility and indicators throughout the application
+     * Called on page load and when user switches roles
+     * Uses hasPermission() for flexible permission-based checks (not hard-coded role names)
+     * (Phase 5: Plan 02 - Role-Based UI Visibility)
+     */
+    function applyRoleBasedUI() {
+        const currentUser = getCurrentUser();
+        const role = ROLES[currentUser.role];
+
+        console.log(`[applyRoleBasedUI] Applying UI for: ${currentUser.name} (${role.displayName})`);
+
+        // --- Personnel Tab Indicators ---
+        const personnelRoleIndicator = document.getElementById('personnelRoleIndicator');
+        const personnelPermissionWarning = document.getElementById('personnelPermissionWarning');
+        const carriedOutByField = document.getElementById('carriedOutBy');
+
+        if (personnelRoleIndicator) {
+            // Build role indicator message
+            let indicatorText = `You are creating this assessment as <strong>${role.displayName}</strong>`;
+            if (hasPermission('review_any')) {
+                indicatorText += ' <span style="color: #28a745;">(You can review any assessment)</span>';
+            }
+            personnelRoleIndicator.innerHTML = indicatorText;
+        }
+
+        if (personnelPermissionWarning && carriedOutByField) {
+            if (!hasPermission('draft_assessment')) {
+                // User cannot draft new assessments
+                personnelPermissionWarning.textContent = 'Only Lab Managers can draft new assessments';
+                personnelPermissionWarning.classList.remove('hidden-for-role');
+                carriedOutByField.classList.add('disabled-for-role');
+            } else {
+                personnelPermissionWarning.classList.add('hidden-for-role');
+                carriedOutByField.classList.remove('disabled-for-role');
+            }
+        }
+
+        // --- Acknowledge/Review Tab - Assessor Approval Section ---
+        const assessorApprovalSection = document.getElementById('assessorApprovalSection');
+        if (assessorApprovalSection) {
+            if (hasPermission('approve')) {
+                assessorApprovalSection.classList.remove('hidden-for-role');
+                // Pre-fill assessor name if blank
+                const assessorNameField = document.getElementById('assessorName');
+                if (assessorNameField && !assessorNameField.value) {
+                    assessorNameField.value = currentUser.name;
+                }
+                // Set today's date for approval date if blank
+                const assessorApprovalDateField = document.getElementById('assessorApprovalDate');
+                if (assessorApprovalDateField && !assessorApprovalDateField.value) {
+                    assessorApprovalDateField.value = new Date().toISOString().split('T')[0];
+                }
+            } else {
+                assessorApprovalSection.classList.add('hidden-for-role');
+            }
+        }
+
+        // --- Output Tab - Review Notice and Approve Button ---
+        const outputReviewNotice = document.getElementById('outputReviewNotice');
+        const approveAndFinalizeButton = document.getElementById('approveAndFinalizeButton');
+
+        if (outputReviewNotice) {
+            if (!hasPermission('review_any')) {
+                // Lab managers see the notice that assessment needs review
+                outputReviewNotice.classList.remove('hidden-for-role');
+            } else {
+                outputReviewNotice.classList.add('hidden-for-role');
+            }
+        }
+
+        if (approveAndFinalizeButton) {
+            if (hasPermission('approve')) {
+                approveAndFinalizeButton.classList.remove('hidden-for-role');
+            } else {
+                approveAndFinalizeButton.classList.add('hidden-for-role');
+            }
+        }
+
+        // --- Process all elements with data-requires-permission attribute ---
+        document.querySelectorAll('[data-requires-permission]').forEach(element => {
+            const requiredPermission = element.getAttribute('data-requires-permission');
+            if (hasPermission(requiredPermission)) {
+                element.classList.remove('hidden-for-role');
+                element.classList.remove('disabled-for-role');
+            } else {
+                // Hide elements that require specific permissions
+                element.classList.add('hidden-for-role');
+            }
+        });
+
+        console.log(`[applyRoleBasedUI] UI updated successfully`);
+    }
+
+    // Expose applyRoleBasedUI globally for external access
+    window.applyRoleBasedUI = applyRoleBasedUI;
 
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
@@ -620,6 +738,9 @@
 
         // --- Initialize Role Switcher (Phase 5: User Role Simulation) ---
         initializeRoleSwitcher();
+
+        // --- Apply Role-Based UI (Phase 5: Plan 02) ---
+        applyRoleBasedUI();
 
         safeAddEventListener('parsePdfButton', 'click', parseUploadedMSDS);
         safeAddEventListener('parseTextButton', 'click', parsePastedMSDS);
