@@ -490,6 +490,31 @@
     // hPhraseToHazardGroup - loaded from js/config/hazards.js
     // controlBandData - loaded from js/config/controls.js
 
+    // --- Tab Navigation (must be defined before DOMContentLoaded) ---
+    function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-pane");
+        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; tabcontent[i].classList.remove("active"); }
+        tablinks = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
+
+        const targetTab = document.getElementById(tabName);
+        if (targetTab) {
+            targetTab.style.display = "block";
+            targetTab.classList.add("active");
+        } else { console.error("Target tab not found:", tabName); return; }
+
+        let clickedButton = evt ? evt.currentTarget : null;
+        if (!clickedButton) {
+             clickedButton = Array.from(tablinks).find(btn => btn.getAttribute('onclick')?.includes(`openTab(event, '${tabName}')`));
+        }
+        if (clickedButton) {
+            clickedButton.classList.add("active");
+        } else if (tabName === 'msdsInputTab' && tablinks.length > 0) {
+            tablinks[0].classList.add('active');
+        }
+    }
+
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOMContentLoaded event fired.");
@@ -574,31 +599,6 @@
         console.log("Dynamic input listeners attached.");
         console.log("DOMContentLoaded setup complete.");
     });
-
-    // --- Tab Navigation ---
-    function openTab(evt, tabName) {
-        let i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-pane");
-        for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = "none"; tabcontent[i].classList.remove("active"); }
-        tablinks = document.getElementsByClassName("tab-button");
-        for (i = 0; i < tablinks.length; i++) { tablinks[i].classList.remove("active"); }
-        
-        const targetTab = document.getElementById(tabName);
-        if (targetTab) {
-            targetTab.style.display = "block";
-            targetTab.classList.add("active");
-        } else { console.error("Target tab not found:", tabName); return; }
-
-        let clickedButton = evt ? evt.currentTarget : null;
-        if (!clickedButton) { 
-             clickedButton = Array.from(tablinks).find(btn => btn.getAttribute('onclick')?.includes(`openTab(event, '${tabName}')`));
-        }
-        if (clickedButton) {
-            clickedButton.classList.add("active");
-        } else if (tabName === 'msdsInputTab' && tablinks.length > 0) { 
-            tablinks[0].classList.add('active');
-        }
-    }
 
     // --- MSDS Parsing Functions ---
     // MSDS parsing functions moved to js/modules/msdsParser.js
