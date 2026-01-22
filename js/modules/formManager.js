@@ -89,8 +89,9 @@ function collectFormData(form, existingMeta) {
         lastModifiedBy: currentUser.id,
         lastModifiedByName: currentUser.name,
         lastModifiedAt: new Date().toISOString(),
-        assignedTo: data.assignedToAssessor || null,
+        assignedTo: data.assignedToAssessor || existingMeta?.assignedTo || null,
         status: existingMeta?.status || 'draft', // draft, under_review, approved
+        statusHistory: existingMeta?.statusHistory || [], // Preserve status transition history
         version: (existingMeta?.version || 0) + 1
     };
 
