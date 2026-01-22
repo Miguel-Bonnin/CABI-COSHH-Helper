@@ -515,6 +515,9 @@
         }
     }
 
+    // Expose openTab globally so onclick handlers can access it
+    window.openTab = openTab;
+
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOMContentLoaded event fired.");

@@ -6,8 +6,10 @@
  * Extracted from coshhgeneratorv5.html for testability and reusability
  */
 
-import { hPhraseSeverityMap } from '../config/hazards.js';
 import { debug, info } from './logger.js';
+
+// Note: hPhraseSeverityMap is a global variable loaded from js/config/hazards.js
+// It's available throughout the application without needing to import
 
 /**
  * Valid units for quantity measurement
