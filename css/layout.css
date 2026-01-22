@@ -256,3 +256,83 @@ body {
     background: #28a745;
     color: #fff;
 }
+
+/* Workflow Action Buttons (Phase 6: Approval Workflow) */
+.workflow-action-section {
+    padding: 15px;
+    margin-top: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.workflow-action-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.workflow-action-button:hover {
+    opacity: 0.9;
+}
+
+.submit-review-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.submit-review-button:hover {
+    background-color: #0056b3;
+}
+
+.request-changes-button {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.request-changes-button:hover {
+    background-color: #e0a800;
+}
+
+.workflow-hint {
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.workflow-actions-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Read-Only Mode for Approved Assessments (Phase 6: Approval Workflow) */
+.assessment-readonly input,
+.assessment-readonly select,
+.assessment-readonly textarea {
+    pointer-events: none;
+    opacity: 0.7;
+    background-color: #f5f5f5;
+}
+
+.assessment-readonly button:not(.print-button):not(.tab-button) {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.readonly-banner {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 12px 20px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}

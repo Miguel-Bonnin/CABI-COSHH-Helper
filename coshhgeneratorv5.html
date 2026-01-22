@@ -468,6 +468,12 @@
                  <div class="column"><label for="finalDateSigned">Date Signed:</label><input type="date" id="finalDateSigned" name="finalDateSigned"></div>
             </div>
 
+            <!-- Workflow Action: Submit for Review (Phase 6: Approval Workflow) -->
+            <div id="submitForReviewSection" class="workflow-action-section hidden-for-role" style="margin-top: 20px;">
+                <button type="button" class="workflow-action-button submit-review-button" id="submitForReviewButton">Submit for Review</button>
+                <p class="workflow-hint">Submit this assessment to the assigned COSHH Assessor for review and approval.</p>
+            </div>
+
             <!-- COSHH Assessor Approval Section (Phase 5: Plan 02) - visible to assessors/admin only -->
             <div id="assessorApprovalSection" class="assessor-only hidden-for-role" data-requires-permission="approve">
                 <h4>COSHH Assessor Approval</h4>
@@ -475,6 +481,10 @@
                 <div class="column-layout">
                     <div class="column"><label for="assessorName">Assessor Name:</label><input type="text" id="assessorName" name="assessorName"></div>
                     <div class="column"><label for="assessorApprovalDate">Approval Date:</label><input type="date" id="assessorApprovalDate" name="assessorApprovalDate"></div>
+                </div>
+                <!-- Workflow Actions for Assessors (Phase 6: Approval Workflow) -->
+                <div id="assessorWorkflowActions" class="workflow-actions-group" style="margin-top: 15px;">
+                    <button type="button" class="workflow-action-button request-changes-button" id="requestChangesButton">Request Changes</button>
                 </div>
             </div>
         </div>
@@ -519,6 +529,9 @@
 
     // --- Module Imports (Phase 5: User Role Simulation) ---
     import { getCurrentUser, setCurrentUser, getUserById, mockUsers, ROLES, hasPermission } from './js/modules/userRoles.js';
+
+    // --- Module Imports (Phase 6: Approval Workflow) ---
+    import { canTransition, transitionStatus, getAvailableActions, isReadOnly, getStatusInfo } from './js/modules/workflowManager.js';
 
     // Note: masterParsedMSDSData is now managed by msdsParser.js module
     // Access via window.masterParsedMSDSData or getMasterParsedMSDSData()
@@ -755,11 +768,188 @@
             }
         }
 
+        // --- Update Workflow Actions (Phase 6: Approval Workflow) ---
+        updateWorkflowActions();
+
         console.log(`[applyRoleBasedUI] UI updated successfully`);
     }
 
     // Expose applyRoleBasedUI globally for external access
     window.applyRoleBasedUI = applyRoleBasedUI;
+
+    /**
+     * Updates workflow action buttons based on current status and permissions
+     * Shows/hides buttons according to available actions for the current state
+     * Also applies read-only mode for approved assessments
+     * (Phase 6: Approval Workflow)
+     */
+    function updateWorkflowActions() {
+        const meta = window.getCurrentAssessmentMeta ? window.getCurrentAssessmentMeta() : null;
+        const currentStatus = meta?.status || 'draft';
+        const availableActions = getAvailableActions(currentStatus);
+
+        console.log(`[updateWorkflowActions] Status: ${currentStatus}, Available actions:`, availableActions);
+
+        // --- Submit for Review Button ---
+        const submitForReviewSection = document.getElementById('submitForReviewSection');
+        const submitForReviewButton = document.getElementById('submitForReviewButton');
+
+        if (submitForReviewSection) {
+            if (currentStatus === 'draft' && availableActions.includes('submit_for_review')) {
+                submitForReviewSection.classList.remove('hidden-for-role');
+            } else {
+                submitForReviewSection.classList.add('hidden-for-role');
+            }
+        }
+
+        // --- Request Changes Button (in assessor section) ---
+        const requestChangesButton = document.getElementById('requestChangesButton');
+        if (requestChangesButton) {
+            if (currentStatus === 'under_review' && availableActions.includes('request_changes')) {
+                requestChangesButton.classList.remove('hidden-for-role');
+            } else {
+                requestChangesButton.classList.add('hidden-for-role');
+            }
+        }
+
+        // --- Approve & Finalize Button ---
+        const approveButton = document.getElementById('approveAndFinalizeButton');
+        if (approveButton) {
+            if (currentStatus === 'under_review' && availableActions.includes('approve')) {
+                approveButton.classList.remove('hidden-for-role');
+            } else if (currentStatus === 'approved') {
+                // Show disabled button for approved assessments
+                approveButton.classList.add('hidden-for-role');
+            } else if (!hasPermission('approve')) {
+                approveButton.classList.add('hidden-for-role');
+            }
+        }
+
+        // --- Read-Only Mode for Approved Assessments ---
+        const form = document.getElementById('coshhFullForm');
+        if (form) {
+            if (isReadOnly()) {
+                form.classList.add('assessment-readonly');
+                showReadOnlyBanner(true);
+            } else {
+                form.classList.remove('assessment-readonly');
+                showReadOnlyBanner(false);
+            }
+        }
+    }
+
+    // Expose updateWorkflowActions globally
+    window.updateWorkflowActions = updateWorkflowActions;
+
+    /**
+     * Shows or hides the read-only banner for approved assessments
+     * @param {boolean} show - Whether to show the banner
+     */
+    function showReadOnlyBanner(show) {
+        let banner = document.getElementById('readOnlyBanner');
+
+        if (show) {
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'readOnlyBanner';
+                banner.className = 'readonly-banner';
+                banner.innerHTML = '🔒 This assessment has been approved and is read-only.';
+
+                const appContainer = document.querySelector('.app-container');
+                if (appContainer) {
+                    appContainer.insertAdjacentElement('afterbegin', banner);
+                }
+            }
+            banner.style.display = 'block';
+        } else if (banner) {
+            banner.style.display = 'none';
+        }
+    }
+
+    /**
+     * Handles the "Submit for Review" workflow action
+     */
+    function handleSubmitForReview() {
+        const meta = window.getCurrentAssessmentMeta ? window.getCurrentAssessmentMeta() : null;
+        const assignedTo = meta?.assignedTo || document.getElementById('assignedToAssessor')?.value;
+
+        if (!assignedTo) {
+            alert('Please assign a COSHH Assessor before submitting for review.');
+            return;
+        }
+
+        const assignedUser = getUserById(assignedTo);
+        const assignedName = assignedUser ? assignedUser.name : 'the assigned assessor';
+
+        if (!confirm(`Submit this assessment to ${assignedName} for review?`)) {
+            return;
+        }
+
+        const result = transitionStatus('under_review');
+
+        if (result.success) {
+            alert(`Assessment submitted for review.\n\n${assignedName} will be notified.`);
+            // Update UI
+            applyRoleBasedUI();
+            displayAssessmentMetadata();
+        } else {
+            alert(`Failed to submit: ${result.error}`);
+        }
+    }
+
+    /**
+     * Handles the "Request Changes" workflow action
+     */
+    function handleRequestChanges() {
+        const comment = prompt('Enter comments for the author (optional):');
+
+        if (!confirm('Send this assessment back to the author for changes?')) {
+            return;
+        }
+
+        const result = transitionStatus('draft');
+
+        if (result.success) {
+            alert('Assessment returned to draft status.\n\nThe author will make the requested changes.');
+            // Update UI
+            applyRoleBasedUI();
+            displayAssessmentMetadata();
+        } else {
+            alert(`Failed to request changes: ${result.error}`);
+        }
+    }
+
+    /**
+     * Handles the "Approve & Finalize" workflow action
+     */
+    function handleApproveAndFinalize() {
+        const assessorApprovedCheckbox = document.getElementById('assessorApproved');
+
+        if (!assessorApprovedCheckbox?.checked) {
+            alert('Please check the "I approve this assessment as compliant" checkbox before approving.');
+            return;
+        }
+
+        if (!confirm('Approve this assessment?\n\nOnce approved, the assessment will be locked and cannot be edited.')) {
+            return;
+        }
+
+        const result = transitionStatus('approved');
+
+        if (result.success) {
+            alert('Assessment approved!\n\nThe assessment is now finalized and read-only.');
+            // Update UI
+            applyRoleBasedUI();
+            displayAssessmentMetadata();
+        } else {
+            alert(`Failed to approve: ${result.error}`);
+        }
+    }
+
+    // Expose workflow handlers globally
+    window.handleSubmitForReview = handleSubmitForReview;
+    window.handleRequestChanges = handleRequestChanges;
+    window.handleApproveAndFinalize = handleApproveAndFinalize;
 
     /**
      * Displays assessment metadata banner above the form
@@ -880,6 +1070,12 @@
 
         // --- Apply Role-Based UI (Phase 5: Plan 02) ---
         applyRoleBasedUI();
+
+        // --- Workflow Action Button Listeners (Phase 6: Approval Workflow) ---
+        safeAddEventListener('submitForReviewButton', 'click', handleSubmitForReview);
+        safeAddEventListener('requestChangesButton', 'click', handleRequestChanges);
+        safeAddEventListener('approveAndFinalizeButton', 'click', handleApproveAndFinalize);
+        console.log("Workflow action button listeners attached.");
 
         safeAddEventListener('parsePdfButton', 'click', parseUploadedMSDS);
         safeAddEventListener('parseTextButton', 'click', parsePastedMSDS);
