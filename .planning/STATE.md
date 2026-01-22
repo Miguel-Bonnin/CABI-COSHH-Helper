@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-13)
 
 **Core value:** Make it demonstrably maintainable and reliable enough to convince IT to support backend integration.
-**Current focus:** Phase 4 — Code Quality (In progress)
+**Current focus:** Phase 5 — User Role Simulation (Complete)
 
 ## Current Position
 
-Phase: 4 of 6 (Code Quality)
-Plan: 5 of 5 in current phase
+Phase: 5 of 6 (User Role Simulation)
+Plan: 3 of 3 in current phase
 Status: Phase complete
-Last activity: 2026-01-21 — Completed Phase 4 via sequential execution
+Last activity: 2026-01-22 — Completed Phase 5 via sequential execution
 
-Progress: ██████████ 100%
+Progress: █████████░ 83%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
-- Average duration: 18 min
-- Total execution time: 4.8 hours
+- Total plans completed: 19
+- Average duration: 17 min
+- Total execution time: 5.5 hours
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: ██████████ 100%
 | 02-runtime-safety | 3 | 54 min | 18 min |
 | 03-documentation-excellence | 5 | 78 min | 16 min |
 | 04-code-quality | 5 | 90 min | 18 min |
+| 05-user-role-simulation | 3 | 45 min | 15 min |
 
 **Recent Trend:**
-- Phase 4: 5 plans executed sequentially (~18 min avg per plan)
+- Phase 5: 3 plans executed sequentially (~15 min avg per plan)
 - Trend: Consistent execution velocity maintained
 
 ## Accumulated Context
@@ -74,6 +75,17 @@ Recent decisions affecting current work:
 - Complex COSHH methodology documented with HSE sources
 - Edge cases documented to prevent breaking intentional behavior
 
+**From Phase 5:**
+
+- Mock user roles: lab_manager, coshh_assessor, admin with permission mapping
+- localStorage key 'cabiCoshh_currentUser' for current user persistence
+- Role switcher always visible in header for demonstration purposes
+- hasPermission() checks instead of hard-coded role names for flexibility
+- data-requires-permission attribute pattern for declarative UI permissions
+- _meta prefix for metadata fields in form data (creator, timestamps, assignment, status)
+- Assessment status values: 'draft', 'under_review', 'approved' (ready for Phase 6)
+- Metadata banner between header and form for ownership visibility
+
 ### Deferred Issues
 
 None yet.
@@ -84,17 +96,17 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-01-21T12:15:00Z
-Stopped at: Completed Phase 4 (Code Quality) - 5/5 plans executed sequentially
+Last session: 2026-01-22T11:30:00Z
+Stopped at: Completed Phase 5 (User Role Simulation) - 3/3 plans executed sequentially
 Resume file: None
 
-**Phase 4 Complete:**
+**Phase 5 Complete:**
 
-- 10 commits created across 5 plans
-- 4 new modules: formManager.js, msdsParser.js, reportGenerator.js, logger.js
-- coshhgeneratorv5.html reduced from 1579 to 938 lines (40% reduction)
-- All code formatted with Prettier/ESLint
-- Risk assessment and report generation refactored
-- Structured logging and improved error messages implemented
-- Comprehensive documentation of COSHH methodology added
-- Sequential execution: 5 plans in ~90 minutes
+- 7 commits created across 3 plans
+- 1 new module: userRoles.js (role management and mock users)
+- Role switcher UI added to application header
+- Role-based UI visibility with applyRoleBasedUI() function
+- Assessor approval section in Acknowledge/Review tab
+- Assessment ownership tracking with _meta object in form data
+- Metadata banner displaying creator, modifier, status, and assignment
+- Sequential execution: 3 plans in ~45 minutes
