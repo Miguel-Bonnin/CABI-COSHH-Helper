@@ -336,3 +336,113 @@ body {
     font-weight: bold;
     text-align: center;
 }
+
+/* Workflow Progress Indicator (Phase 6: Approval Workflow) */
+.workflow-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    margin-bottom: 10px;
+}
+
+.workflow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+}
+
+.workflow-step .step-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+}
+
+.workflow-step .step-label {
+    font-size: 0.85em;
+    text-align: center;
+}
+
+/* Pending step (not yet reached) */
+.workflow-step.pending .step-icon {
+    background: #e9ecef;
+    color: #6c757d;
+    border: 2px solid #dee2e6;
+}
+
+.workflow-step.pending .step-label {
+    color: #6c757d;
+}
+
+/* Current step (active) */
+.workflow-step.current .step-icon {
+    background: #007bff;
+    color: white;
+    border: 2px solid #007bff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+.workflow-step.current .step-label {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Completed step */
+.workflow-step.completed .step-icon {
+    background: #28a745;
+    color: white;
+    border: 2px solid #28a745;
+}
+
+.workflow-step.completed .step-label {
+    color: #28a745;
+}
+
+/* Connector line between steps */
+.workflow-connector {
+    width: 60px;
+    height: 3px;
+    background: #dee2e6;
+    margin: 0 5px;
+    margin-bottom: 22px;
+}
+
+.workflow-connector.completed {
+    background: #28a745;
+}
+
+/* Status Message */
+.workflow-status-message {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    color: #495057;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* Enhanced metadata banner with workflow elements */
+.assessment-meta-banner {
+    background: #e8f4f8;
+    border: 1px solid #b8dae8;
+    padding: 15px 20px;
+    margin: 10px 20px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.assessment-meta-info {
+    border-top: 1px solid #b8dae8;
+    padding-top: 10px;
+    margin-top: 10px;
+}

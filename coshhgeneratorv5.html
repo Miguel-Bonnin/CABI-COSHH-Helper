@@ -953,9 +953,10 @@
 
     /**
      * Displays assessment metadata banner above the form
-     * Shows creator, last modified info, status badge, and assignment
+     * Shows creator, last modified info, status badge, assignment, and workflow progress
      * Called after loadLocally() or importFromJsonFile() completes
      * (Phase 5: Plan 03 - Assessment Ownership & Assignment)
+     * (Phase 6: Approval Workflow - Added workflow progress indicator)
      */
     function displayAssessmentMetadata() {
         // Get the current assessment metadata from formManager
@@ -970,6 +971,8 @@
         // Don't show banner if no metadata (new assessment)
         if (!meta) {
             console.log('[displayAssessmentMetadata] No metadata found, banner not shown');
+            // Update workflow progress for new assessments (shows draft state)
+            updateWorkflowProgress('draft');
             return;
         }
 
@@ -989,11 +992,27 @@
             assignedToText = assignedUser ? assignedUser.name : 'Unknown';
         }
 
+        // Get approver name from status history if approved
+        let approverInfo = '';
+        if (meta.status === 'approved' && meta.statusHistory) {
+            const approvalEntry = meta.statusHistory.find(h => h.to === 'approved');
+            if (approvalEntry) {
+                const approvalDate = new Date(approvalEntry.at).toLocaleDateString();
+                approverInfo = `Approved by ${approvalEntry.byName} on ${approvalDate}`;
+            }
+        }
+
         // Format status for display (replace underscores with spaces)
         const statusDisplay = meta.status ? meta.status.replace(/_/g, ' ') : 'draft';
 
-        // Build banner content
-        let bannerContent = `
+        // Build banner content - Part 1: Workflow Progress
+        let bannerContent = buildWorkflowProgressHTML(meta.status || 'draft');
+
+        // Build banner content - Part 2: Status Message
+        bannerContent += `<div class="workflow-status-message">${getStatusMessage(meta.status, assignedToText, approverInfo)}</div>`;
+
+        // Build banner content - Part 3: Metadata Info
+        bannerContent += `<div class="assessment-meta-info">
             <strong>Assessment Info:</strong>
             Created by ${meta.createdByName || 'Unknown'} on ${createdDate} |
             Last modified: ${modifiedDate}`;
@@ -1002,9 +1021,6 @@
             bannerContent += ` by ${meta.lastModifiedByName}`;
         }
 
-        bannerContent += ` |
-            Status: <span class="status-badge status-${meta.status}">${statusDisplay}</span>`;
-
         if (meta.assignedTo && assignedToText) {
             bannerContent += ` | Assigned to: ${assignedToText}`;
         }
@@ -1012,6 +1028,8 @@
         if (meta.version) {
             bannerContent += ` | Version: ${meta.version}`;
         }
+
+        bannerContent += `</div>`;
 
         banner.innerHTML = bannerContent;
 
@@ -1027,6 +1045,98 @@
 
     // Expose displayAssessmentMetadata globally for external access
     window.displayAssessmentMetadata = displayAssessmentMetadata;
+
+    /**
+     * Builds the HTML for the workflow progress indicator
+     * @param {string} currentStatus - Current assessment status
+     * @returns {string} HTML string for the progress indicator
+     */
+    function buildWorkflowProgressHTML(currentStatus) {
+        const steps = [
+            { id: 'draft', label: 'Draft', number: '1' },
+            { id: 'under_review', label: 'Under Review', number: '2' },
+            { id: 'approved', label: 'Approved', number: '3' }
+        ];
+
+        const statusOrder = { 'draft': 0, 'under_review': 1, 'approved': 2 };
+        const currentIndex = statusOrder[currentStatus] || 0;
+
+        let html = '<div class="workflow-progress">';
+
+        steps.forEach((step, index) => {
+            const isCompleted = index < currentIndex;
+            const isCurrent = index === currentIndex;
+            const isPending = index > currentIndex;
+
+            let stepClass = 'workflow-step';
+            if (isCompleted) stepClass += ' completed';
+            else if (isCurrent) stepClass += ' current';
+            else stepClass += ' pending';
+
+            const icon = isCompleted ? '✓' : step.number;
+
+            html += `
+                <div class="${stepClass}" data-status="${step.id}">
+                    <span class="step-icon">${icon}</span>
+                    <span class="step-label">${step.label}</span>
+                </div>`;
+
+            // Add connector between steps (except after last step)
+            if (index < steps.length - 1) {
+                const connectorClass = isCompleted ? 'workflow-connector completed' : 'workflow-connector';
+                html += `<div class="${connectorClass}"></div>`;
+            }
+        });
+
+        html += '</div>';
+        return html;
+    }
+
+    /**
+     * Gets a status-specific message for the user
+     * @param {string} status - Current status
+     * @param {string} assignedToName - Name of assigned assessor (if any)
+     * @param {string} approverInfo - Approval information (if approved)
+     * @returns {string} Status message
+     */
+    function getStatusMessage(status, assignedToName, approverInfo) {
+        switch (status) {
+            case 'draft':
+                if (assignedToName) {
+                    return `This assessment is a draft assigned to ${assignedToName}. Complete all sections and submit for review.`;
+                }
+                return 'This assessment is a draft. Assign a COSHH Assessor and complete all sections before submitting for review.';
+
+            case 'under_review':
+                if (assignedToName) {
+                    return `Awaiting review by ${assignedToName}. You will be notified when approved.`;
+                }
+                return 'Awaiting review by the assigned COSHH Assessor.';
+
+            case 'approved':
+                if (approverInfo) {
+                    return `${approverInfo}. This assessment is finalized and ready for use.`;
+                }
+                return 'This assessment has been approved and is ready for use.';
+
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * Updates the workflow progress indicator (can be called independently)
+     * @param {string} status - Status to display
+     */
+    function updateWorkflowProgress(status) {
+        // This function is called by displayAssessmentMetadata
+        // The progress indicator is built as part of the banner
+        // No separate DOM manipulation needed
+        console.log(`[updateWorkflowProgress] Status: ${status}`);
+    }
+
+    // Expose updateWorkflowProgress globally
+    window.updateWorkflowProgress = updateWorkflowProgress;
 
     // --- Initialize Tabs & Defaults & Event Listeners ---
     document.addEventListener('DOMContentLoaded', () => {
