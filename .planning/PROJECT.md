@@ -22,15 +22,16 @@ Make it demonstrably maintainable and reliable enough to convince IT to support 
 - ✓ LocalStorage persistence for draft assessments - existing
 - ✓ JSON export/import functionality - existing
 - ✓ Modular JavaScript architecture (recently refactored from monolithic HTML) - existing
+- ✓ Automated test suite with 69+ tests (Vitest + happy-dom) - v0.6.0
+- ✓ Runtime validation with safe DOM helpers and error handling - v0.6.0
+- ✓ Developer documentation (ARCHITECTURE.md, CONTRIBUTING.md, JSDoc) - v0.6.0
+- ✓ Code quality: Prettier, ESLint, structured logging, refactored functions - v0.6.0
+- ✓ Mock user role system with 3 roles and role switcher UI - v0.6.0
+- ✓ Mock approval workflow UI (draft → under_review → approved) - v0.6.0
 
 ### Active
 
-- [ ] Automated test suite to prevent regressions when adding features
-- [ ] Runtime validation checks to catch issues early
-- [ ] Enhanced developer documentation (architecture, contribution guides, setup instructions)
-- [ ] Code quality improvements for easier understanding and debugging
-- [ ] Mock user role system (COSH assessors, lab managers, admin) in frontend
-- [ ] Mock approval workflow UI (draft → review → approve → publish)
+(None - Milestone 1 complete. Next milestone TBD.)
 
 ### Out of Scope
 
@@ -42,9 +43,12 @@ Make it demonstrably maintainable and reliable enough to convince IT to support 
 ## Context
 
 **Current State:**
-- Semi-working state, prone to breaking when new features are added
-- Recently underwent modularization from monolithic HTML to separate modules
-- Successfully uses modern JavaScript module pattern with separated config files
+
+- Milestone 1 (v0.6.0) complete: testing, validation, documentation, code quality, mock roles & workflow
+- 69+ automated tests with 100% pass rate
+- Well-documented with ARCHITECTURE.md, CONTRIBUTING.md, and JSDoc comments
+- Modular JavaScript with Prettier/ESLint standards
+- Mock approval workflow demonstrates complete vision (draft → review → approved)
 - Client-side only (browser-based SPA with no backend server)
 - Currently deployed to GitHub Pages: https://miguel-bonnin.github.io/CABI-COSHH-Helper/
 
@@ -69,11 +73,11 @@ This is a "vibe coded" project that needs to prove itself professionally maintai
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Frontend-first approach | Demonstrate maintainability and stability before requesting backend support from IT | — Pending |
-| Mock user roles in UI | Show IT the complete workflow vision without requiring backend infrastructure | — Pending |
-| Automated testing + runtime validation | Prevent breakage when adding features; catch issues early in development and production | — Pending |
+| Frontend-first approach | Demonstrate maintainability and stability before requesting backend support from IT | ✓ v0.6.0 |
+| Mock user roles in UI | Show IT the complete workflow vision without requiring backend infrastructure | ✓ v0.6.0 |
+| Automated testing + runtime validation | Prevent breakage when adding features; catch issues early in development and production | ✓ v0.6.0 |
 | Keep vanilla JavaScript | No framework overhead; already working pattern; easier for IT to maintain | ✓ Good |
 | Modular architecture via ES6 modules | Moved from monolithic HTML to separate files for better maintainability | ✓ Good |
 
 ---
-*Last updated: 2026-01-13 after initialization*
+*Last updated: 2026-01-22 after Milestone 1 (v0.6.0) completion*
